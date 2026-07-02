@@ -75,11 +75,9 @@ PERSIAPAN
 ---------
 1. Pastikan Apache dan MySQL XAMPP aktif.
 2. Database tujuan harus bernama task_management_laravel.
-3. Data dari task_management_databases harus sudah diimpor seperti proses sebelumnya.
-4. Jangan menjalankan php artisan migrate:fresh karena akan menghapus data.
-5. Pastikan hasilnya bukan folder bertingkat. Contoh benar:
+3. Pastikan hasilnya bukan folder bertingkat. Contoh benar:
    task_management_laravel/app/Http/Controllers/AuthController.php
-6. Periksa file .env:
+4. Periksa file .env:
 
    APP_NAME=Flowlist
    APP_URL=http://127.0.0.1:8000
@@ -91,24 +89,24 @@ PERSIAPAN
    DB_USERNAME=root
    DB_PASSWORD=
 
-7. Dari terminal root project jalankan:
+5. Dari terminal root project jalankan:
 
    php artisan optimize:clear
    php artisan migrate
    php artisan storage:link
    php artisan route:list
 
-8. Pengujian otomatis bersifat opsional. JANGAN langsung menjalankan test dengan
+6. Pengujian otomatis bersifat opsional. JANGAN langsung menjalankan test dengan
    database utama karena test memakai RefreshDatabase. Untuk test yang aman:
    - Salin .env.testing.flowlist.example menjadi .env.testing
    - Jalankan: php artisan key:generate --env=testing
    - Setelah itu: php artisan test --filter=FlowlistSmokeTest
 
-9. Jalankan website:
+7. Jalankan website:
 
    php artisan serve
 
-10. Buka:
+8. Buka:
 
    http://127.0.0.1:8000
 
