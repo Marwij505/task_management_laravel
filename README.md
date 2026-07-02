@@ -93,11 +93,15 @@ PERSIAPAN
 
    cd task_management_laravel
    composer install
+   npm install
+   copy .env.example .env
+   php artisan key:generate
    php artisan migrate
    php artisan migrate:fresh (optional agar tidak ada data di database kalian)
    php artisan optimize:clear
    php artisan storage:link
    php artisan route:list
+   npm run dev
 
 6. Pengujian otomatis bersifat opsional. JANGAN langsung menjalankan test dengan
    database utama karena test memakai RefreshDatabase. Untuk test yang aman:
@@ -105,7 +109,7 @@ PERSIAPAN
    - Jalankan: php artisan key:generate --env=testing
    - Setelah itu: php artisan test --filter=FlowlistSmokeTest
 
-7. Jalankan website:
+7. Jalankan website di terminal:
 
    php artisan serve
 
