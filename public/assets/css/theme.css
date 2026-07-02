@@ -1,0 +1,175 @@
+/* ===============================
+   FLOWLIST GLOBAL THEME
+   Light / Dark / System
+================================ */
+
+/* DARK THEME VARIABLES */
+html[data-theme="dark"] {
+    --primary: #020617;
+    --primary-soft: #0f172a;
+    --accent: #16d95f;
+
+    --bg-main: #0f172a;
+    --bg-card: #111827;
+    --border: #253041;
+
+    --text-dark: #e5e7eb;
+    --text-muted: #94a3b8;
+
+    --gray-soft: #1f2937;
+    --input-bg: #1f2937;
+
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* BASE */
+html[data-theme="dark"] body {
+    background: var(--bg-main);
+    color: var(--text-dark);
+}
+
+/* COMMON SURFACES */
+html[data-theme="dark"] .panel-card,
+html[data-theme="dark"] .form-card,
+html[data-theme="dark"] .task-card,
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .chart-card,
+html[data-theme="dark"] .detail-card,
+html[data-theme="dark"] .filter-section,
+html[data-theme="dark"] .calendar-card,
+html[data-theme="dark"] .calendar-section,
+html[data-theme="dark"] .statistics-message,
+html[data-theme="dark"] .profile-message {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text-dark);
+}
+
+/* SIDEBAR */
+html[data-theme="dark"] .sidebar {
+    background: #020617;
+}
+
+/* TEXT */
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] label,
+html[data-theme="dark"] .topbar-left h2,
+html[data-theme="dark"] .page-header h2,
+html[data-theme="dark"] .panel-header h3,
+html[data-theme="dark"] .task-card-top h3,
+html[data-theme="dark"] .detail-title-area h2,
+html[data-theme="dark"] .info-text span,
+html[data-theme="dark"] .info-text strong {
+    color: var(--text-dark);
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] .topbar-left p,
+html[data-theme="dark"] .page-header p,
+html[data-theme="dark"] .setting-text p,
+html[data-theme="dark"] .task-card-top p,
+html[data-theme="dark"] .description-section p,
+html[data-theme="dark"] .task-category,
+html[data-theme="dark"] .task-date,
+html[data-theme="dark"] .list-summary p {
+    color: var(--text-muted);
+}
+
+/* INPUTS */
+html[data-theme="dark"] input,
+html[data-theme="dark"] textarea,
+html[data-theme="dark"] select {
+    background: #1f2937 !important;
+    color: var(--text-dark) !important;
+    border-color: var(--border) !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: #64748b;
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] textarea:focus,
+html[data-theme="dark"] select:focus {
+    background: #111827 !important;
+    border-color: var(--accent) !important;
+}
+
+/* PROFILE TABS */
+html[data-theme="dark"] .profile-tabs {
+    background: #1f2937;
+}
+
+html[data-theme="dark"] .tab-btn {
+    color: var(--text-muted);
+}
+
+html[data-theme="dark"] .tab-btn.active {
+    background: #111827;
+    color: var(--text-dark);
+}
+
+/* BUTTONS */
+html[data-theme="dark"] .secondary-btn,
+html[data-theme="dark"] .cancel-btn,
+html[data-theme="dark"] .clear-filter-btn,
+html[data-theme="dark"] .calendar-nav-btn,
+html[data-theme="dark"] .today-btn,
+html[data-theme="dark"] .action-btn {
+    background: #111827;
+    border-color: var(--border);
+    color: var(--text-dark);
+}
+
+html[data-theme="dark"] .secondary-btn:hover,
+html[data-theme="dark"] .cancel-btn:hover,
+html[data-theme="dark"] .clear-filter-btn:hover,
+html[data-theme="dark"] .calendar-nav-btn:hover,
+html[data-theme="dark"] .today-btn:hover,
+html[data-theme="dark"] .action-btn:hover {
+    background: #1f2937;
+}
+
+/* TASK / TAGS */
+html[data-theme="dark"] .task-menu-dot,
+html[data-theme="dark"] .tag,
+html[data-theme="dark"] .task-tag {
+    background: #1f2937;
+    color: var(--text-dark);
+}
+
+html[data-theme="dark"] .task-tag.muted {
+    background: #253041;
+    color: var(--text-muted);
+}
+
+/* EMPTY / LOADING STATES */
+html[data-theme="dark"] .empty-state,
+html[data-theme="dark"] .calendar-state,
+html[data-theme="dark"] .task-grid:empty::before {
+    background: #111827;
+    border-color: #334155;
+    color: var(--text-muted);
+}
+
+/* PROGRESS */
+html[data-theme="dark"] .progress-bar {
+    background: #334155;
+}
+
+/* SCROLLBAR */
+html[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: #0f172a;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb {
+    background: #334155;
+}
+
+html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}
