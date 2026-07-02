@@ -91,8 +91,11 @@ PERSIAPAN
 
 5. Dari terminal root project jalankan:
 
-   php artisan optimize:clear
+   cd task_management_laravel
+   composer install
    php artisan migrate
+   php artisan migrate:fresh (optional agar tidak ada data di database kalian)
+   php artisan optimize:clear
    php artisan storage:link
    php artisan route:list
 
