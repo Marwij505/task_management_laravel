@@ -92,8 +92,8 @@ PERSIAPAN
 5. Dari terminal root project jalankan:
 
    cd task_management_laravel
+   composer update (kalau laravel beda versi)
    composer install
-   npm install
    copy .env.example .env
    php artisan key:generate
    php artisan migrate
@@ -101,19 +101,18 @@ PERSIAPAN
    php artisan optimize:clear
    php artisan storage:link
    php artisan route:list
-   npm run dev
 
-6. Pengujian otomatis bersifat opsional. JANGAN langsung menjalankan test dengan
-   database utama karena test memakai RefreshDatabase. Untuk test yang aman:
-   - Salin .env.testing.flowlist.example menjadi .env.testing
-   - Jalankan: php artisan key:generate --env=testing
-   - Setelah itu: php artisan test --filter=FlowlistSmokeTest
+   catatan (optional):
+   -  npm install dan npm run dev hanya diperlukan jika asset frontend menggunakan Vite.
+      Untuk versi Flowlist ini, CSS dan JS utama berada di public/assets, jadi website tetap bisa berjalan hanya dengan php artisan serve.
+      - npm install
+      - npm run dev
 
-7. Jalankan website di terminal:
+6. Jalankan website di terminal:
 
    php artisan serve
 
-8. Buka:
+7. Buka:
 
    http://127.0.0.1:8000
 
