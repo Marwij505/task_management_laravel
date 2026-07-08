@@ -11,6 +11,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    /*
+     * Role resmi yang dipakai sistem.
+     * Pakai constant agar tidak salah tulis string role di controller atau middleware.
+     */
+    public const ROLE_USER = 'user';
+    public const ROLE_ADMIN = 'admin';
+
     protected $fillable = [
         'name',
         'username',
@@ -18,6 +25,7 @@ class User extends Authenticatable
         'email',
         'avatar_path',
         'password',
+        'role',
         'email_notifications',
         'task_reminders',
         'weekly_report',
@@ -45,5 +53,22 @@ class User extends Authenticatable
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /*
+     * Cek apakah user aktif adalah admin.
+     * Method ini akan dipakai oleh middleware dan redirect login.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /*
+     * Cek apakah user aktif adalah user biasa.
+     */
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
     }
 }

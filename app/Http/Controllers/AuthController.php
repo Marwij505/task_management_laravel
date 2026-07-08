@@ -82,11 +82,19 @@ class AuthController extends Controller
         }
 
         $username = Auth::user()?->username ?: Auth::user()?->name ?: 'User';
+        /*
+        * Redirect otomatis berdasarkan role.
+        * Admin masuk ke halaman admin.
+        * User biasa masuk ke dashboard task biasa.
+        */
+        $redirectRoute = Auth::user()?->isAdmin()
+            ? route('admin.dashboard')
+            : route('dashboard');
 
         return response()->json([
             'success' => true,
             'message' => 'Enjoy This Website, '.$username.'!',
-            'redirect' => route('dashboard'),
+            'redirect' => $redirectRoute,
         ]);
     }
 
@@ -120,8 +128,14 @@ class AuthController extends Controller
             'full_name' => $username,
             'email' => strtolower(trim((string) $request->input('email'))),
             'password' => Hash::make((string) $request->input('password')),
-        ]);
 
+            /*
+            * Register publik hanya boleh membuat user biasa.
+            * Admin tidak boleh dibuat dari form register publik.
+            */
+            'role' => User::ROLE_USER,
+        ]);
+        
         return response()->json([
             'success' => true,
             'message' => 'Your account has been created successfully.',
