@@ -52,10 +52,10 @@
                         <span>Global Statistics</span>
                     </a>
 
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Activity Logs">
+                    <a href="{{ route('admin.logs.index') }}" class="menu-item">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
-                    </button>
+                    </a>
                 </nav>
             </div>
 

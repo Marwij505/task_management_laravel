@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\ActivityLogService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -82,6 +83,19 @@ class AuthController extends Controller
         }
 
         $username = Auth::user()?->username ?: Auth::user()?->name ?: 'User';
+        /*
+        * Catat aktivitas login.
+        */
+        ActivityLogService::log(
+            module: 'auth',
+            action: 'login',
+            description: 'User logged in: '.$username,
+            properties: [
+                'email' => Auth::user()?->email,
+                'role' => Auth::user()?->role,
+            ],
+            targetUserId: Auth::id()
+        );
         /*
         * Redirect otomatis berdasarkan role.
         * Admin masuk ke halaman admin.
@@ -201,6 +215,22 @@ class AuthController extends Controller
         }
 
         Auth::logout();
+
+        /*
+        * Catat aktivitas logout sebelum session dihancurkan.
+        */
+        if (Auth::check()) {
+            ActivityLogService::log(
+                module: 'auth',
+                action: 'logout',
+                description: 'User logged out: '.(Auth::user()?->email ?? 'Unknown user'),
+                properties: [
+                    'email' => Auth::user()?->email,
+                    'role' => Auth::user()?->role,
+                ],
+                targetUserId: Auth::id()
+            );
+        }
 
         $request->session()->forget([
             'login_remembered',

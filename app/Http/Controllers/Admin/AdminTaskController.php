@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskProgressService;
 use Carbon\Carbon;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -170,6 +171,23 @@ class AdminTaskController extends Controller
 
         $this->replaceTags($task, $validated['tags'] ?? '');
 
+        /*
+        * Catat aktivitas create task oleh admin.
+        */
+        ActivityLogService::log(
+            module: 'admin_tasks',
+            action: 'create',
+            description: 'Created task: '.$task->title,
+            properties: [
+                'task_id' => $task->id,
+                'title' => $task->title,
+                'owner_user_id' => $task->user_id,
+                'status' => $task->status,
+                'priority' => $task->priority,
+            ],
+            targetUserId: (int) $task->user_id
+        );
+
         return redirect()
             ->route('admin.tasks.index')
             ->with('success', 'Task has been created successfully.');
@@ -210,6 +228,24 @@ class AdminTaskController extends Controller
 
         $this->replaceTags($task, $validated['tags'] ?? '');
 
+        /*
+        * Catat aktivitas update task oleh admin.
+        */
+        ActivityLogService::log(
+            module: 'admin_tasks',
+            action: 'update',
+            description: 'Updated task: '.$task->title,
+            properties: [
+                'task_id' => $task->id,
+                'title' => $task->title,
+                'owner_user_id' => $task->user_id,
+                'status' => $task->status,
+                'priority' => $task->priority,
+                'progress' => $task->progress,
+            ],
+            targetUserId: (int) $task->user_id
+        );
+
         return redirect()
             ->route('admin.tasks.index')
             ->with('success', 'Task has been updated successfully.');
@@ -225,6 +261,21 @@ class AdminTaskController extends Controller
             'progress' => 100,
         ])->save();
 
+        /*
+        * Catat aktivitas mark completed.
+        */
+        ActivityLogService::log(
+            module: 'admin_tasks',
+            action: 'complete',
+            description: 'Marked task as completed: '.$task->title,
+            properties: [
+                'task_id' => $task->id,
+                'title' => $task->title,
+                'owner_user_id' => $task->user_id,
+            ],
+            targetUserId: (int) $task->user_id
+        );
+
         return redirect()
             ->route('admin.tasks.index')
             ->with('success', 'Task has been marked as completed.');
@@ -237,6 +288,28 @@ class AdminTaskController extends Controller
          * Task tags ikut terhapus karena relasi database memakai cascade.
          */
         $task->delete();
+
+        /*
+        * Simpan data penting sebelum task dihapus.
+        */
+        $deletedTaskData = [
+            'task_id' => $task->id,
+            'title' => $task->title,
+            'owner_user_id' => $task->user_id,
+            'status' => $task->status,
+            'priority' => $task->priority,
+        ];
+
+        /*
+        * Catat aktivitas delete task.
+        */
+        ActivityLogService::log(
+            module: 'admin_tasks',
+            action: 'delete',
+            description: 'Deleted task: '.$task->title,
+            properties: $deletedTaskData,
+            targetUserId: (int) $task->user_id
+        );
 
         return redirect()
             ->route('admin.tasks.index')

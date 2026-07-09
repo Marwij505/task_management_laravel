@@ -55,10 +55,10 @@
                         <span>Global Statistics</span>
                     </a>
 
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Activity Logs">
+                    <a href="{{ route('admin.logs.index') }}" class="menu-item">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
-                    </button>
+                    </a>
                 </nav>
             </div>
 
@@ -355,13 +355,13 @@
                             </div>
                         </a>
 
-                        <button type="button" class="admin-action-card js-coming-soon" data-feature="Activity Logs">
+                        <a href="{{ route('admin.logs.index') }}" class="admin-action-card">
                             <i class="fa-solid fa-clock-rotate-left"></i>
                             <div>
                                 <strong>Activity Logs</strong>
                                 <span>Track user and admin activity</span>
                             </div>
-                        </button>
+                        </a>
                     </div>
                 </div>
 

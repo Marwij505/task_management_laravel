@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\ActivityLogService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -75,7 +76,7 @@ class AdminUserController extends Controller
             'password' => ['required', 'string', 'min:4', 'max:255', 'confirmed'],
         ]);
 
-        User::create([
+        $createdUser = User::create([
             'name' => $validated['full_name'],
             'full_name' => $validated['full_name'],
             'username' => $validated['username'],
@@ -83,6 +84,21 @@ class AdminUserController extends Controller
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
         ]);
+
+        /*
+        * Catat aktivitas create user.
+        */
+        ActivityLogService::log(
+            module: 'admin_users',
+            action: 'create',
+            description: 'Created user account: '.$createdUser->email,
+            properties: [
+                'created_user_id' => $createdUser->id,
+                'email' => $createdUser->email,
+                'role' => $createdUser->role,
+            ],
+            targetUserId: $createdUser->id
+        );
 
         return redirect()
             ->route('admin.users.index')
@@ -139,6 +155,21 @@ class AdminUserController extends Controller
             'role' => $validated['role'],
         ]);
 
+        /*
+        * Catat aktivitas update user.
+        */
+        ActivityLogService::log(
+            module: 'admin_users',
+            action: 'update',
+            description: 'Updated user account: '.$user->email,
+            properties: [
+                'updated_user_id' => $user->id,
+                'email' => $user->email,
+                'role' => $user->role,
+            ],
+            targetUserId: $user->id
+        );
+
         return redirect()
             ->route('admin.users.index')
             ->with('success', 'User has been updated successfully.');
@@ -158,6 +189,20 @@ class AdminUserController extends Controller
             'password' => Hash::make($validated['password']),
             'remember_token' => null,
         ])->save();
+
+        /*
+        * Catat aktivitas reset password.
+        */
+        ActivityLogService::log(
+            module: 'admin_users',
+            action: 'reset_password',
+            description: 'Reset password for user: '.$user->email,
+            properties: [
+                'target_user_id' => $user->id,
+                'email' => $user->email,
+            ],
+            targetUserId: $user->id
+        );
 
         return redirect()
             ->route('admin.users.index')
@@ -185,6 +230,27 @@ class AdminUserController extends Controller
          * semua task milik user ini akan ikut terhapus.
          */
         $user->delete();
+
+        /*
+        * Simpan data penting sebelum user dihapus.
+        */
+        $deletedUserData = [
+            'deleted_user_id' => $user->id,
+            'email' => $user->email,
+            'username' => $user->username,
+            'role' => $user->role,
+        ];
+
+        /*
+        * Catat aktivitas delete user.
+        */
+        ActivityLogService::log(
+            module: 'admin_users',
+            action: 'delete',
+            description: 'Deleted user account: '.$user->email,
+            properties: $deletedUserData,
+            targetUserId: $user->id
+        );
 
         return redirect()
             ->route('admin.users.index')

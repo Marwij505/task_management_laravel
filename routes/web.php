@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminTaskController;
 use App\Http\Controllers\Admin\AdminStatisticsController;
+use App\Http\Controllers\Admin\AdminActivityLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
@@ -127,7 +128,7 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
 
         Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])
             ->name('users.destroy');
-            
+
         /*
         * All Task Management Routes.
         * Semua route ini hanya untuk admin.
@@ -153,6 +154,13 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
         */
         Route::get('/statistics', [AdminStatisticsController::class, 'index'])
             ->name('statistics.index');  
+        
+        /*
+        * Activity Logs Route.
+        * Halaman ini hanya untuk admin.
+        */
+        Route::get('/activity-logs', [AdminActivityLogController::class, 'index'])
+            ->name('logs.index');
         });
     /*
      * Logout is available for both admin and regular user.
