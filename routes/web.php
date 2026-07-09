@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
@@ -100,13 +101,32 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
     | Only users with role "admin" can access these pages.
     */
     Route::prefix('admin')
-        ->name('admin.')
-        ->middleware(EnsureUserIsAdmin::class)
-        ->group(function () {
-            Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-                ->name('dashboard');
-        });
+    ->name('admin.')
+    ->middleware(EnsureUserIsAdmin::class)
+    ->group(function () {
+        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+            ->name('dashboard');
 
+        /*
+         * User Management Routes.
+         * Semua route ini hanya boleh diakses admin.
+         */
+        Route::get('/users', [AdminUserController::class, 'index'])
+            ->name('users.index');
+
+        Route::post('/users', [AdminUserController::class, 'store'])
+            ->name('users.store');
+
+        Route::patch('/users/{user}', [AdminUserController::class, 'update'])
+            ->name('users.update');
+
+        Route::patch('/users/{user}/password', [AdminUserController::class, 'resetPassword'])
+            ->name('users.password');
+
+        Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])
+            ->name('users.destroy');
+    });
+    
     /*
      * Logout is available for both admin and regular user.
      */

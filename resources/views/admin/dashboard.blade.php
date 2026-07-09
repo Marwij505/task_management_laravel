@@ -40,11 +40,10 @@
                         <span>Dashboard</span>
                     </a>
 
-                    <!-- These buttons will be connected to real pages in the next admin stages. -->
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="User Management">
+                    <a href="{{ route('admin.users.index') }}" class="menu-item">
                         <i class="fa-solid fa-users"></i>
                         <span>User Management</span>
-                    </button>
+                    </a>
 
                     <button type="button" class="menu-item menu-button js-coming-soon" data-feature="All Task Management">
                         <i class="fa-solid fa-list-check"></i>
@@ -294,9 +293,9 @@
                                 <p>Newest registered accounts</p>
                             </div>
 
-                            <button type="button" class="admin-link-btn js-coming-soon" data-feature="User Management">
+                            <a href="{{ route('admin.users.index') }}" class="admin-link-btn">
                                 Manage
-                            </button>
+                            </a>
                         </div>
 
                         <div class="admin-user-list">
@@ -332,13 +331,13 @@
                     </div>
 
                     <div class="admin-action-grid">
-                        <button type="button" class="admin-action-card js-coming-soon" data-feature="User Management">
+                        <a href="{{ route('admin.users.index') }}" class="admin-action-card">
                             <i class="fa-solid fa-users"></i>
                             <div>
                                 <strong>User Management</strong>
                                 <span>Manage roles and user accounts</span>
                             </div>
-                        </button>
+                        </a>
 
                         <button type="button" class="admin-action-card js-coming-soon" data-feature="All Task Management">
                             <i class="fa-solid fa-list-check"></i>
