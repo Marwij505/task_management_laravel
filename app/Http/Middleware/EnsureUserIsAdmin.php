@@ -8,13 +8,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsAdmin
 {
+    /**
+     * This middleware protects admin-only routes.
+     *
+     * Flow:
+     * - Guest users are handled by Laravel auth middleware before this middleware runs.
+     * - Logged-in users with role "admin" can continue.
+     * - Logged-in users with role "user" will be blocked.
+     */
     public function handle(Request $request, Closure $next): Response
     {
+        $user = $request->user();
+
         /*
-         * Route admin hanya boleh dibuka oleh user yang sudah login
-         * dan memiliki role admin.
+         * Extra safety check.
+         * This condition should rarely happen because the route already uses auth middleware.
          */
-        if (! $request->user() || ! $request->user()->isAdmin()) {
+        if (! $user) {
+            return redirect()->route('login');
+        }
+
+        /*
+         * Only admin users may access admin routes.
+         * The isAdmin() method comes from app/Models/User.php.
+         */
+        if (! $user->isAdmin()) {
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,

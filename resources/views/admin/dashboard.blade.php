@@ -109,7 +109,7 @@
             </div>
 
             <div class="actions">
-                <a href="{{ route('dashboard') }}">Go to User Dashboard</a>
+                <a href="{{ route('admin.dashboard') }}">Refresh Admin Dashboard</a>
 
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf

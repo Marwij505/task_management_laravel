@@ -9,17 +9,21 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Middleware\EnsureLoginSessionStillValid;
 use App\Http\Middleware\EnsureUserIsAdmin;
+use App\Http\Middleware\EnsureUserIsRegularUser;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Home Route
+|--------------------------------------------------------------------------
+| The first page follows the authenticated user's role.
+*/
 Route::get('/', function () {
     if (! Auth::check()) {
         return redirect()->route('login');
     }
 
-    /*
-     * Halaman awal juga mengikuti role.
-     */
     return Auth::user()?->isAdmin()
         ? redirect()->route('admin.dashboard')
         : redirect()->route('dashboard');
@@ -29,7 +33,7 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 | Guest Routes
 |--------------------------------------------------------------------------
-| Hanya untuk pengunjung yang belum login.
+| Only guests can access login, register, and forgot password pages.
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -49,44 +53,52 @@ Route::middleware('guest')->group(function () {
 |--------------------------------------------------------------------------
 | Authenticated Routes
 |--------------------------------------------------------------------------
-| Semua halaman di dalam group ini wajib login.
+| All routes inside this group require login and valid session.
 */
 Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function () {
     /*
-     * Halaman user biasa.
-     */
-    Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
-    Route::get('/tasks', [PageController::class, 'taskList'])->name('tasks.index');
-    Route::get('/tasks/create', [PageController::class, 'createTask'])->name('tasks.create');
-    Route::get('/task-detail', [PageController::class, 'taskDetail'])->name('tasks.detail');
-    Route::get('/calendar', [PageController::class, 'calendar'])->name('calendar');
-    Route::get('/statistics', [PageController::class, 'statistics'])->name('statistics');
-    Route::get('/profile', [PageController::class, 'profile'])->name('profile');
+    |--------------------------------------------------------------------------
+    | Regular User Area
+    |--------------------------------------------------------------------------
+    | Only users with role "user" can access these pages and APIs.
+    */
+    Route::middleware(EnsureUserIsRegularUser::class)->group(function () {
+        Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
+        Route::get('/tasks', [PageController::class, 'taskList'])->name('tasks.index');
+        Route::get('/tasks/create', [PageController::class, 'createTask'])->name('tasks.create');
+        Route::get('/task-detail', [PageController::class, 'taskDetail'])->name('tasks.detail');
+        Route::get('/calendar', [PageController::class, 'calendar'])->name('calendar');
+        Route::get('/statistics', [PageController::class, 'statistics'])->name('statistics');
+        Route::get('/profile', [PageController::class, 'profile'])->name('profile');
 
-    /*
-     * API internal Flowlist untuk user yang sudah login.
-     */
-    Route::prefix('flowlist-api')->name('flowlist.api.')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'data'])->name('dashboard');
+        /*
+         * Flowlist internal API for regular users.
+         * Admin API will be separated later.
+         */
+        Route::prefix('flowlist-api')->name('flowlist.api.')->group(function () {
+            Route::get('/dashboard', [DashboardController::class, 'data'])->name('dashboard');
 
-        Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
-        Route::get('/task-detail', [TaskController::class, 'show'])->name('tasks.show');
-        Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
-        Route::post('/tasks/update', [TaskController::class, 'update'])->name('tasks.update');
-        Route::post('/tasks/complete', [TaskController::class, 'complete'])->name('tasks.complete');
-        Route::post('/tasks/delete', [TaskController::class, 'destroy'])->name('tasks.destroy');
+            Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+            Route::get('/task-detail', [TaskController::class, 'show'])->name('tasks.show');
+            Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
+            Route::post('/tasks/update', [TaskController::class, 'update'])->name('tasks.update');
+            Route::post('/tasks/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+            Route::post('/tasks/delete', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-        Route::get('/calendar', [TaskController::class, 'calendar'])->name('calendar');
-        Route::get('/statistics', [StatisticsController::class, 'data'])->name('statistics');
+            Route::get('/calendar', [TaskController::class, 'calendar'])->name('calendar');
+            Route::get('/statistics', [StatisticsController::class, 'data'])->name('statistics');
 
-        Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+            Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+            Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        });
     });
 
     /*
-     * Halaman admin.
-     * Semua route admin wajib login dan wajib role admin.
-     */
+    |--------------------------------------------------------------------------
+    | Admin Area
+    |--------------------------------------------------------------------------
+    | Only users with role "admin" can access these pages.
+    */
     Route::prefix('admin')
         ->name('admin.')
         ->middleware(EnsureUserIsAdmin::class)
@@ -95,5 +107,8 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
                 ->name('dashboard');
         });
 
+    /*
+     * Logout is available for both admin and regular user.
+     */
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
