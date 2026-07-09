@@ -1,0 +1,352 @@
+/*
+|--------------------------------------------------------------------------
+| Admin All Task Management Page
+|--------------------------------------------------------------------------
+| Base layout uses dashboard.css.
+| This file only adds admin task management styling.
+*/
+
+.admin-tasks-layout {
+    display: grid;
+    grid-template-columns: 2fr 0.95fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.admin-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.admin-alert.success {
+    background: var(--green-soft);
+    color: var(--green-text);
+}
+
+.admin-alert.error {
+    background: var(--red-soft);
+    color: var(--red-text);
+}
+
+.admin-task-filter {
+    display: grid;
+    grid-template-columns: 1.3fr 0.9fr 0.8fr 0.8fr auto;
+    gap: 14px;
+    align-items: end;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #fbfcfd;
+    margin-bottom: 20px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-field.full {
+    grid-column: 1 / -1;
+}
+
+.form-field label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.form-field input,
+.form-field select,
+.form-field textarea {
+    width: 100%;
+    min-height: 46px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 0 14px;
+    background: #ffffff;
+    color: var(--text-dark);
+    outline: none;
+    font-size: 0.95rem;
+    transition: 0.3s ease;
+}
+
+.form-field textarea {
+    padding-top: 12px;
+    resize: vertical;
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px rgba(22, 217, 95, 0.12);
+}
+
+.filter-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.admin-primary-btn,
+.admin-secondary-btn,
+.admin-danger-btn {
+    min-height: 46px;
+    border: none;
+    border-radius: 14px;
+    padding: 0 16px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-decoration: none;
+    transition: 0.3s ease;
+}
+
+.admin-primary-btn {
+    background: var(--accent);
+    color: var(--white);
+    box-shadow: 0 10px 24px rgba(16, 210, 79, 0.18);
+}
+
+.admin-secondary-btn {
+    background: #ffffff;
+    color: var(--primary);
+    border: 1px solid var(--border);
+}
+
+.admin-danger-btn {
+    background: var(--red-soft);
+    color: var(--red-text);
+}
+
+.admin-primary-btn:hover,
+.admin-secondary-btn:hover,
+.admin-danger-btn:hover {
+    transform: translateY(-1px);
+}
+
+.admin-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.admin-task-row {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px 18px;
+    background: #ffffff;
+    transition: 0.3s ease;
+}
+
+.admin-task-row:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(22, 41, 56, 0.08);
+}
+
+.admin-task-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.admin-task-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.admin-tag-list span {
+    border-radius: 999px;
+    padding: 6px 10px;
+    background: #f3f4f6;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    font-weight: 600;
+}
+
+.admin-task-details {
+    margin-top: 16px;
+}
+
+.admin-task-details summary {
+    list-style: none;
+    cursor: pointer;
+    width: fit-content;
+    min-height: 42px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--primary);
+    font-weight: 700;
+    transition: 0.3s ease;
+}
+
+.admin-task-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.admin-task-details summary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.admin-task-panel {
+    margin-top: 16px;
+    display: grid;
+    gap: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+}
+
+.admin-form-block {
+    padding: 16px;
+    border-radius: 18px;
+    background: #fbfcfd;
+    border: 1px solid var(--border);
+}
+
+.admin-form-block h5 {
+    font-size: 0.98rem;
+    margin-bottom: 14px;
+    color: var(--text-dark);
+}
+
+.admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+.admin-task-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-create-task-card {
+    position: sticky;
+    top: 32px;
+}
+
+.admin-create-task-form {
+    display: grid;
+    gap: 14px;
+}
+
+.admin-create-task-btn {
+    width: 100%;
+    margin-top: 4px;
+}
+
+.admin-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-top: 20px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+}
+
+.admin-pagination a,
+.admin-pagination span,
+.admin-pagination strong {
+    min-height: 42px;
+    border-radius: 14px;
+    padding: 0 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+}
+
+.admin-pagination a {
+    background: var(--accent);
+    color: var(--white);
+    font-weight: 700;
+}
+
+.admin-pagination span {
+    background: #f3f4f6;
+    color: var(--text-muted);
+}
+
+.admin-pagination strong {
+    color: var(--text-dark);
+}
+
+@media (max-width: 1200px) {
+    .admin-tasks-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-task-filter {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filter-actions {
+        grid-column: 1 / -1;
+    }
+
+    .admin-create-task-card {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-task-filter,
+    .admin-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-actions,
+    .admin-task-actions {
+        flex-direction: column;
+    }
+
+    .admin-primary-btn,
+    .admin-secondary-btn,
+    .admin-danger-btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-pagination {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .admin-pagination a,
+    .admin-pagination span,
+    .admin-pagination strong {
+        width: 100%;
+    }
+}

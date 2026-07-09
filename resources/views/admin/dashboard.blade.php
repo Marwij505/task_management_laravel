@@ -45,10 +45,10 @@
                         <span>User Management</span>
                     </a>
 
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="All Task Management">
+                    <a href="{{ route('admin.tasks.index') }}" class="menu-item">
                         <i class="fa-solid fa-list-check"></i>
                         <span>All Tasks</span>
-                    </button>
+                    </a>
 
                     <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Global Statistics">
                         <i class="fa-solid fa-chart-column"></i>
@@ -189,9 +189,9 @@
                             <p>Latest tasks created by all users</p>
                         </div>
 
-                        <button type="button" class="new-task-btn admin-small-btn js-coming-soon" data-feature="All Task Management">
+                        <a href="{{ route('admin.tasks.index') }}" class="new-task-btn admin-small-btn">
                             View All
-                        </button>
+                        </a>
                     </div>
 
                     <div class="task-list">
@@ -339,13 +339,13 @@
                             </div>
                         </a>
 
-                        <button type="button" class="admin-action-card js-coming-soon" data-feature="All Task Management">
+                        <a href="{{ route('admin.tasks.index') }}" class="admin-action-card">
                             <i class="fa-solid fa-list-check"></i>
                             <div>
                                 <strong>All Task Management</strong>
                                 <span>Monitor every user task</span>
                             </div>
-                        </button>
+                        </a>
 
                         <button type="button" class="admin-action-card js-coming-soon" data-feature="Global Statistics">
                             <i class="fa-solid fa-chart-column"></i>

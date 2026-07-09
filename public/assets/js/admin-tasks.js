@@ -1,16 +1,15 @@
 document.addEventListener('DOMContentLoaded', function () {
     const deleteForms = document.querySelectorAll('.admin-delete-form');
+    const completeForms = document.querySelectorAll('.admin-complete-form');
     const comingSoonButtons = document.querySelectorAll('.js-coming-soon');
     const toast = document.getElementById('adminToast');
 
-    // =====================================
-    // RESTORE SCROLL POSITION AFTER FORM SUBMIT
-    // =====================================
-    // Karena create, edit, reset password, dan delete memakai form submit biasa,
-    // halaman akan reload. Kode ini menyimpan posisi scroll sebelum submit,
-    // lalu mengembalikan posisi scroll setelah halaman selesai reload.
-    const allAdminForms = document.querySelectorAll('form');
-    const savedScrollPosition = sessionStorage.getItem('adminUsersScrollY');
+    /*
+     * Simpan posisi scroll sebelum form submit.
+     * Setelah halaman reload, posisi scroll dikembalikan.
+     */
+    const allForms = document.querySelectorAll('form');
+    const savedScrollPosition = sessionStorage.getItem('adminTasksScrollY');
 
     if (savedScrollPosition !== null) {
         window.requestAnimationFrame(function () {
@@ -20,23 +19,22 @@ document.addEventListener('DOMContentLoaded', function () {
                 behavior: 'instant'
             });
 
-            sessionStorage.removeItem('adminUsersScrollY');
+            sessionStorage.removeItem('adminTasksScrollY');
         });
     }
 
-    allAdminForms.forEach(function (form) {
+    allForms.forEach(function (form) {
         form.addEventListener('submit', function () {
-            sessionStorage.setItem('adminUsersScrollY', String(window.scrollY));
+            sessionStorage.setItem('adminTasksScrollY', String(window.scrollY));
         });
     });
 
     /*
-     * Konfirmasi delete.
-     * Ini mencegah admin tidak sengaja menghapus user.
+     * Konfirmasi delete agar admin tidak menghapus task tanpa sengaja.
      */
     deleteForms.forEach(function (form) {
         form.addEventListener('submit', function (event) {
-            const message = form.dataset.confirm || 'Are you sure?';
+            const message = form.dataset.confirm || 'Delete this task?';
 
             if (!window.confirm(message)) {
                 event.preventDefault();
@@ -45,7 +43,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     /*
-     * Toast kecil untuk fitur admin yang belum masuk babak ini.
+     * Konfirmasi mark completed.
+     */
+    completeForms.forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!window.confirm('Mark this task as completed?')) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    /*
+     * Toast untuk modul admin yang belum dibuat.
      */
     function showToast(message) {
         if (!toast) return;

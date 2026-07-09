@@ -9,8 +9,11 @@
 
     <title>Flowlist User Management</title>
 
+    <!-- Reuse regular dashboard style so admin pages stay consistent. -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
+
+    <!-- Admin-specific styling. -->
     <link rel="stylesheet" href="{{ asset('assets/css/admin-dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/admin-users.css') }}" />
 
@@ -22,6 +25,7 @@
 
 <body>
     <div class="dashboard-container">
+        <!-- Admin Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="brand">
@@ -42,11 +46,12 @@
                         <span>User Management</span>
                     </a>
 
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="All Task Management">
+                    <a href="{{ route('admin.tasks.index') }}" class="menu-item">
                         <i class="fa-solid fa-list-check"></i>
                         <span>All Tasks</span>
-                    </button>
+                    </a>
 
+                    <!-- These modules will be connected in the next stages. -->
                     <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Global Statistics">
                         <i class="fa-solid fa-chart-column"></i>
                         <span>Global Statistics</span>
@@ -72,6 +77,7 @@
             </div>
         </aside>
 
+        <!-- Main Content -->
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-left">
@@ -86,6 +92,7 @@
                 </div>
             </header>
 
+            <!-- Success message after create, update, reset password, or delete. -->
             @if(session('success'))
                 <div class="admin-alert success">
                     <i class="fa-regular fa-circle-check"></i>
@@ -93,6 +100,7 @@
                 </div>
             @endif
 
+            <!-- Error message for protected actions. -->
             @if(session('error'))
                 <div class="admin-alert error">
                     <i class="fa-solid fa-triangle-exclamation"></i>
@@ -100,6 +108,7 @@
                 </div>
             @endif
 
+            <!-- Validation error message. -->
             @if($errors->any())
                 <div class="admin-alert error">
                     <i class="fa-solid fa-triangle-exclamation"></i>
@@ -110,6 +119,7 @@
                 </div>
             @endif
 
+            <!-- Summary Cards -->
             <section class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-info">
@@ -153,6 +163,7 @@
             </section>
 
             <section class="admin-users-layout">
+                <!-- User List Card -->
                 <div class="recent-tasks-card admin-users-card">
                     <div class="section-header admin-users-header">
                         <div>
@@ -161,6 +172,7 @@
                         </div>
                     </div>
 
+                    <!-- Search and Role Filter -->
                     <form method="GET" action="{{ route('admin.users.index') }}" class="admin-filter-form">
                         <div class="form-field">
                             <label for="search">Search</label>
@@ -194,6 +206,7 @@
                         </div>
                     </form>
 
+                    <!-- Users -->
                     <div class="admin-user-list">
                         @forelse($users as $user)
                             <article class="admin-user-row">
@@ -222,6 +235,7 @@
                                     </div>
                                 </div>
 
+                                <!-- Manage panel. Details keeps the page clean until admin needs to edit. -->
                                 <details class="admin-user-details">
                                     <summary>
                                         <i class="fa-solid fa-pen-to-square"></i>
@@ -229,6 +243,7 @@
                                     </summary>
 
                                     <div class="admin-user-panel">
+                                        <!-- Edit User -->
                                         <form method="POST" action="{{ route('admin.users.update', $user) }}" class="admin-form-block">
                                             @csrf
                                             @method('PATCH')
@@ -238,17 +253,32 @@
                                             <div class="admin-form-grid">
                                                 <div class="form-field">
                                                     <label>Full Name</label>
-                                                    <input type="text" name="full_name" value="{{ old('full_name', $user->full_name ?: $user->name) }}" required>
+                                                    <input
+                                                        type="text"
+                                                        name="full_name"
+                                                        value="{{ old('full_name', $user->full_name ?: $user->name) }}"
+                                                        required
+                                                    >
                                                 </div>
 
                                                 <div class="form-field">
                                                     <label>Username</label>
-                                                    <input type="text" name="username" value="{{ old('username', $user->username) }}" required>
+                                                    <input
+                                                        type="text"
+                                                        name="username"
+                                                        value="{{ old('username', $user->username) }}"
+                                                        required
+                                                    >
                                                 </div>
 
                                                 <div class="form-field">
                                                     <label>Email</label>
-                                                    <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
+                                                    <input
+                                                        type="email"
+                                                        name="email"
+                                                        value="{{ old('email', $user->email) }}"
+                                                        required
+                                                    >
                                                 </div>
 
                                                 <div class="form-field">
@@ -265,6 +295,7 @@
                                             </button>
                                         </form>
 
+                                        <!-- Reset Password -->
                                         <form method="POST" action="{{ route('admin.users.password', $user) }}" class="admin-form-block">
                                             @csrf
                                             @method('PATCH')
@@ -274,12 +305,22 @@
                                             <div class="admin-form-grid">
                                                 <div class="form-field">
                                                     <label>New Password</label>
-                                                    <input type="password" name="password" placeholder="New password" required>
+                                                    <input
+                                                        type="password"
+                                                        name="password"
+                                                        placeholder="New password"
+                                                        required
+                                                    >
                                                 </div>
 
                                                 <div class="form-field">
                                                     <label>Confirm Password</label>
-                                                    <input type="password" name="password_confirmation" placeholder="Confirm password" required>
+                                                    <input
+                                                        type="password"
+                                                        name="password_confirmation"
+                                                        placeholder="Confirm password"
+                                                        required
+                                                    >
                                                 </div>
                                             </div>
 
@@ -288,6 +329,7 @@
                                             </button>
                                         </form>
 
+                                        <!-- Delete User -->
                                         <form
                                             method="POST"
                                             action="{{ route('admin.users.destroy', $user) }}"
@@ -312,6 +354,7 @@
                         @endforelse
                     </div>
 
+                    <!-- Simple Pagination -->
                     @if($users->hasPages())
                         <div class="admin-pagination">
                             @if($users->previousPageUrl())
@@ -333,6 +376,7 @@
                     @endif
                 </div>
 
+                <!-- Create User Card -->
                 <aside class="deadlines-card admin-create-card" id="createUserForm">
                     <div class="section-header">
                         <h3>Create User</h3>
@@ -344,17 +388,35 @@
 
                         <div class="form-field">
                             <label>Full Name</label>
-                            <input type="text" name="full_name" value="{{ old('full_name') }}" placeholder="Full name" required>
+                            <input
+                                type="text"
+                                name="full_name"
+                                value="{{ old('full_name') }}"
+                                placeholder="Full name"
+                                required
+                            >
                         </div>
 
                         <div class="form-field">
                             <label>Username</label>
-                            <input type="text" name="username" value="{{ old('username') }}" placeholder="Username" required>
+                            <input
+                                type="text"
+                                name="username"
+                                value="{{ old('username') }}"
+                                placeholder="Username"
+                                required
+                            >
                         </div>
 
                         <div class="form-field">
                             <label>Email</label>
-                            <input type="email" name="email" value="{{ old('email') }}" placeholder="Email address" required>
+                            <input
+                                type="email"
+                                name="email"
+                                value="{{ old('email') }}"
+                                placeholder="Email address"
+                                required
+                            >
                         </div>
 
                         <div class="form-field">
@@ -367,12 +429,22 @@
 
                         <div class="form-field">
                             <label>Password</label>
-                            <input type="password" name="password" placeholder="Password" required>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="Password"
+                                required
+                            >
                         </div>
 
                         <div class="form-field">
                             <label>Confirm Password</label>
-                            <input type="password" name="password_confirmation" placeholder="Confirm password" required>
+                            <input
+                                type="password"
+                                name="password_confirmation"
+                                placeholder="Confirm password"
+                                required
+                            >
                         </div>
 
                         <button type="submit" class="new-task-btn admin-create-btn">

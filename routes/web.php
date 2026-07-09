@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
+use App\Http\Controllers\Admin\AdminTaskController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PageController;
@@ -125,8 +126,26 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
 
         Route::delete('/users/{user}', [AdminUserController::class, 'destroy'])
             ->name('users.destroy');
-    });
-    
+        /*
+        * All Task Management Routes.
+        * Semua route ini hanya untuk admin.
+        */
+        Route::get('/tasks', [AdminTaskController::class, 'index'])
+            ->name('tasks.index');
+
+        Route::post('/tasks', [AdminTaskController::class, 'store'])
+            ->name('tasks.store');
+
+        Route::patch('/tasks/{task}', [AdminTaskController::class, 'update'])
+            ->name('tasks.update');
+
+        Route::patch('/tasks/{task}/complete', [AdminTaskController::class, 'complete'])
+            ->name('tasks.complete');
+
+        Route::delete('/tasks/{task}', [AdminTaskController::class, 'destroy'])
+            ->name('tasks.destroy');
+            });
+            
     /*
      * Logout is available for both admin and regular user.
      */
