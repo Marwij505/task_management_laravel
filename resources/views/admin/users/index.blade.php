@@ -51,11 +51,10 @@
                         <span>All Tasks</span>
                     </a>
 
-                    <!-- These modules will be connected in the next stages. -->
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Global Statistics">
+                    <a href="{{ route('admin.statistics.index') }}" class="menu-item">
                         <i class="fa-solid fa-chart-column"></i>
                         <span>Global Statistics</span>
-                    </button>
+                    </a>
 
                     <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Activity Logs">
                         <i class="fa-solid fa-clock-rotate-left"></i>

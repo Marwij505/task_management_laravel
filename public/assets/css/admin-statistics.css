@@ -1,0 +1,225 @@
+/*
+|--------------------------------------------------------------------------
+| Admin Global Statistics Page
+|--------------------------------------------------------------------------
+| Main layout still uses dashboard.css.
+| This file only adds statistics-specific styling.
+*/
+
+.admin-statistics-grid {
+    display: grid;
+    grid-template-columns: 1.35fr 1fr;
+    gap: 24px;
+}
+
+.stat-bar-list,
+.category-list,
+.top-user-list,
+.monthly-trend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.stat-bar-item {
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #ffffff;
+}
+
+.stat-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.stat-bar-header strong {
+    color: var(--text-dark);
+    font-size: 0.95rem;
+}
+
+.stat-track {
+    width: 100%;
+    height: 10px;
+    border-radius: 999px;
+    background: #e5eaf0;
+    overflow: hidden;
+}
+
+.stat-fill {
+    height: 100%;
+    border-radius: inherit;
+    background: var(--accent);
+}
+
+.stat-track.muted {
+    background: #eef2f7;
+}
+
+.stat-fill.muted {
+    background: var(--primary);
+}
+
+.stat-bar-item small {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.category-row,
+.top-user-row,
+.month-row {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 16px;
+    background: #ffffff;
+}
+
+.category-row {
+    display: grid;
+    grid-template-columns: 0.7fr 1.3fr;
+    gap: 16px;
+    align-items: center;
+}
+
+.category-row strong,
+.month-row strong {
+    display: block;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+}
+
+.category-row span,
+.month-bars span {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.category-progress {
+    display: grid;
+    grid-template-columns: 1fr 48px;
+    gap: 12px;
+    align-items: center;
+}
+
+.category-progress small {
+    color: var(--text-muted);
+    font-weight: 700;
+    text-align: right;
+}
+
+.deadline-risk-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.deadline-risk-grid div {
+    min-height: 110px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 18px;
+    background: #fbfcfd;
+}
+
+.deadline-risk-grid span {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    margin-bottom: 10px;
+}
+
+.deadline-risk-grid strong {
+    display: block;
+    font-size: 2rem;
+    color: var(--text-dark);
+}
+
+.top-user-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.top-user-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.top-user-main h4 {
+    color: var(--text-dark);
+    font-size: 1rem;
+    margin-bottom: 4px;
+}
+
+.top-user-main p {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+
+.top-user-meta {
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.top-user-meta strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 1.3rem;
+    margin-top: 8px;
+}
+
+.top-user-meta small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.month-bars {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.hidden-report {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+    .admin-statistics-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .category-row,
+    .top-user-row {
+        grid-template-columns: 1fr;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .category-progress {
+        grid-template-columns: 1fr;
+        width: 100%;
+    }
+
+    .category-progress small,
+    .top-user-meta {
+        text-align: left;
+    }
+
+    .deadline-risk-grid {
+        grid-template-columns: 1fr;
+    }
+}

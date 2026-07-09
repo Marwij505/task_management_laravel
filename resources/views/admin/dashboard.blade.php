@@ -50,10 +50,10 @@
                         <span>All Tasks</span>
                     </a>
 
-                    <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Global Statistics">
+                    <a href="{{ route('admin.statistics.index') }}" class="menu-item">
                         <i class="fa-solid fa-chart-column"></i>
                         <span>Global Statistics</span>
-                    </button>
+                    </a>
 
                     <button type="button" class="menu-item menu-button js-coming-soon" data-feature="Activity Logs">
                         <i class="fa-solid fa-clock-rotate-left"></i>
@@ -347,13 +347,13 @@
                             </div>
                         </a>
 
-                        <button type="button" class="admin-action-card js-coming-soon" data-feature="Global Statistics">
+                        <a href="{{ route('admin.statistics.index') }}" class="admin-action-card">
                             <i class="fa-solid fa-chart-column"></i>
                             <div>
                                 <strong>Global Statistics</strong>
                                 <span>View system-wide performance</span>
                             </div>
-                        </button>
+                        </a>
 
                         <button type="button" class="admin-action-card js-coming-soon" data-feature="Activity Logs">
                             <i class="fa-solid fa-clock-rotate-left"></i>
