@@ -179,6 +179,9 @@
                     </div>
                 </article>
             </section>
+
+            {{-- Footer Flowlist --}}
+            @include('partials.app-footer')
         </main>
     </div>
 

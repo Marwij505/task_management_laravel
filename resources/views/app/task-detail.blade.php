@@ -186,6 +186,9 @@
                     Update Task
                 </button>
             </div>
+
+            {{-- Footer Flowlist --}}
+            @include('partials.app-footer')
         </main>
     </div>
 

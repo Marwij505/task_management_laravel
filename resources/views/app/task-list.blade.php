@@ -152,6 +152,9 @@
                     Bisa lewat PHP, Flask/Jinja, atau JavaScript fetch API.
                 -->
             </section>
+
+            {{-- Footer Flowlist --}}
+            @include('partials.app-footer')
         </main>
     </div>
 

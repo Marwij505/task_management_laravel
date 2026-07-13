@@ -454,14 +454,17 @@
                 class="hidden-report"
                 readonly
             >Flowlist Global Statistics Summary
-Total Users: {{ $totalUsers }}
-Admins: {{ $totalAdmins }}
-Regular Users: {{ $totalRegularUsers }}
-Total Tasks: {{ $totalTasks }}
-Completed Tasks: {{ $completedTasks }}
-Completion Rate: {{ $completionRate }}%
-Overdue Tasks: {{ $statusBreakdown['overdue'] }}
-Due Today Tasks: {{ $statusBreakdown['due-today'] }}</textarea>
+                Total Users: {{ $totalUsers }}
+                Admins: {{ $totalAdmins }}
+                Regular Users: {{ $totalRegularUsers }}
+                Total Tasks: {{ $totalTasks }}
+                Completed Tasks: {{ $completedTasks }}
+                Completion Rate: {{ $completionRate }}%
+                Overdue Tasks: {{ $statusBreakdown['overdue'] }}
+                Due Today Tasks: {{ $statusBreakdown['due-today'] }}</textarea>
+
+                {{-- Footer Flowlist --}}
+                @include('partials.app-footer')
         </main>
     </div>
 

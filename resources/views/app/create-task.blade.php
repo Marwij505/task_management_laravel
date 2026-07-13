@@ -190,11 +190,14 @@
                     </div>
                 </form>
             </section>
+
+            {{-- Footer Flowlist --}}
+            @include('partials.app-footer')
         </main>
     </div>
 
     @include('partials.flowlist-routes')
-  <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
     <script src="{{ asset('assets/js/create-task.js') }}"></script>
 
 </body>
