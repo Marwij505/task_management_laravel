@@ -3,8 +3,16 @@
    Light / Dark / System
 ================================ */
 
-/* DARK THEME VARIABLES */
+/*
+|--------------------------------------------------------------------------
+| Dark Theme Color Tokens
+|--------------------------------------------------------------------------
+| Semua warna dark mode dipusatkan di sini agar mudah diubah.
+*/
+
 html[data-theme="dark"] {
+    color-scheme: dark;
+
     --primary: #020617;
     --primary-soft: #0f172a;
     --accent: #16d95f;
@@ -20,23 +28,57 @@ html[data-theme="dark"] {
     --input-bg: #1f2937;
 
     --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-}
 
-/* BASE */
-html[data-theme="dark"] body {
-    background: var(--bg-main);
-    color: var(--text-dark);
+    --dark-page-bg: #0f172a;
+    --dark-sidebar-bg: #020817;
+
+    --dark-surface-1: #111827;
+    --dark-surface-2: #172033;
+    --dark-surface-3: #1e293b;
+    --dark-surface-hover: #243147;
+
+    --dark-border: #29364c;
+    --dark-border-soft: rgba(148, 163, 184, 0.18);
+
+    --dark-text-primary: #f8fafc;
+    --dark-text-secondary: #d7deea;
+    --dark-text-muted: #94a3b8;
+    --dark-text-disabled: #64748b;
+
+    --dark-input-bg: #202c40;
+    --dark-input-hover: #26344a;
+
+    --dark-track: #334155;
+
+    --dark-green-soft: rgba(22, 217, 95, 0.16);
+    --dark-green-text: #5df291;
+
+    --dark-blue-soft: rgba(59, 130, 246, 0.18);
+    --dark-blue-text: #7fb2ff;
+
+    --dark-purple-soft: rgba(168, 85, 247, 0.18);
+    --dark-purple-text: #c99cff;
+
+    --dark-orange-soft: rgba(249, 115, 22, 0.18);
+    --dark-orange-text: #ffad72;
+
+    --dark-red-soft: rgba(239, 68, 68, 0.18);
+    --dark-red-text: #ff8888;
+
+    --dark-yellow-soft: rgba(245, 158, 11, 0.18);
+    --dark-yellow-text: #ffd270;
+
+    --dark-shadow:
+        0 18px 40px rgba(0, 0, 0, 0.24);
 }
 
 /* COMMON SURFACES */
 html[data-theme="dark"] .panel-card,
 html[data-theme="dark"] .form-card,
 html[data-theme="dark"] .task-card,
-html[data-theme="dark"] .stat-card,
 html[data-theme="dark"] .chart-card,
 html[data-theme="dark"] .detail-card,
 html[data-theme="dark"] .filter-section,
-html[data-theme="dark"] .calendar-card,
 html[data-theme="dark"] .calendar-section,
 html[data-theme="dark"] .statistics-message,
 html[data-theme="dark"] .profile-message {
@@ -45,17 +87,7 @@ html[data-theme="dark"] .profile-message {
     color: var(--text-dark);
 }
 
-/* SIDEBAR */
-html[data-theme="dark"] .sidebar {
-    background: #020617;
-}
-
 /* TEXT */
-html[data-theme="dark"] h1,
-html[data-theme="dark"] h2,
-html[data-theme="dark"] h3,
-html[data-theme="dark"] h4,
-html[data-theme="dark"] label,
 html[data-theme="dark"] .topbar-left h2,
 html[data-theme="dark"] .page-header h2,
 html[data-theme="dark"] .panel-header h3,
@@ -76,27 +108,6 @@ html[data-theme="dark"] .task-category,
 html[data-theme="dark"] .task-date,
 html[data-theme="dark"] .list-summary p {
     color: var(--text-muted);
-}
-
-/* INPUTS */
-html[data-theme="dark"] input,
-html[data-theme="dark"] textarea,
-html[data-theme="dark"] select {
-    background: #1f2937 !important;
-    color: var(--text-dark) !important;
-    border-color: var(--border) !important;
-}
-
-html[data-theme="dark"] input::placeholder,
-html[data-theme="dark"] textarea::placeholder {
-    color: #64748b;
-}
-
-html[data-theme="dark"] input:focus,
-html[data-theme="dark"] textarea:focus,
-html[data-theme="dark"] select:focus {
-    background: #111827 !important;
-    border-color: var(--accent) !important;
 }
 
 /* PROFILE TABS */
@@ -134,31 +145,12 @@ html[data-theme="dark"] .action-btn:hover {
     background: #1f2937;
 }
 
-/* TASK / TAGS */
-html[data-theme="dark"] .task-menu-dot,
-html[data-theme="dark"] .tag,
-html[data-theme="dark"] .task-tag {
-    background: #1f2937;
-    color: var(--text-dark);
-}
-
-html[data-theme="dark"] .task-tag.muted {
-    background: #253041;
-    color: var(--text-muted);
-}
-
 /* EMPTY / LOADING STATES */
-html[data-theme="dark"] .empty-state,
 html[data-theme="dark"] .calendar-state,
 html[data-theme="dark"] .task-grid:empty::before {
     background: #111827;
     border-color: #334155;
     color: var(--text-muted);
-}
-
-/* PROGRESS */
-html[data-theme="dark"] .progress-bar {
-    background: #334155;
 }
 
 /* SCROLLBAR */
@@ -657,26 +649,6 @@ summary:focus-visible {
 
 /*
 |--------------------------------------------------------------------------
-| Dark Theme Compatibility
-|--------------------------------------------------------------------------
-*/
-
-html[data-theme="dark"] .admin-log-filter,
-html[data-theme="dark"] .admin-log-json {
-    background: rgba(255, 255, 255, 0.035);
-}
-
-html[data-theme="dark"] .stat-card:hover,
-html[data-theme="dark"] .task-item:hover,
-html[data-theme="dark"] .admin-user-row:hover,
-html[data-theme="dark"] .admin-task-row:hover,
-html[data-theme="dark"] .admin-log-row:hover,
-html[data-theme="dark"] .admin-action-card:hover {
-    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
-}
-
-/*
-|--------------------------------------------------------------------------
 | Responsive Motion Adjustment
 |--------------------------------------------------------------------------
 */
@@ -728,4 +700,743 @@ html[data-theme="dark"] .admin-action-card:hover {
         opacity: 1;
         transform: none;
     }
+}
+
+/*
+|--------------------------------------------------------------------------
+| FLOWLIST DARK THEME COMPLETE FIX
+|--------------------------------------------------------------------------
+| Patch ini memperbaiki komponen user dan admin yang masih memakai
+| background putih ketika dark mode aktif.
+|
+| Area yang diperbaiki:
+| 1. Dashboard user dan admin
+| 2. Task cards
+| 3. Calendar
+| 4. User Management
+| 5. All Task Management
+| 6. Global Statistics
+| 7. Activity Logs
+| 8. Form, input, button, badge, dan progress bar
+|--------------------------------------------------------------------------
+*/
+
+/*
+|--------------------------------------------------------------------------
+| Main Page Background
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"],
+html[data-theme="dark"] body {
+    background: var(--dark-page-bg);
+    color: var(--dark-text-primary);
+}
+
+html[data-theme="dark"] .dashboard-container,
+html[data-theme="dark"] .admin-dashboard-container,
+html[data-theme="dark"] .main-content {
+    background: var(--dark-page-bg);
+    color: var(--dark-text-primary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Sidebar
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .sidebar {
+    background: var(--dark-sidebar-bg);
+    border-right-color: var(--dark-border-soft);
+}
+
+html[data-theme="dark"] .brand h1,
+html[data-theme="dark"] .menu-item,
+html[data-theme="dark"] .logout-btn {
+    color: var(--dark-text-primary);
+}
+
+html[data-theme="dark"] .menu-item:hover,
+html[data-theme="dark"] .logout-btn:hover {
+    background: rgba(255, 255, 255, 0.055);
+}
+
+html[data-theme="dark"] .menu-item.active {
+    background: var(--accent);
+    color: #ffffff;
+}
+
+html[data-theme="dark"] .menu-item.active i {
+    color: #ffffff;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Main Card Surfaces
+|--------------------------------------------------------------------------
+| Mengubah seluruh card putih menjadi surface dark.
+*/
+
+html[data-theme="dark"] .stat-card,
+html[data-theme="dark"] .recent-tasks-card,
+html[data-theme="dark"] .deadlines-card,
+html[data-theme="dark"] .task-item,
+html[data-theme="dark"] .deadline-item,
+html[data-theme="dark"] .admin-profile-card,
+html[data-theme="dark"] .admin-progress-box,
+html[data-theme="dark"] .admin-activity-box,
+html[data-theme="dark"] .admin-action-card,
+html[data-theme="dark"] .admin-user-row,
+html[data-theme="dark"] .admin-user-item,
+html[data-theme="dark"] .admin-task-row,
+html[data-theme="dark"] .admin-log-row,
+html[data-theme="dark"] .admin-user-panel,
+html[data-theme="dark"] .admin-task-panel,
+html[data-theme="dark"] .admin-log-json,
+html[data-theme="dark"] .stat-bar-item,
+html[data-theme="dark"] .category-row,
+html[data-theme="dark"] .top-user-row,
+html[data-theme="dark"] .month-row,
+html[data-theme="dark"] .deadline-risk-grid > div {
+    background: var(--dark-surface-1) !important;
+    border-color: var(--dark-border) !important;
+    color: var(--dark-text-primary) !important;
+}
+
+/*
+ * Card tingkat kedua memakai warna sedikit lebih terang.
+ */
+html[data-theme="dark"] .admin-progress-box,
+html[data-theme="dark"] .admin-user-panel,
+html[data-theme="dark"] .admin-task-panel,
+html[data-theme="dark"] .admin-log-json,
+html[data-theme="dark"] .deadline-risk-grid > div {
+    background: var(--dark-surface-2) !important;
+}
+
+/*
+ * Hover card.
+ */
+html[data-theme="dark"] .stat-card:hover,
+html[data-theme="dark"] .task-item:hover,
+html[data-theme="dark"] .admin-user-row:hover,
+html[data-theme="dark"] .admin-task-row:hover,
+html[data-theme="dark"] .admin-log-row:hover,
+html[data-theme="dark"] .admin-action-card:hover {
+    background: var(--dark-surface-hover) !important;
+    border-color: rgba(22, 217, 95, 0.32) !important;
+    box-shadow: var(--dark-shadow);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Headings and Text
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] h1,
+html[data-theme="dark"] h2,
+html[data-theme="dark"] h3,
+html[data-theme="dark"] h4,
+html[data-theme="dark"] h5,
+html[data-theme="dark"] h6,
+html[data-theme="dark"] strong {
+    color: var(--dark-text-primary);
+}
+
+html[data-theme="dark"] p,
+html[data-theme="dark"] span,
+html[data-theme="dark"] small,
+html[data-theme="dark"] label {
+    color: var(--dark-text-secondary);
+}
+
+html[data-theme="dark"] .topbar-left p,
+html[data-theme="dark"] .section-header p,
+html[data-theme="dark"] .task-date,
+html[data-theme="dark"] .task-date span,
+html[data-theme="dark"] .task-progress span,
+html[data-theme="dark"] .progress-header span,
+html[data-theme="dark"] .admin-task-meta,
+html[data-theme="dark"] .admin-task-meta span,
+html[data-theme="dark"] .admin-user-main p,
+html[data-theme="dark"] .admin-log-header p,
+html[data-theme="dark"] .admin-log-time,
+html[data-theme="dark"] .stat-bar-item small,
+html[data-theme="dark"] .category-row span,
+html[data-theme="dark"] .top-user-row p,
+html[data-theme="dark"] .top-user-row small,
+html[data-theme="dark"] .month-row span {
+    color: var(--dark-text-muted) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dashboard Task Cards
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .task-list .task-item,
+html[data-theme="dark"] .recent-tasks-card .task-item,
+html[data-theme="dark"] .upcoming-list > div {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .task-top h4,
+html[data-theme="dark"] .task-item h4,
+html[data-theme="dark"] .deadline-item h4 {
+    color: var(--dark-text-primary) !important;
+}
+
+/*
+ * Tombol besar yang sebelumnya putih.
+ */
+html[data-theme="dark"] .view-all-btn,
+html[data-theme="dark"] .view-calendar-btn,
+html[data-theme="dark"] .task-list-button,
+html[data-theme="dark"] .calendar-view-button {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .view-all-btn:hover,
+html[data-theme="dark"] .view-calendar-btn:hover,
+html[data-theme="dark"] .task-list-button:hover,
+html[data-theme="dark"] .calendar-view-button:hover {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+    border-color: var(--accent) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Forms and Inputs
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] input,
+html[data-theme="dark"] select,
+html[data-theme="dark"] textarea {
+    background: var(--dark-input-bg) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] input:hover,
+html[data-theme="dark"] select:hover,
+html[data-theme="dark"] textarea:hover {
+    background: var(--dark-input-hover) !important;
+    border-color: rgba(22, 217, 95, 0.5) !important;
+}
+
+html[data-theme="dark"] input:focus,
+html[data-theme="dark"] select:focus,
+html[data-theme="dark"] textarea:focus {
+    background: var(--dark-input-hover) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 0 0 4px rgba(22, 217, 95, 0.12) !important;
+}
+
+html[data-theme="dark"] input::placeholder,
+html[data-theme="dark"] textarea::placeholder {
+    color: var(--dark-text-disabled) !important;
+    opacity: 1;
+}
+
+html[data-theme="dark"] option {
+    background: var(--dark-surface-2);
+    color: var(--dark-text-primary);
+}
+
+/*
+ * Membuat icon kalender browser terlihat di dark mode.
+ */
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    opacity: 0.8;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Filter Containers
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .admin-filter-form,
+html[data-theme="dark"] .admin-task-filter,
+html[data-theme="dark"] .admin-log-filter {
+    background: var(--dark-surface-2) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Buttons
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .admin-secondary-btn,
+html[data-theme="dark"] .admin-link-btn,
+html[data-theme="dark"] summary,
+html[data-theme="dark"] .admin-user-details summary,
+html[data-theme="dark"] .admin-task-details summary,
+html[data-theme="dark"] .admin-log-details summary {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .admin-secondary-btn:hover,
+html[data-theme="dark"] .admin-link-btn:hover,
+html[data-theme="dark"] summary:hover {
+    background: var(--dark-surface-hover) !important;
+    border-color: var(--accent) !important;
+    color: var(--dark-green-text) !important;
+}
+
+html[data-theme="dark"] .new-task-btn,
+html[data-theme="dark"] .admin-primary-btn {
+    background: var(--accent);
+    color: #ffffff !important;
+}
+
+html[data-theme="dark"] .new-task-btn span,
+html[data-theme="dark"] .admin-primary-btn span {
+    color: #ffffff !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Progress Bars
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .progress-bar,
+html[data-theme="dark"] .stat-track {
+    background: var(--dark-track) !important;
+}
+
+html[data-theme="dark"] .progress-fill,
+html[data-theme="dark"] .stat-fill {
+    background: var(--accent);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Calendar Dark Mode
+|--------------------------------------------------------------------------
+| Beberapa kemungkinan class calendar disertakan agar patch tetap bekerja
+| meskipun nama class pada halaman calendar berbeda.
+*/
+
+html[data-theme="dark"] .calendar-container,
+html[data-theme="dark"] .calendar-card,
+html[data-theme="dark"] .calendar-wrapper,
+html[data-theme="dark"] .calendar-content {
+    background: var(--dark-surface-1) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .calendar-day,
+html[data-theme="dark"] .calendar-cell,
+html[data-theme="dark"] .calendar-day-cell,
+html[data-theme="dark"] .day-cell,
+html[data-theme="dark"] .calendar-grid > div {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .calendar-day:hover,
+html[data-theme="dark"] .calendar-cell:hover,
+html[data-theme="dark"] .calendar-day-cell:hover,
+html[data-theme="dark"] .day-cell:hover {
+    background: var(--dark-surface-hover) !important;
+    border-color: rgba(22, 217, 95, 0.55) !important;
+}
+
+html[data-theme="dark"] .calendar-day.today,
+html[data-theme="dark"] .calendar-cell.today,
+html[data-theme="dark"] .calendar-day-cell.today,
+html[data-theme="dark"] .day-cell.today {
+    background: var(--dark-green-soft) !important;
+    border-color: var(--accent) !important;
+}
+
+html[data-theme="dark"] .calendar-day.today *,
+html[data-theme="dark"] .calendar-cell.today *,
+html[data-theme="dark"] .calendar-day-cell.today *,
+html[data-theme="dark"] .day-cell.today * {
+    color: var(--dark-green-text) !important;
+}
+
+html[data-theme="dark"] .calendar-day.other-month,
+html[data-theme="dark"] .calendar-cell.other-month,
+html[data-theme="dark"] .calendar-day-cell.other-month,
+html[data-theme="dark"] .day-cell.other-month {
+    opacity: 0.42;
+}
+
+html[data-theme="dark"] .calendar-navigation button,
+html[data-theme="dark"] .calendar-controls button,
+html[data-theme="dark"] .calendar-header button {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-primary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .calendar-navigation button:hover,
+html[data-theme="dark"] .calendar-controls button:hover,
+html[data-theme="dark"] .calendar-header button:hover {
+    background: var(--accent) !important;
+    color: #ffffff !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| User Management
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .admin-user-summary h4,
+html[data-theme="dark"] .admin-user-main h4 {
+    color: var(--dark-text-primary) !important;
+}
+
+html[data-theme="dark"] .admin-user-avatar {
+    background: var(--dark-green-soft) !important;
+    color: var(--dark-green-text) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| All Task Management
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .admin-task-row h4 {
+    color: var(--dark-text-primary) !important;
+}
+
+html[data-theme="dark"] .admin-tag-list span {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-muted) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Global Statistics
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .stat-bar-header strong,
+html[data-theme="dark"] .category-row strong,
+html[data-theme="dark"] .top-user-row h4,
+html[data-theme="dark"] .top-user-meta strong,
+html[data-theme="dark"] .month-row strong {
+    color: var(--dark-text-primary) !important;
+}
+
+html[data-theme="dark"] .category-progress,
+html[data-theme="dark"] .month-bars {
+    color: var(--dark-text-secondary);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Activity Logs
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .admin-log-header h4 {
+    color: var(--dark-text-primary) !important;
+}
+
+html[data-theme="dark"] .admin-log-json pre {
+    background: #020617 !important;
+    color: #dbeafe !important;
+    border: 1px solid var(--dark-border);
+}
+
+html[data-theme="dark"] .admin-log-json p {
+    color: var(--dark-text-muted) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dark Badge Colors
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .badge.status.pending {
+    background: var(--dark-orange-soft) !important;
+    color: var(--dark-orange-text) !important;
+}
+
+html[data-theme="dark"] .badge.status.progress,
+html[data-theme="dark"] .badge.status.in-progress {
+    background: var(--dark-blue-soft) !important;
+    color: var(--dark-blue-text) !important;
+}
+
+html[data-theme="dark"] .badge.status.completed {
+    background: var(--dark-green-soft) !important;
+    color: var(--dark-green-text) !important;
+}
+
+html[data-theme="dark"] .badge.status.due-today {
+    background: var(--dark-yellow-soft) !important;
+    color: var(--dark-yellow-text) !important;
+}
+
+html[data-theme="dark"] .badge.status.overdue {
+    background: var(--dark-red-soft) !important;
+    color: var(--dark-red-text) !important;
+}
+
+html[data-theme="dark"] .badge.priority.high {
+    background: var(--dark-red-soft) !important;
+    color: var(--dark-red-text) !important;
+}
+
+html[data-theme="dark"] .badge.priority.medium {
+    background: var(--dark-yellow-soft) !important;
+    color: var(--dark-yellow-text) !important;
+}
+
+html[data-theme="dark"] .badge.priority.low {
+    background: var(--dark-green-soft) !important;
+    color: var(--dark-green-text) !important;
+}
+
+html[data-theme="dark"] .role-badge.admin {
+    background: var(--dark-purple-soft) !important;
+    color: var(--dark-purple-text) !important;
+}
+
+html[data-theme="dark"] .role-badge.user {
+    background: var(--dark-green-soft) !important;
+    color: var(--dark-green-text) !important;
+}
+
+html[data-theme="dark"] .log-badge.module {
+    background: var(--dark-blue-soft) !important;
+    color: var(--dark-blue-text) !important;
+}
+
+html[data-theme="dark"] .log-badge.action {
+    background: var(--dark-green-soft) !important;
+    color: var(--dark-green-text) !important;
+}
+
+html[data-theme="dark"] .log-badge.target {
+    background: var(--dark-purple-soft) !important;
+    color: var(--dark-purple-text) !important;
+}
+
+html[data-theme="dark"] .log-badge.ip {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-muted) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Empty State, Pagination, Alert
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .empty-state {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-muted) !important;
+    border-color: var(--dark-border) !important;
+}
+
+html[data-theme="dark"] .admin-pagination span,
+html[data-theme="dark"] .admin-pagination strong {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-secondary) !important;
+}
+
+html[data-theme="dark"] .admin-alert.success {
+    background: var(--dark-green-soft) !important;
+    color: var(--dark-green-text) !important;
+    border-color: rgba(22, 217, 95, 0.28) !important;
+}
+
+html[data-theme="dark"] .admin-alert.error {
+    background: var(--dark-red-soft) !important;
+    color: var(--dark-red-text) !important;
+    border-color: rgba(239, 68, 68, 0.28) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Horizontal Separators
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] hr,
+html[data-theme="dark"] .admin-mini-list > div,
+html[data-theme="dark"] .admin-pagination,
+html[data-theme="dark"] .admin-task-meta,
+html[data-theme="dark"] .admin-log-details {
+    border-color: var(--dark-border-soft) !important;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Selection
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] ::selection {
+    background: rgba(22, 217, 95, 0.32);
+    color: #ffffff;
+}
+
+/*
+|--------------------------------------------------------------------------
+| DARK MODE FIX: CATEGORY AND TAGS
+|--------------------------------------------------------------------------
+| Memperbaiki:
+| 1. Category badge pada Task Detail.
+| 2. Tag pada Task Detail.
+| 3. Tag pada Task List.
+| 4. Tombol/menu kecil pada task card.
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * Category pada Task Detail dibuat oleh task-detail.js
+ * menggunakan class "badge category".
+ */
+html[data-theme="dark"] .badge.category,
+html[data-theme="dark"] .badge.category-default {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-secondary) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+/*
+ * Tag pada Task Detail menggunakan class "tag".
+ * Tag pada Task List menggunakan class "task-tag".
+ */
+html[data-theme="dark"] .tag,
+html[data-theme="dark"] .task-tag {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-primary) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+/*
+ * Tag tambahan seperti "+2" tetap dibuat sedikit lebih redup.
+ */
+html[data-theme="dark"] .task-tag.muted {
+    background: var(--dark-surface-2) !important;
+    color: var(--dark-text-muted) !important;
+    border-color: var(--dark-border-soft) !important;
+}
+
+/*
+ * Icon kecil atau menu task mengikuti dark surface.
+ */
+html[data-theme="dark"] .task-menu-dot {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-secondary) !important;
+    border-color: var(--dark-border) !important;
+}
+
+/*
+ * Hover category dan tag.
+ */
+html[data-theme="dark"] .badge.category:hover,
+html[data-theme="dark"] .badge.category-default:hover,
+html[data-theme="dark"] .tag:hover,
+html[data-theme="dark"] .task-tag:hover {
+    background: var(--dark-surface-hover) !important;
+    color: var(--dark-green-text) !important;
+    border-color: rgba(22, 217, 95, 0.45) !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| DARK MODE FIX: CALENDAR TASK ITEMS
+|--------------------------------------------------------------------------
+| Calendar cell sudah menggunakan dark surface.
+| Blok ini khusus memperbaiki task kecil yang masih berwarna putih.
+|--------------------------------------------------------------------------
+*/
+
+/*
+ * Task di dalam kalender menggunakan class "calendar-task".
+ */
+html[data-theme="dark"] .calendar-task {
+    background: var(--dark-surface-3) !important;
+    color: var(--dark-text-primary) !important;
+    border: 1px solid var(--dark-border) !important;
+}
+
+/*
+ * Teks task harus tetap memiliki kontras yang jelas.
+ */
+html[data-theme="dark"] .calendar-task .task-text {
+    color: var(--dark-text-primary) !important;
+}
+
+/*
+ * Hover task kalender.
+ */
+html[data-theme="dark"] .calendar-task:hover {
+    background: var(--dark-surface-hover) !important;
+    border-color: rgba(22, 217, 95, 0.45) !important;
+}
+
+/*
+ * Task completed memakai warna hijau gelap.
+ */
+html[data-theme="dark"] .calendar-task.completed {
+    background: var(--dark-green-soft) !important;
+    border-color: rgba(22, 217, 95, 0.3) !important;
+    opacity: 0.82;
+}
+
+html[data-theme="dark"] .calendar-task.completed .task-text {
+    color: var(--dark-green-text) !important;
+}
+
+/*
+ * Task overdue memakai warna merah gelap.
+ */
+html[data-theme="dark"] .calendar-task.overdue {
+    background: var(--dark-red-soft) !important;
+    border-color: rgba(239, 68, 68, 0.3) !important;
+}
+
+html[data-theme="dark"] .calendar-task.overdue .task-text {
+    color: var(--dark-red-text) !important;
+}
+
+/*
+ * Task due today memakai warna kuning gelap.
+ */
+html[data-theme="dark"] .calendar-task.due-today {
+    background: var(--dark-yellow-soft) !important;
+    border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+html[data-theme="dark"] .calendar-task.due-today .task-text {
+    color: var(--dark-yellow-text) !important;
+}
+
+/*
+ * Jumlah task tambahan di kalender.
+ */
+html[data-theme="dark"] .more-task-count {
+    color: var(--dark-text-muted) !important;
 }
