@@ -13,7 +13,7 @@ use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Middleware\EnsureLoginSessionStillValid;
 use App\Http\Middleware\EnsureUserIsAdmin;
-use App\Http\Middleware\EnsureUserIsRegularUser;
+use App\Http\Middleware\EnsureUserCanAccessUserPage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -66,7 +66,7 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
     |--------------------------------------------------------------------------
     | Only users with role "user" can access these pages and APIs.
     */
-    Route::middleware(EnsureUserIsRegularUser::class)->group(function () {
+    Route::middleware(EnsureUserCanAccessUserPage::class)->group(function () {
         Route::get('/dashboard', [PageController::class, 'dashboard'])->name('dashboard');
         Route::get('/tasks', [PageController::class, 'taskList'])->name('tasks.index');
         Route::get('/tasks/create', [PageController::class, 'createTask'])->name('tasks.create');

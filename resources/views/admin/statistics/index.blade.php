@@ -75,6 +75,11 @@
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
                     </a>
+
+                    <a href="{{ route('dashboard') }}" class="menu-item">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User Page</span>
+                    </a>
                 </nav>
             </div>
 

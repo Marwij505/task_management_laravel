@@ -71,14 +71,14 @@
                         <span>Global Statistics</span>
                     </a>
 
-                    <!--
-                        Babak 7:
-                        Activity Logs is now an active route.
-                        It is no longer a coming-soon button.
-                    -->
                     <a href="{{ route('admin.logs.index') }}" class="menu-item">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
+                    </a>
+
+                    <a href="{{ route('dashboard') }}" class="menu-item">
+                        <i class="fa-solid fa-user"></i>
+                        <span>User Page</span>
                     </a>
                 </nav>
             </div>

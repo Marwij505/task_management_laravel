@@ -57,6 +57,13 @@
             <i class="fa-regular fa-user"></i>
             <span>Profile</span>
           </a>
+
+          @if(auth()->user()?->isAdmin())
+            <a href="{{ route('admin.dashboard') }}" class="menu-item admin-return-menu">
+              <i class="fa-solid fa-shield-halved"></i>
+                <span>Admin Page</span>
+            </a>
+          @endif
         </nav>
       </div>
 
