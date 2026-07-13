@@ -173,3 +173,559 @@ html[data-theme="dark"] ::-webkit-scrollbar-thumb {
 html[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
     background: #475569;
 }
+
+/*
+|--------------------------------------------------------------------------
+| FLOWLIST UI ENHANCEMENTS
+|--------------------------------------------------------------------------
+| Digunakan oleh halaman user dan admin.
+|
+| Fitur:
+| 1. Animasi masuk halaman.
+| 2. Animasi card dan list.
+| 3. Transisi tombol, sidebar, input, dan details.
+| 4. Loading state pada form.
+| 5. Efek ripple saat tombol diklik.
+| 6. Smooth scrolling.
+| 7. Dukungan reduced motion.
+|--------------------------------------------------------------------------
+*/
+
+:root {
+    /*
+     * Durasi animasi dibuat singkat agar aplikasi tetap terasa cepat.
+     */
+    --ui-duration-fast: 160ms;
+    --ui-duration-normal: 280ms;
+    --ui-duration-slow: 460ms;
+
+    /*
+     * Easing ini menghasilkan gerakan yang halus.
+     */
+    --ui-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+    --ui-ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    /*
+     * Shadow tambahan untuk hover.
+     */
+    --ui-shadow-hover: 0 18px 38px rgba(15, 35, 50, 0.11);
+    --ui-shadow-button: 0 10px 26px rgba(16, 210, 79, 0.22);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Smooth Scrolling
+|--------------------------------------------------------------------------
+| Berlaku untuk navigasi anchor seperti Create User dan Create Task.
+*/
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 24px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Page Entry Animation
+|--------------------------------------------------------------------------
+| Class ui-motion-ready ditambahkan oleh preferences.js.
+| Animasi hanya berjalan setelah JavaScript berhasil dimuat.
+*/
+
+body.ui-motion-ready .main-content {
+    animation: uiPageEnter var(--ui-duration-slow) var(--ui-ease-standard) both;
+}
+
+@keyframes uiPageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Reveal Animation
+|--------------------------------------------------------------------------
+| JavaScript menambahkan class ui-reveal dan is-visible.
+| Elemen muncul ketika masuk ke viewport.
+*/
+
+body.ui-motion-ready .ui-reveal {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+    transition:
+        opacity var(--ui-duration-slow) var(--ui-ease-standard),
+        transform var(--ui-duration-slow) var(--ui-ease-standard);
+
+    /*
+     * Setiap elemen dapat memiliki delay berbeda.
+     */
+    transition-delay: var(--ui-reveal-delay, 0ms);
+}
+
+body.ui-motion-ready .ui-reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Card Transitions
+|--------------------------------------------------------------------------
+| Berlaku pada halaman user dan admin.
+*/
+
+.stat-card,
+.recent-tasks-card,
+.deadlines-card,
+.task-item,
+.admin-user-row,
+.admin-task-row,
+.admin-log-row,
+.admin-action-card,
+.admin-profile-card,
+.admin-progress-box,
+.admin-activity-box {
+    transition:
+        transform var(--ui-duration-normal) var(--ui-ease-standard),
+        box-shadow var(--ui-duration-normal) var(--ui-ease-standard),
+        border-color var(--ui-duration-normal) ease,
+        background-color var(--ui-duration-normal) ease;
+}
+
+.stat-card:hover,
+.task-item:hover,
+.admin-user-row:hover,
+.admin-task-row:hover,
+.admin-log-row:hover,
+.admin-action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ui-shadow-hover);
+}
+
+/*
+ * Card besar hanya bergerak sedikit.
+ * Ini menjaga layout agar tidak terasa berlebihan.
+ */
+.recent-tasks-card:hover,
+.deadlines-card:hover {
+    transform: translateY(-2px);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Sidebar Menu Transitions
+|--------------------------------------------------------------------------
+*/
+
+.menu-item,
+.logout-btn {
+    position: relative;
+    overflow: hidden;
+    transition:
+        color var(--ui-duration-fast) ease,
+        background-color var(--ui-duration-fast) ease,
+        transform var(--ui-duration-fast) var(--ui-ease-standard),
+        box-shadow var(--ui-duration-fast) ease;
+}
+
+.menu-item:hover,
+.logout-btn:hover {
+    transform: translateX(4px);
+}
+
+.menu-item:active,
+.logout-btn:active {
+    transform: translateX(2px) scale(0.985);
+}
+
+/*
+ * Icon sidebar ikut bergerak secara halus.
+ */
+.menu-item i,
+.logout-btn i {
+    transition:
+        transform var(--ui-duration-normal) var(--ui-ease-bounce),
+        color var(--ui-duration-fast) ease;
+}
+
+.menu-item:hover i,
+.logout-btn:hover i {
+    transform: scale(1.12);
+}
+
+.menu-item.active i {
+    animation: uiActiveIcon 420ms var(--ui-ease-bounce);
+}
+
+@keyframes uiActiveIcon {
+    0% {
+        transform: scale(0.85);
+    }
+
+    60% {
+        transform: scale(1.18);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Button Transitions
+|--------------------------------------------------------------------------
+*/
+
+button,
+.new-task-btn,
+.admin-primary-btn,
+.admin-secondary-btn,
+.admin-danger-btn,
+.admin-link-btn,
+.admin-small-btn {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transition:
+        transform var(--ui-duration-fast) var(--ui-ease-standard),
+        box-shadow var(--ui-duration-fast) ease,
+        filter var(--ui-duration-fast) ease,
+        background-color var(--ui-duration-fast) ease,
+        border-color var(--ui-duration-fast) ease,
+        color var(--ui-duration-fast) ease;
+}
+
+button:not(:disabled):hover,
+.new-task-btn:hover,
+.admin-primary-btn:hover,
+.admin-secondary-btn:hover,
+.admin-danger-btn:hover,
+.admin-link-btn:hover,
+.admin-small-btn:hover {
+    transform: translateY(-2px);
+}
+
+.new-task-btn:hover,
+.admin-primary-btn:hover {
+    box-shadow: var(--ui-shadow-button);
+}
+
+button:not(:disabled):active,
+.new-task-btn:active,
+.admin-primary-btn:active,
+.admin-secondary-btn:active,
+.admin-danger-btn:active,
+.admin-link-btn:active,
+.admin-small-btn:active {
+    transform: translateY(0) scale(0.975);
+}
+
+button:disabled {
+    cursor: not-allowed;
+    opacity: 0.65;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Ripple Effect
+|--------------------------------------------------------------------------
+| Elemen ripple dibuat oleh JavaScript saat tombol ditekan.
+*/
+
+.ui-ripple {
+    position: absolute;
+    z-index: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.42);
+    transform: translate(-50%, -50%) scale(0);
+    animation: uiRippleAnimation 620ms ease-out forwards;
+}
+
+/*
+ * Pastikan isi tombol tetap berada di atas ripple.
+ */
+button > *:not(.ui-ripple),
+.new-task-btn > *:not(.ui-ripple),
+.admin-primary-btn > *:not(.ui-ripple),
+.admin-secondary-btn > *:not(.ui-ripple),
+.admin-danger-btn > *:not(.ui-ripple),
+.admin-link-btn > *:not(.ui-ripple),
+.menu-item > *:not(.ui-ripple),
+.logout-btn > *:not(.ui-ripple) {
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes uiRippleAnimation {
+    from {
+        opacity: 0.8;
+        transform: translate(-50%, -50%) scale(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(22);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Form Input Transitions
+|--------------------------------------------------------------------------
+*/
+
+input,
+select,
+textarea {
+    transition:
+        border-color var(--ui-duration-fast) ease,
+        box-shadow var(--ui-duration-fast) ease,
+        background-color var(--ui-duration-fast) ease,
+        transform var(--ui-duration-fast) ease;
+}
+
+input:hover,
+select:hover,
+textarea:hover {
+    border-color: rgba(22, 217, 95, 0.5);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    transform: translateY(-1px);
+    outline: none;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Details and Manage Panel Animation
+|--------------------------------------------------------------------------
+*/
+
+details > summary {
+    transition:
+        color var(--ui-duration-fast) ease,
+        background-color var(--ui-duration-fast) ease,
+        border-color var(--ui-duration-fast) ease,
+        transform var(--ui-duration-fast) ease;
+}
+
+details > summary:hover {
+    transform: translateY(-1px);
+}
+
+details[open] > summary {
+    margin-bottom: 12px;
+}
+
+details[open] > :not(summary) {
+    animation: uiDetailsOpen var(--ui-duration-normal) var(--ui-ease-standard);
+    transform-origin: top;
+}
+
+@keyframes uiDetailsOpen {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scaleY(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Badge Animation
+|--------------------------------------------------------------------------
+*/
+
+.badge,
+.role-badge,
+.log-badge {
+    transition:
+        transform var(--ui-duration-fast) var(--ui-ease-standard),
+        filter var(--ui-duration-fast) ease;
+}
+
+.badge:hover,
+.role-badge:hover,
+.log-badge:hover {
+    transform: translateY(-1px) scale(1.03);
+    filter: brightness(0.98);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Progress Bar Animation
+|--------------------------------------------------------------------------
+*/
+
+.progress-fill,
+.stat-fill {
+    transition:
+        width 650ms var(--ui-ease-standard),
+        filter var(--ui-duration-fast) ease;
+}
+
+.progress-bar:hover .progress-fill,
+.stat-track:hover .stat-fill {
+    filter: brightness(1.06);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Form Loading State
+|--------------------------------------------------------------------------
+| Class ui-busy ditambahkan ketika form dikirim.
+*/
+
+form.ui-busy {
+    position: relative;
+}
+
+/*
+ * Tombol submit menampilkan indikator loading.
+ */
+form.ui-busy button[type="submit"],
+form.ui-busy input[type="submit"] {
+    pointer-events: none;
+    opacity: 0.78;
+}
+
+form.ui-busy button[type="submit"]::after,
+form.ui-busy input[type="submit"]::after {
+    content: "";
+    width: 15px;
+    height: 15px;
+    margin-left: 9px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: middle;
+    animation: uiLoadingSpin 680ms linear infinite;
+}
+
+@keyframes uiLoadingSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Page Leaving State
+|--------------------------------------------------------------------------
+| Digunakan ketika browser mulai berpindah halaman.
+*/
+
+body.ui-page-leaving .main-content {
+    opacity: 0.985;
+    transition: opacity 120ms ease;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Focus Accessibility
+|--------------------------------------------------------------------------
+| Fokus keyboard tetap jelas.
+*/
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+    outline: 3px solid rgba(22, 217, 95, 0.28);
+    outline-offset: 3px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dark Theme Compatibility
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .admin-log-filter,
+html[data-theme="dark"] .admin-log-json {
+    background: rgba(255, 255, 255, 0.035);
+}
+
+html[data-theme="dark"] .stat-card:hover,
+html[data-theme="dark"] .task-item:hover,
+html[data-theme="dark"] .admin-user-row:hover,
+html[data-theme="dark"] .admin-task-row:hover,
+html[data-theme="dark"] .admin-log-row:hover,
+html[data-theme="dark"] .admin-action-card:hover {
+    box-shadow: 0 18px 38px rgba(0, 0, 0, 0.28);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Responsive Motion Adjustment
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 768px) {
+    /*
+     * Gerakan diperkecil pada layar smartphone.
+     */
+    .stat-card:hover,
+    .task-item:hover,
+    .admin-user-row:hover,
+    .admin-task-row:hover,
+    .admin-log-row:hover,
+    .admin-action-card:hover,
+    .recent-tasks-card:hover,
+    .deadlines-card:hover {
+        transform: translateY(-2px);
+    }
+
+    .menu-item:hover,
+    .logout-btn:hover {
+        transform: translateX(2px);
+    }
+}
+
+/*
+|--------------------------------------------------------------------------
+| Reduced Motion Accessibility
+|--------------------------------------------------------------------------
+| Animasi dinonaktifkan ketika user memilih reduced motion
+| pada pengaturan sistem operasi.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    body.ui-motion-ready .ui-reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
