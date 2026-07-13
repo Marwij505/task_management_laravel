@@ -9,31 +9,47 @@
 
     <title>Flowlist Admin Dashboard</title>
 
-    <!-- Reuse the regular user dashboard style as the main design base. -->
+    <!--
+        Reuse the regular user dashboard styles.
+        This keeps the admin and regular user interfaces consistent.
+    -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
 
-    <!-- Admin-specific adjustment only. -->
+    <!-- Admin-specific visual adjustments. -->
     <link rel="stylesheet" href="{{ asset('assets/css/admin-dashboard.css') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 </head>
 
 <body>
     <div class="dashboard-container admin-dashboard-container">
-        <!-- Admin Sidebar -->
+        <!-- =========================================================
+             ADMIN SIDEBAR
+             ========================================================= -->
         <aside class="sidebar">
             <div class="sidebar-top">
+                <!-- Flowlist Brand -->
                 <div class="brand">
                     <div class="brand-logo">
                         <i class="fa-solid fa-table-cells-large"></i>
                     </div>
+
                     <h1>Flowlist</h1>
                 </div>
 
+                <!-- Admin Navigation -->
                 <nav class="sidebar-menu">
                     <a href="{{ route('admin.dashboard') }}" class="menu-item active">
                         <i class="fa-solid fa-table-columns"></i>
@@ -55,6 +71,11 @@
                         <span>Global Statistics</span>
                     </a>
 
+                    <!--
+                        Babak 7:
+                        Activity Logs is now an active route.
+                        It is no longer a coming-soon button.
+                    -->
                     <a href="{{ route('admin.logs.index') }}" class="menu-item">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
@@ -62,21 +83,33 @@
                 </nav>
             </div>
 
+            <!-- Logout -->
             <div class="sidebar-bottom">
-                <form id="logoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">
+                <form
+                    id="logoutForm"
+                    method="POST"
+                    action="{{ route('logout') }}"
+                    style="display:none;"
+                >
                     @csrf
                 </form>
 
-                <a href="{{ route('logout') }}" class="logout-btn"
-                   onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                <a
+                    href="{{ route('logout') }}"
+                    class="logout-btn"
+                    onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"
+                >
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- =========================================================
+             MAIN CONTENT
+             ========================================================= -->
         <main class="main-content">
+            <!-- Topbar -->
             <header class="topbar">
                 <div class="topbar-left">
                     <h2>Admin Dashboard</h2>
@@ -84,26 +117,46 @@
                 </div>
 
                 <div class="topbar-right">
+                    <!-- Logged-in Admin Profile -->
                     <div class="admin-profile-card">
                         <div class="admin-avatar">
-                            {{ strtoupper(substr(auth()->user()->full_name ?? auth()->user()->username ?? 'A', 0, 1)) }}
+                            {{
+                                strtoupper(
+                                    substr(
+                                        auth()->user()->full_name
+                                            ?? auth()->user()->username
+                                            ?? 'A',
+                                        0,
+                                        1
+                                    )
+                                )
+                            }}
                         </div>
 
                         <div>
-                            <h4>{{ auth()->user()->full_name ?? auth()->user()->username }}</h4>
+                            <h4>
+                                {{
+                                    auth()->user()->full_name
+                                        ?? auth()->user()->username
+                                }}
+                            </h4>
+
                             <p>{{ ucfirst(auth()->user()->role) }}</p>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <!-- Stats Cards -->
+            <!-- =====================================================
+                 GLOBAL SUMMARY CARDS
+                 ===================================================== -->
             <section class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-info">
                         <h4>Total Users</h4>
                         <h3>{{ $totalUsers }}</h3>
                     </div>
+
                     <div class="stat-icon blue">
                         <i class="fa-solid fa-users"></i>
                     </div>
@@ -114,6 +167,7 @@
                         <h4>Admins</h4>
                         <h3>{{ $totalAdmins }}</h3>
                     </div>
+
                     <div class="stat-icon green">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
@@ -124,6 +178,7 @@
                         <h4>Regular Users</h4>
                         <h3>{{ $totalRegularUsers }}</h3>
                     </div>
+
                     <div class="stat-icon purple">
                         <i class="fa-regular fa-user"></i>
                     </div>
@@ -134,6 +189,7 @@
                         <h4>Total Tasks</h4>
                         <h3>{{ $totalTasks }}</h3>
                     </div>
+
                     <div class="stat-icon orange">
                         <i class="fa-solid fa-list-check"></i>
                     </div>
@@ -144,6 +200,7 @@
                         <h4>Completed</h4>
                         <h3>{{ $completedTasks }}</h3>
                     </div>
+
                     <div class="stat-icon green">
                         <i class="fa-regular fa-circle-check"></i>
                     </div>
@@ -154,6 +211,7 @@
                         <h4>In Progress</h4>
                         <h3>{{ $inProgressTasks }}</h3>
                     </div>
+
                     <div class="stat-icon blue">
                         <i class="fa-regular fa-clock"></i>
                     </div>
@@ -164,6 +222,7 @@
                         <h4>Due Today</h4>
                         <h3>{{ $dueTodayTasks }}</h3>
                     </div>
+
                     <div class="stat-icon orange">
                         <i class="fa-solid fa-triangle-exclamation"></i>
                     </div>
@@ -174,14 +233,18 @@
                         <h4>Overdue</h4>
                         <h3>{{ $overdueTasks }}</h3>
                     </div>
+
                     <div class="stat-icon red">
                         <i class="fa-solid fa-arrow-trend-up"></i>
                     </div>
                 </div>
             </section>
 
-            <!-- Main Dashboard Content -->
+            <!-- =====================================================
+                 MAIN DASHBOARD AREA
+                 ===================================================== -->
             <section class="dashboard-content admin-dashboard-content">
+                <!-- Recent Tasks -->
                 <div class="recent-tasks-card">
                     <div class="section-header admin-section-header">
                         <div>
@@ -189,7 +252,10 @@
                             <p>Latest tasks created by all users</p>
                         </div>
 
-                        <a href="{{ route('admin.tasks.index') }}" class="new-task-btn admin-small-btn">
+                        <a
+                            href="{{ route('admin.tasks.index') }}"
+                            class="new-task-btn admin-small-btn"
+                        >
                             View All
                         </a>
                     </div>
@@ -198,8 +264,8 @@
                         @forelse($recentTasks as $task)
                             @php
                                 /*
-                                 * User dashboard CSS uses "progress" for in-progress badge.
-                                 * This keeps admin badge colors identical to the user dashboard.
+                                 * User dashboard CSS uses "progress"
+                                 * for the in-progress status badge.
                                  */
                                 $statusClass = $task['status'] === 'in-progress'
                                     ? 'progress'
@@ -237,17 +303,24 @@
                                     </div>
 
                                     <div class="progress-bar">
-                                        <div class="progress-fill" style="width: {{ $task['progress'] }}%;"></div>
+                                        <div
+                                            class="progress-fill"
+                                            style="width: {{ $task['progress'] }}%;"
+                                        ></div>
                                     </div>
                                 </div>
                             </div>
                         @empty
-                            <div class="empty-state">No recent tasks available</div>
+                            <div class="empty-state">
+                                No recent tasks available
+                            </div>
                         @endforelse
                     </div>
                 </div>
 
+                <!-- Dashboard Side Column -->
                 <div class="admin-side-column">
+                    <!-- System Progress -->
                     <div class="deadlines-card">
                         <div class="section-header">
                             <h3>System Progress</h3>
@@ -259,7 +332,10 @@
                             <p>Completion Rate</p>
 
                             <div class="progress-bar">
-                                <div class="progress-fill accent" style="width: {{ $completionRate }}%;"></div>
+                                <div
+                                    class="progress-fill accent"
+                                    style="width: {{ $completionRate }}%;"
+                                ></div>
                             </div>
                         </div>
 
@@ -286,6 +362,7 @@
                         </div>
                     </div>
 
+                    <!-- Recent Users -->
                     <div class="deadlines-card">
                         <div class="section-header admin-section-header">
                             <div>
@@ -293,7 +370,10 @@
                                 <p>Newest registered accounts</p>
                             </div>
 
-                            <a href="{{ route('admin.users.index') }}" class="admin-link-btn">
+                            <a
+                                href="{{ route('admin.users.index') }}"
+                                class="admin-link-btn"
+                            >
                                 Manage
                             </a>
                         </div>
@@ -302,7 +382,16 @@
                             @forelse($recentUsers as $user)
                                 <div class="admin-user-item">
                                     <div class="admin-user-avatar">
-                                        {{ strtoupper(substr($user['name'] ?: $user['username'], 0, 1)) }}
+                                        {{
+                                            strtoupper(
+                                                substr(
+                                                    $user['name']
+                                                        ?: $user['username'],
+                                                    0,
+                                                    1
+                                                )
+                                            )
+                                        }}
                                     </div>
 
                                     <div class="admin-user-main">
@@ -311,52 +400,80 @@
                                     </div>
 
                                     <div class="admin-user-meta">
-                                        <span class="role-badge {{ $user['role'] }}">{{ ucfirst($user['role']) }}</span>
-                                        <small>{{ $user['tasks_count'] }} tasks</small>
+                                        <span class="role-badge {{ $user['role'] }}">
+                                            {{ ucfirst($user['role']) }}
+                                        </span>
+
+                                        <small>
+                                            {{ $user['tasks_count'] }} tasks
+                                        </small>
                                     </div>
                                 </div>
                             @empty
-                                <div class="empty-state">No users available</div>
+                                <div class="empty-state">
+                                    No users available
+                                </div>
                             @endforelse
                         </div>
                     </div>
                 </div>
             </section>
 
+            <!-- =====================================================
+                 QUICK ACTIONS AND ACTIVITY LOG STATUS
+                 ===================================================== -->
             <section class="admin-bottom-grid">
+                <!-- Quick Actions -->
                 <div class="recent-tasks-card">
                     <div class="section-header">
                         <h3>Quick Actions</h3>
-                        <p>Admin shortcuts for upcoming modules</p>
+                        <p>Admin shortcuts for available modules</p>
                     </div>
 
                     <div class="admin-action-grid">
-                        <a href="{{ route('admin.users.index') }}" class="admin-action-card">
+                        <a
+                            href="{{ route('admin.users.index') }}"
+                            class="admin-action-card"
+                        >
                             <i class="fa-solid fa-users"></i>
+
                             <div>
                                 <strong>User Management</strong>
                                 <span>Manage roles and user accounts</span>
                             </div>
                         </a>
 
-                        <a href="{{ route('admin.tasks.index') }}" class="admin-action-card">
+                        <a
+                            href="{{ route('admin.tasks.index') }}"
+                            class="admin-action-card"
+                        >
                             <i class="fa-solid fa-list-check"></i>
+
                             <div>
                                 <strong>All Task Management</strong>
                                 <span>Monitor every user task</span>
                             </div>
                         </a>
 
-                        <a href="{{ route('admin.statistics.index') }}" class="admin-action-card">
+                        <a
+                            href="{{ route('admin.statistics.index') }}"
+                            class="admin-action-card"
+                        >
                             <i class="fa-solid fa-chart-column"></i>
+
                             <div>
                                 <strong>Global Statistics</strong>
                                 <span>View system-wide performance</span>
                             </div>
                         </a>
 
-                        <a href="{{ route('admin.logs.index') }}" class="admin-action-card">
+                        <!-- Babak 7 Activity Logs Quick Action -->
+                        <a
+                            href="{{ route('admin.logs.index') }}"
+                            class="admin-action-card"
+                        >
                             <i class="fa-solid fa-clock-rotate-left"></i>
+
                             <div>
                                 <strong>Activity Logs</strong>
                                 <span>Track user and admin activity</span>
@@ -365,28 +482,47 @@
                     </div>
                 </div>
 
+                <!-- Activity Logging Status -->
                 <div class="deadlines-card">
                     <div class="section-header">
                         <h3>Activity Preview</h3>
-                        <p>System activity logs will appear here later</p>
+                        <p>System audit logging is active</p>
                     </div>
 
                     <div class="admin-activity-box">
                         <i class="fa-solid fa-clock-rotate-left"></i>
-                        <strong>Coming in Stage 7</strong>
-                        <span>Task changes, user updates, admin actions, and login events will be tracked here.</span>
+
+                        <strong>Activity Logging Active</strong>
+
+                        <span>
+                            Authentication, regular user activity, profile changes,
+                            admin actions, and task changes are recorded.
+                        </span>
+
+                        <a
+                            href="{{ route('admin.logs.index') }}"
+                            class="admin-link-btn"
+                        >
+                            Open Activity Logs
+                        </a>
                     </div>
                 </div>
             </section>
         </main>
     </div>
 
+    <!--
+        Toast remains available for future admin modules
+        that may still use the coming-soon function.
+    -->
     <div class="admin-toast" id="adminToast">
         Feature will be available in the next admin stage.
     </div>
 
+    <!-- Shared and page-specific JavaScript -->
     <script src="{{ asset('assets/js/theme.js') }}"></script>
     <script src="{{ asset('assets/js/preferences.js') }}"></script>
     <script src="{{ asset('assets/js/admin-dashboard.js') }}"></script>
 </body>
+
 </html>

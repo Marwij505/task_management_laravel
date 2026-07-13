@@ -138,6 +138,16 @@
     color: var(--green-text);
 }
 
+.admin-log-icon.user_tasks {
+    background: var(--green-soft);
+    color: var(--green-text);
+}
+
+.admin-log-icon.profile {
+    background: var(--blue-soft);
+    color: var(--blue-text);
+}
+
 .admin-log-main {
     flex: 1;
     min-width: 0;

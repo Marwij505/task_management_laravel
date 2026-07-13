@@ -8,7 +8,13 @@ return new class extends Migration
 {
     /**
      * Membuat tabel activity_logs.
-     * Tabel ini menyimpan jejak aktivitas user dan admin.
+     *
+     * Tabel menyimpan:
+     * - aktivitas autentikasi
+     * - aktivitas task user biasa
+     * - perubahan profile
+     * - aktivitas pengelolaan user oleh admin
+     * - aktivitas pengelolaan task oleh admin
      */
     public function up(): void
     {
@@ -17,8 +23,9 @@ return new class extends Migration
                 $table->id();
 
                 /*
-                 * user_id adalah pelaku aktivitas.
-                 * Contoh: admin yang mengedit user, user yang login, admin yang menghapus task.
+                 * Actor atau pelaku aktivitas.
+                 * Nullable karena register dan forgot password
+                 * dapat dilakukan tanpa login.
                  */
                 $table->foreignId('user_id')
                     ->nullable()
@@ -26,8 +33,8 @@ return new class extends Migration
                     ->nullOnDelete();
 
                 /*
-                 * target_user_id adalah user yang terdampak.
-                 * Contoh: admin mereset password user A.
+                 * User yang menjadi target aktivitas.
+                 * Contoh: admin reset password user lain.
                  */
                 $table->foreignId('target_user_id')
                     ->nullable()
@@ -35,30 +42,31 @@ return new class extends Migration
                     ->nullOnDelete();
 
                 /*
-                 * module menjelaskan area fitur.
-                 * Contoh: auth, admin_users, admin_tasks.
+                 * Area fitur.
+                 * Contoh: auth, user_tasks, profile,
+                 * admin_users, admin_tasks.
                  */
-                $table->string('module', 60)->index();
+                $table->string('module', 80)->index();
 
                 /*
-                 * action menjelaskan jenis aksi.
-                 * Contoh: login, logout, create, update, delete, reset_password.
+                 * Jenis aktivitas.
+                 * Contoh: login, create, update, delete.
                  */
-                $table->string('action', 60)->index();
+                $table->string('action', 80)->index();
 
                 /*
-                 * description adalah kalimat singkat yang mudah dibaca admin.
+                 * Kalimat yang mudah dibaca pada halaman admin.
                  */
                 $table->text('description');
 
                 /*
-                 * properties menyimpan detail tambahan dalam bentuk JSON.
-                 * Contoh: email user, role lama, role baru, task title, owner task.
+                 * Detail tambahan dalam format JSON.
+                 * Password dan token tidak boleh dimasukkan.
                  */
                 $table->json('properties')->nullable();
 
                 /*
-                 * Data teknis untuk kebutuhan audit sederhana.
+                 * Informasi teknis untuk kebutuhan audit.
                  */
                 $table->string('ip_address', 45)->nullable();
                 $table->text('user_agent')->nullable();
@@ -72,7 +80,7 @@ return new class extends Migration
     }
 
     /**
-     * Menghapus tabel jika migration di-rollback.
+     * Menghapus tabel ketika rollback.
      */
     public function down(): void
     {

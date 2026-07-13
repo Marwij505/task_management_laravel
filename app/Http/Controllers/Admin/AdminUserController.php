@@ -91,10 +91,11 @@ class AdminUserController extends Controller
         ActivityLogService::log(
             module: 'admin_users',
             action: 'create',
-            description: 'Created user account: '.$createdUser->email,
+            description: 'Admin created user account: '.$createdUser->email,
             properties: [
                 'created_user_id' => $createdUser->id,
                 'email' => $createdUser->email,
+                'username' => $createdUser->username,
                 'role' => $createdUser->role,
             ],
             targetUserId: $createdUser->id
@@ -147,6 +148,13 @@ class AdminUserController extends Controller
             return back()->with('error', 'The system must have at least one admin.');
         }
 
+        $before = [
+            'full_name' => $user->full_name,
+            'username' => $user->username,
+            'email' => $user->email,
+            'role' => $user->role,
+        ];
+
         $user->update([
             'name' => $validated['full_name'],
             'full_name' => $validated['full_name'],
@@ -161,11 +169,16 @@ class AdminUserController extends Controller
         ActivityLogService::log(
             module: 'admin_users',
             action: 'update',
-            description: 'Updated user account: '.$user->email,
+            description: 'Admin updated user account: '.$user->email,
             properties: [
                 'updated_user_id' => $user->id,
-                'email' => $user->email,
-                'role' => $user->role,
+                'before' => $before,
+                'after' => [
+                    'full_name' => $user->full_name,
+                    'username' => $user->username,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                ],
             ],
             targetUserId: $user->id
         );
@@ -196,10 +209,11 @@ class AdminUserController extends Controller
         ActivityLogService::log(
             module: 'admin_users',
             action: 'reset_password',
-            description: 'Reset password for user: '.$user->email,
+            description: 'Admin reset password for user: '.$user->email,
             properties: [
                 'target_user_id' => $user->id,
                 'email' => $user->email,
+                'role' => $user->role,
             ],
             targetUserId: $user->id
         );
@@ -212,44 +226,56 @@ class AdminUserController extends Controller
     public function destroy(Request $request, User $user): RedirectResponse
     {
         /*
-         * Admin tidak boleh menghapus akunnya sendiri.
-         */
+        * Admin tidak boleh menghapus akun sendiri.
+        */
         if ($request->user()->id === $user->id) {
-            return back()->with('error', 'You cannot delete your own account.');
+            return back()->with(
+                'error',
+                'You cannot delete your own account.'
+            );
         }
 
         /*
-         * Admin terakhir tidak boleh dihapus.
-         */
-        if ($user->isAdmin() && User::where('role', User::ROLE_ADMIN)->count() <= 1) {
-            return back()->with('error', 'The system must have at least one admin.');
+        * Sistem harus memiliki minimal satu admin.
+        */
+        if (
+            $user->isAdmin()
+            && User::where('role', User::ROLE_ADMIN)->count() <= 1
+        ) {
+            return back()->with(
+                'error',
+                'The system must have at least one admin.'
+            );
         }
 
         /*
-         * Karena database memakai ON DELETE CASCADE,
-         * semua task milik user ini akan ikut terhapus.
-         */
-        $user->delete();
-
-        /*
-        * Simpan data penting sebelum user dihapus.
+        * Simpan informasi sebelum user dan task-nya dihapus.
         */
         $deletedUserData = [
             'deleted_user_id' => $user->id,
             'email' => $user->email,
             'username' => $user->username,
             'role' => $user->role,
+            'tasks_count' => $user->tasks()->count(),
         ];
 
+        $deletedEmail = $user->email;
+
         /*
-        * Catat aktivitas delete user.
+        * Hapus user setelah data audit disimpan ke variabel.
+        */
+        $user->delete();
+
+        /*
+        * targetUserId harus null karena user target sudah dihapus.
+        * ID lama tetap tersimpan pada properties.
         */
         ActivityLogService::log(
             module: 'admin_users',
             action: 'delete',
-            description: 'Deleted user account: '.$user->email,
+            description: 'Admin deleted user account: '.$deletedEmail,
             properties: $deletedUserData,
-            targetUserId: $user->id
+            targetUserId: null
         );
 
         return redirect()

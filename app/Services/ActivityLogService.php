@@ -9,45 +9,101 @@ use Illuminate\Support\Facades\Log;
 class ActivityLogService
 {
     /**
-     * Method utama untuk mencatat aktivitas.
+     * Mencatat aktivitas aplikasi.
      *
-     * Contoh penggunaan:
-     * ActivityLogService::log(
-     *     module: 'admin_users',
-     *     action: 'update',
-     *     description: 'Updated user account',
-     *     properties: ['email' => 'user@gmail.com'],
-     *     targetUserId: 5
-     * );
+     * Error pencatatan log tidak boleh menghentikan fitur utama.
      */
     public static function log(
         string $module,
         string $action,
         string $description,
         array $properties = [],
-        ?int $targetUserId = null
+        ?int $targetUserId = null,
+        ?int $actorId = null
     ): void {
         try {
             ActivityLog::create([
-                'user_id' => Auth::id(),
+                'user_id' => $actorId ?? Auth::id(),
                 'target_user_id' => $targetUserId,
-                'module' => $module,
-                'action' => $action,
+                'module' => mb_substr($module, 0, 80),
+                'action' => mb_substr($action, 0, 80),
                 'description' => $description,
-                'properties' => $properties,
-                'ip_address' => request()?->ip(),
-                'user_agent' => request()?->userAgent(),
+                'properties' => self::sanitizeProperties($properties),
+                'ip_address' => self::requestIp(),
+                'user_agent' => self::requestUserAgent(),
             ]);
         } catch (\Throwable $exception) {
             /*
-             * Log aktivitas tidak boleh membuat fitur utama error.
-             * Jika gagal mencatat log, sistem tetap berjalan.
+             * Simpan kegagalan pencatatan ke storage/logs/laravel.log.
+             * Proses utama tetap berjalan.
              */
             Log::warning('Failed to write activity log.', [
                 'module' => $module,
                 'action' => $action,
                 'message' => $exception->getMessage(),
             ]);
+        }
+    }
+
+    /**
+     * Menghapus data sensitif sebelum masuk ke database.
+     */
+    private static function sanitizeProperties(array $properties): array
+    {
+        $blockedKeys = [
+            '_token',
+            'token',
+            'password',
+            'password_confirmation',
+            'current_password',
+            'new_password',
+            'confirm_password',
+            'remember_token',
+        ];
+
+        return collect($properties)
+            ->reject(function ($value, $key) use ($blockedKeys) {
+                return in_array((string) $key, $blockedKeys, true);
+            })
+            ->map(function ($value) {
+                if (is_array($value)) {
+                    return self::sanitizeProperties($value);
+                }
+
+                if (is_string($value)) {
+                    return mb_substr($value, 0, 700);
+                }
+
+                return $value;
+            })
+            ->all();
+    }
+
+    /**
+     * Mengambil IP hanya ketika HTTP request tersedia.
+     */
+    private static function requestIp(): ?string
+    {
+        try {
+            return app()->runningInConsole()
+                ? null
+                : request()->ip();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+
+    /**
+     * Mengambil browser atau user-agent.
+     */
+    private static function requestUserAgent(): ?string
+    {
+        try {
+            return app()->runningInConsole()
+                ? null
+                : request()->userAgent();
+        } catch (\Throwable) {
+            return null;
         }
     }
 }

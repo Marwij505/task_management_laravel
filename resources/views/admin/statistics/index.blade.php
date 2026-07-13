@@ -9,25 +9,40 @@
 
     <title>Flowlist Global Statistics</title>
 
+    <!-- Shared dashboard styles. -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
+
+    <!-- Admin statistics styles. -->
     <link rel="stylesheet" href="{{ asset('assets/css/admin-dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/admin-statistics.css') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 </head>
 
 <body>
     <div class="dashboard-container">
+        <!-- =========================================================
+             ADMIN SIDEBAR
+             ========================================================= -->
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="brand">
                     <div class="brand-logo">
                         <i class="fa-solid fa-table-cells-large"></i>
                     </div>
+
                     <h1>Flowlist</h1>
                 </div>
 
@@ -47,11 +62,15 @@
                         <span>All Tasks</span>
                     </a>
 
-                    <a href="{{ route('admin.statistics.index') }}" class="menu-item active">
+                    <a
+                        href="{{ route('admin.statistics.index') }}"
+                        class="menu-item active"
+                    >
                         <i class="fa-solid fa-chart-column"></i>
                         <span>Global Statistics</span>
                     </a>
 
+                    <!-- Babak 7 Activity Logs -->
                     <a href="{{ route('admin.logs.index') }}" class="menu-item">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
@@ -59,19 +78,31 @@
                 </nav>
             </div>
 
+            <!-- Logout -->
             <div class="sidebar-bottom">
-                <form id="logoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">
+                <form
+                    id="logoutForm"
+                    method="POST"
+                    action="{{ route('logout') }}"
+                    style="display:none;"
+                >
                     @csrf
                 </form>
 
-                <a href="{{ route('logout') }}" class="logout-btn"
-                   onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                <a
+                    href="{{ route('logout') }}"
+                    class="logout-btn"
+                    onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"
+                >
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
 
+        <!-- =========================================================
+             MAIN CONTENT
+             ========================================================= -->
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-left">
@@ -80,18 +111,25 @@
                 </div>
 
                 <div class="topbar-right">
-                    <button type="button" class="new-task-btn js-copy-report">
+                    <button
+                        type="button"
+                        class="new-task-btn js-copy-report"
+                    >
                         <span>Copy Summary</span>
                     </button>
                 </div>
             </header>
 
+            <!-- =====================================================
+                 GLOBAL STATISTICS SUMMARY
+                 ===================================================== -->
             <section class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-info">
                         <h4>Total Users</h4>
                         <h3>{{ $totalUsers }}</h3>
                     </div>
+
                     <div class="stat-icon blue">
                         <i class="fa-solid fa-users"></i>
                     </div>
@@ -102,6 +140,7 @@
                         <h4>Total Tasks</h4>
                         <h3>{{ $totalTasks }}</h3>
                     </div>
+
                     <div class="stat-icon orange">
                         <i class="fa-solid fa-list-check"></i>
                     </div>
@@ -112,6 +151,7 @@
                         <h4>Completed</h4>
                         <h3>{{ $completedTasks }}</h3>
                     </div>
+
                     <div class="stat-icon green">
                         <i class="fa-regular fa-circle-check"></i>
                     </div>
@@ -122,13 +162,18 @@
                         <h4>Completion Rate</h4>
                         <h3>{{ $completionRate }}%</h3>
                     </div>
+
                     <div class="stat-icon purple">
                         <i class="fa-solid fa-chart-simple"></i>
                     </div>
                 </div>
             </section>
 
+            <!-- =====================================================
+                 DETAILED GLOBAL STATISTICS
+                 ===================================================== -->
             <section class="admin-statistics-grid">
+                <!-- Status Breakdown -->
                 <div class="recent-tasks-card">
                     <div class="section-header">
                         <h3>Status Breakdown</h3>
@@ -138,8 +183,20 @@
                     <div class="stat-bar-list">
                         @foreach($statusBreakdown as $status => $count)
                             @php
-                                $percentage = $totalTasks > 0 ? (int) round(($count / $totalTasks) * 100) : 0;
-                                $statusClass = $status === 'in-progress' ? 'progress' : $status;
+                                /*
+                                 * Calculate status percentage safely.
+                                 */
+                                $percentage = $totalTasks > 0
+                                    ? (int) round(($count / $totalTasks) * 100)
+                                    : 0;
+
+                                /*
+                                 * Existing CSS uses "progress"
+                                 * for the in-progress status.
+                                 */
+                                $statusClass = $status === 'in-progress'
+                                    ? 'progress'
+                                    : $status;
                             @endphp
 
                             <div class="stat-bar-item">
@@ -147,11 +204,15 @@
                                     <span class="badge status {{ $statusClass }}">
                                         {{ ucwords(str_replace('-', ' ', $status)) }}
                                     </span>
+
                                     <strong>{{ $count }} tasks</strong>
                                 </div>
 
                                 <div class="stat-track">
-                                    <div class="stat-fill" style="width: {{ $percentage }}%;"></div>
+                                    <div
+                                        class="stat-fill"
+                                        style="width: {{ $percentage }}%;"
+                                    ></div>
                                 </div>
 
                                 <small>{{ $percentage }}%</small>
@@ -160,6 +221,7 @@
                     </div>
                 </div>
 
+                <!-- Priority Breakdown -->
                 <div class="deadlines-card">
                     <div class="section-header">
                         <h3>Priority Breakdown</h3>
@@ -169,7 +231,9 @@
                     <div class="stat-bar-list">
                         @foreach($priorityBreakdown as $priority => $count)
                             @php
-                                $percentage = $totalTasks > 0 ? (int) round(($count / $totalTasks) * 100) : 0;
+                                $percentage = $totalTasks > 0
+                                    ? (int) round(($count / $totalTasks) * 100)
+                                    : 0;
                             @endphp
 
                             <div class="stat-bar-item">
@@ -177,11 +241,15 @@
                                     <span class="badge priority {{ $priority }}">
                                         {{ ucfirst($priority) }}
                                     </span>
+
                                     <strong>{{ $count }} tasks</strong>
                                 </div>
 
                                 <div class="stat-track">
-                                    <div class="stat-fill" style="width: {{ $percentage }}%;"></div>
+                                    <div
+                                        class="stat-fill"
+                                        style="width: {{ $percentage }}%;"
+                                    ></div>
                                 </div>
 
                                 <small>{{ $percentage }}%</small>
@@ -190,6 +258,7 @@
                     </div>
                 </div>
 
+                <!-- Top Categories -->
                 <div class="recent-tasks-card">
                     <div class="section-header">
                         <h3>Top Categories</h3>
@@ -206,17 +275,24 @@
 
                                 <div class="category-progress">
                                     <div class="stat-track">
-                                        <div class="stat-fill" style="width: {{ $category['percentage'] }}%;"></div>
+                                        <div
+                                            class="stat-fill"
+                                            style="width: {{ $category['percentage'] }}%;"
+                                        ></div>
                                     </div>
+
                                     <small>{{ $category['percentage'] }}%</small>
                                 </div>
                             </div>
                         @empty
-                            <div class="empty-state">No category data available.</div>
+                            <div class="empty-state">
+                                No category data available.
+                            </div>
                         @endforelse
                     </div>
                 </div>
 
+                <!-- Deadline Risk -->
                 <div class="deadlines-card">
                     <div class="section-header">
                         <h3>Deadline Risk</h3>
@@ -246,6 +322,7 @@
                     </div>
                 </div>
 
+                <!-- Top Productive Users -->
                 <div class="recent-tasks-card">
                     <div class="section-header">
                         <h3>Top Productive Users</h3>
@@ -257,7 +334,15 @@
                             <div class="top-user-row">
                                 <div class="top-user-main">
                                     <div class="admin-user-avatar">
-                                        {{ strtoupper(substr($user['name'] ?: 'U', 0, 1)) }}
+                                        {{
+                                            strtoupper(
+                                                substr(
+                                                    $user['name'] ?: 'U',
+                                                    0,
+                                                    1
+                                                )
+                                            )
+                                        }}
                                     </div>
 
                                     <div>
@@ -270,16 +355,27 @@
                                     <span class="role-badge {{ $user['role'] }}">
                                         {{ ucfirst($user['role']) }}
                                     </span>
-                                    <strong>{{ $user['completion_rate'] }}%</strong>
-                                    <small>{{ $user['completed_count'] }} of {{ $user['tasks_count'] }} completed</small>
+
+                                    <strong>
+                                        {{ $user['completion_rate'] }}%
+                                    </strong>
+
+                                    <small>
+                                        {{ $user['completed_count'] }}
+                                        of {{ $user['tasks_count'] }}
+                                        completed
+                                    </small>
                                 </div>
                             </div>
                         @empty
-                            <div class="empty-state">No user productivity data available.</div>
+                            <div class="empty-state">
+                                No user productivity data available.
+                            </div>
                         @endforelse
                     </div>
                 </div>
 
+                <!-- Monthly Trend -->
                 <div class="deadlines-card">
                     <div class="section-header">
                         <h3>Monthly Trend</h3>
@@ -289,9 +385,23 @@
                     <div class="monthly-trend-list">
                         @foreach($monthlyTrend as $month)
                             @php
-                                $maxValue = max($month['created'], $month['completed'], 1);
-                                $createdWidth = (int) round(($month['created'] / $maxValue) * 100);
-                                $completedWidth = (int) round(($month['completed'] / $maxValue) * 100);
+                                /*
+                                 * Use a minimum value of 1
+                                 * to prevent division by zero.
+                                 */
+                                $maxValue = max(
+                                    $month['created'],
+                                    $month['completed'],
+                                    1
+                                );
+
+                                $createdWidth = (int) round(
+                                    ($month['created'] / $maxValue) * 100
+                                );
+
+                                $completedWidth = (int) round(
+                                    ($month['completed'] / $maxValue) * 100
+                                );
                             @endphp
 
                             <div class="month-row">
@@ -299,16 +409,28 @@
 
                                 <div class="month-bars">
                                     <div>
-                                        <span>Created: {{ $month['created'] }}</span>
+                                        <span>
+                                            Created: {{ $month['created'] }}
+                                        </span>
+
                                         <div class="stat-track">
-                                            <div class="stat-fill" style="width: {{ $createdWidth }}%;"></div>
+                                            <div
+                                                class="stat-fill"
+                                                style="width: {{ $createdWidth }}%;"
+                                            ></div>
                                         </div>
                                     </div>
 
                                     <div>
-                                        <span>Completed: {{ $month['completed'] }}</span>
+                                        <span>
+                                            Completed: {{ $month['completed'] }}
+                                        </span>
+
                                         <div class="stat-track muted">
-                                            <div class="stat-fill muted" style="width: {{ $completedWidth }}%;"></div>
+                                            <div
+                                                class="stat-fill muted"
+                                                style="width: {{ $completedWidth }}%;"
+                                            ></div>
                                         </div>
                                     </div>
                                 </div>
@@ -318,20 +440,27 @@
                 </div>
             </section>
 
-            <textarea id="statisticsReportText" class="hidden-report" readonly>
-                Flowlist Global Statistics Summary
-                Total Users: {{ $totalUsers }}
-                Admins: {{ $totalAdmins }}
-                Regular Users: {{ $totalRegularUsers }}
-                Total Tasks: {{ $totalTasks }}
-                Completed Tasks: {{ $completedTasks }}
-                Completion Rate: {{ $completionRate }}%
-                Overdue Tasks: {{ $statusBreakdown['overdue'] }}
-                Due Today Tasks: {{ $statusBreakdown['due-today'] }}
-            </textarea>
+            <!--
+                Hidden text used by admin-statistics.js
+                when the admin clicks Copy Summary.
+            -->
+            <textarea
+                id="statisticsReportText"
+                class="hidden-report"
+                readonly
+            >Flowlist Global Statistics Summary
+Total Users: {{ $totalUsers }}
+Admins: {{ $totalAdmins }}
+Regular Users: {{ $totalRegularUsers }}
+Total Tasks: {{ $totalTasks }}
+Completed Tasks: {{ $completedTasks }}
+Completion Rate: {{ $completionRate }}%
+Overdue Tasks: {{ $statusBreakdown['overdue'] }}
+Due Today Tasks: {{ $statusBreakdown['due-today'] }}</textarea>
         </main>
     </div>
 
+    <!-- Copy Summary Toast -->
     <div class="admin-toast" id="adminToast">
         Summary copied successfully.
     </div>
@@ -340,4 +469,5 @@
     <script src="{{ asset('assets/js/preferences.js') }}"></script>
     <script src="{{ asset('assets/js/admin-statistics.js') }}"></script>
 </body>
+
 </html>

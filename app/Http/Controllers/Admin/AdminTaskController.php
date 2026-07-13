@@ -6,8 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskProgressService;
-use Carbon\Carbon;
 use App\Services\ActivityLogService;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -177,13 +177,14 @@ class AdminTaskController extends Controller
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'create',
-            description: 'Created task: '.$task->title,
+            description: 'Admin created task: '.$task->title,
             properties: [
                 'task_id' => $task->id,
                 'title' => $task->title,
                 'owner_user_id' => $task->user_id,
                 'status' => $task->status,
                 'priority' => $task->priority,
+                'deadline' => (string) $task->deadline,
             ],
             targetUserId: (int) $task->user_id
         );
@@ -211,6 +212,17 @@ class AdminTaskController extends Controller
             'tags' => ['nullable', 'string', 'max:500'],
         ]);
 
+        $before = $task->only([
+            'user_id',
+            'title',
+            'status',
+            'priority',
+            'category',
+            'deadline',
+            'progress',
+            'assignee',
+        ]);
+
         $task->forceFill([
             'user_id' => $validated['user_id'],
             'title' => $validated['title'],
@@ -234,14 +246,20 @@ class AdminTaskController extends Controller
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'update',
-            description: 'Updated task: '.$task->title,
+            description: 'Admin updated task: '.$task->title,
             properties: [
                 'task_id' => $task->id,
-                'title' => $task->title,
-                'owner_user_id' => $task->user_id,
-                'status' => $task->status,
-                'priority' => $task->priority,
-                'progress' => $task->progress,
+                'before' => $before,
+                'after' => $task->only([
+                    'user_id',
+                    'title',
+                    'status',
+                    'priority',
+                    'category',
+                    'deadline',
+                    'progress',
+                    'assignee',
+                ]),
             ],
             targetUserId: (int) $task->user_id
         );
@@ -267,7 +285,7 @@ class AdminTaskController extends Controller
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'complete',
-            description: 'Marked task as completed: '.$task->title,
+            description: 'Admin completed task: '.$task->title,
             properties: [
                 'task_id' => $task->id,
                 'title' => $task->title,
@@ -284,13 +302,7 @@ class AdminTaskController extends Controller
     public function destroy(Task $task): RedirectResponse
     {
         /*
-         * Menghapus task.
-         * Task tags ikut terhapus karena relasi database memakai cascade.
-         */
-        $task->delete();
-
-        /*
-        * Simpan data penting sebelum task dihapus.
+        * Simpan seluruh data penting sebelum task dihapus.
         */
         $deletedTaskData = [
             'task_id' => $task->id,
@@ -298,17 +310,26 @@ class AdminTaskController extends Controller
             'owner_user_id' => $task->user_id,
             'status' => $task->status,
             'priority' => $task->priority,
+            'category' => $task->category,
         ];
 
+        $taskTitle = $task->title;
+        $ownerUserId = (int) $task->user_id;
+
         /*
-        * Catat aktivitas delete task.
+        * Hapus task setelah informasi audit disimpan.
+        */
+        $task->delete();
+
+        /*
+        * Owner user masih ada, sehingga targetUserId tetap dapat digunakan.
         */
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'delete',
-            description: 'Deleted task: '.$task->title,
+            description: 'Admin deleted task: '.$taskTitle,
             properties: $deletedTaskData,
-            targetUserId: (int) $task->user_id
+            targetUserId: $ownerUserId
         );
 
         return redirect()

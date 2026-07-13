@@ -51,6 +51,21 @@ class AuthController extends Controller
             $field => $login,
             'password' => (string) $request->input('password'),
         ], $remember)) {
+
+            /*
+            * Catat percobaan login gagal.
+            * Password tidak dimasukkan ke activity log.
+            */
+            ActivityLogService::log(
+                module: 'auth',
+                action: 'login_failed',
+                description: 'Failed login attempt: '.$login,
+                properties: [
+                    'login' => $login,
+                    'login_field' => $field,
+                ]
+            );
+
             return response()->json([
                 'success' => false,
                 'message' => 'The email / username or password you entered is wrong. Please try again.',
@@ -83,18 +98,21 @@ class AuthController extends Controller
         }
 
         $username = Auth::user()?->username ?: Auth::user()?->name ?: 'User';
+        $user = Auth::user();
         /*
-        * Catat aktivitas login.
+        * Catat login admin maupun user biasa.
         */
         ActivityLogService::log(
             module: 'auth',
             action: 'login',
             description: 'User logged in: '.$username,
             properties: [
-                'email' => Auth::user()?->email,
-                'role' => Auth::user()?->role,
+                'user_id' => $user?->id,
+                'email' => $user?->email,
+                'role' => $user?->role,
+                'remember' => $remember,
             ],
-            targetUserId: Auth::id()
+            targetUserId: $user?->id
         );
         /*
         * Redirect otomatis berdasarkan role.
@@ -136,7 +154,7 @@ class AuthController extends Controller
 
         $username = trim((string) $request->input('username'));
 
-        User::create([
+        $createdUser = User::create([
             'name' => $username,
             'username' => $username,
             'full_name' => $username,
@@ -149,6 +167,19 @@ class AuthController extends Controller
             */
             'role' => User::ROLE_USER,
         ]);
+
+        ActivityLogService::log(
+            module: 'auth',
+            action: 'register',
+            description: 'New user registered: '.$createdUser->email,
+            properties: [
+                'registered_user_id' => $createdUser->id,
+                'username' => $createdUser->username,
+                'email' => $createdUser->email,
+                'role' => $createdUser->role,
+            ],
+            targetUserId: $createdUser->id
+        );
         
         return response()->json([
             'success' => true,
@@ -192,7 +223,19 @@ class AuthController extends Controller
 
         $user->forceFill([
             'password' => Hash::make((string) $request->input('password')),
+            'remember_token' => null,
         ])->save();
+
+        ActivityLogService::log(
+            module: 'auth',
+            action: 'password_reset',
+            description: 'User reset password using forgot password flow: '.$user->email,
+            properties: [
+                'target_user_id' => $user->id,
+                'email' => $user->email,
+            ],
+            targetUserId: $user->id
+        );
 
         return response()->json([
             'success' => true,
@@ -204,33 +247,42 @@ class AuthController extends Controller
     public function logout(Request $request): RedirectResponse
     {
         $guard = Auth::guard();
+
         $recallerName = method_exists($guard, 'getRecallerName')
             ? $guard->getRecallerName()
             : null;
 
-        if ($request->user()) {
-            $request->user()->forceFill([
+        /*
+        * Simpan user sebelum proses logout.
+        */
+        $user = $request->user();
+
+        if ($user) {
+            /*
+            * Log harus dibuat sebelum Auth::logout()
+            * agar actor masih dapat dideteksi.
+            */
+            ActivityLogService::log(
+                module: 'auth',
+                action: 'logout',
+                description: 'User logged out: '.$user->email,
+                properties: [
+                    'user_id' => $user->id,
+                    'email' => $user->email,
+                    'role' => $user->role,
+                ],
+                targetUserId: $user->id
+            );
+
+            /*
+            * Hapus remember token agar sesi remember me lama tidak aktif.
+            */
+            $user->forceFill([
                 'remember_token' => null,
             ])->save();
         }
 
         Auth::logout();
-
-        /*
-        * Catat aktivitas logout sebelum session dihancurkan.
-        */
-        if (Auth::check()) {
-            ActivityLogService::log(
-                module: 'auth',
-                action: 'logout',
-                description: 'User logged out: '.(Auth::user()?->email ?? 'Unknown user'),
-                properties: [
-                    'email' => Auth::user()?->email,
-                    'role' => Auth::user()?->role,
-                ],
-                targetUserId: Auth::id()
-            );
-        }
 
         $request->session()->forget([
             'login_remembered',

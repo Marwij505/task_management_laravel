@@ -9,29 +9,40 @@
 
     <title>Flowlist User Management</title>
 
-    <!-- Reuse regular dashboard style so admin pages stay consistent. -->
+    <!-- Shared dashboard styles. -->
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
 
-    <!-- Admin-specific styling. -->
+    <!-- Admin page styles. -->
     <link rel="stylesheet" href="{{ asset('assets/css/admin-dashboard.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/admin-users.css') }}" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    />
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Admin Sidebar -->
+        <!-- =========================================================
+             ADMIN SIDEBAR
+             ========================================================= -->
         <aside class="sidebar">
             <div class="sidebar-top">
                 <div class="brand">
                     <div class="brand-logo">
                         <i class="fa-solid fa-table-cells-large"></i>
                     </div>
+
                     <h1>Flowlist</h1>
                 </div>
 
@@ -41,7 +52,10 @@
                         <span>Dashboard</span>
                     </a>
 
-                    <a href="{{ route('admin.users.index') }}" class="menu-item active">
+                    <a
+                        href="{{ route('admin.users.index') }}"
+                        class="menu-item active"
+                    >
                         <i class="fa-solid fa-users"></i>
                         <span>User Management</span>
                     </a>
@@ -51,11 +65,15 @@
                         <span>All Tasks</span>
                     </a>
 
-                    <a href="{{ route('admin.statistics.index') }}" class="menu-item">
+                    <a
+                        href="{{ route('admin.statistics.index') }}"
+                        class="menu-item"
+                    >
                         <i class="fa-solid fa-chart-column"></i>
                         <span>Global Statistics</span>
                     </a>
 
+                    <!-- Babak 7 Activity Logs -->
                     <a href="{{ route('admin.logs.index') }}" class="menu-item">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                         <span>Activity Logs</span>
@@ -63,20 +81,31 @@
                 </nav>
             </div>
 
+            <!-- Logout -->
             <div class="sidebar-bottom">
-                <form id="logoutForm" method="POST" action="{{ route('logout') }}" style="display:none;">
+                <form
+                    id="logoutForm"
+                    method="POST"
+                    action="{{ route('logout') }}"
+                    style="display:none;"
+                >
                     @csrf
                 </form>
 
-                <a href="{{ route('logout') }}" class="logout-btn"
-                   onclick="event.preventDefault(); document.getElementById('logoutForm').submit();">
+                <a
+                    href="{{ route('logout') }}"
+                    class="logout-btn"
+                    onclick="event.preventDefault(); document.getElementById('logoutForm').submit();"
+                >
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span>Logout</span>
                 </a>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- =========================================================
+             MAIN CONTENT
+             ========================================================= -->
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-left">
@@ -91,7 +120,7 @@
                 </div>
             </header>
 
-            <!-- Success message after create, update, reset password, or delete. -->
+            <!-- Success message. -->
             @if(session('success'))
                 <div class="admin-alert success">
                     <i class="fa-regular fa-circle-check"></i>
@@ -99,7 +128,7 @@
                 </div>
             @endif
 
-            <!-- Error message for protected actions. -->
+            <!-- Protected action error. -->
             @if(session('error'))
                 <div class="admin-alert error">
                     <i class="fa-solid fa-triangle-exclamation"></i>
@@ -107,10 +136,11 @@
                 </div>
             @endif
 
-            <!-- Validation error message. -->
+            <!-- Validation error. -->
             @if($errors->any())
                 <div class="admin-alert error">
                     <i class="fa-solid fa-triangle-exclamation"></i>
+
                     <div>
                         <strong>Please check your input.</strong>
                         <span>{{ $errors->first() }}</span>
@@ -118,13 +148,16 @@
                 </div>
             @endif
 
-            <!-- Summary Cards -->
+            <!-- =====================================================
+                 USER SUMMARY
+                 ===================================================== -->
             <section class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-info">
                         <h4>Total Users</h4>
                         <h3>{{ $totalUsers }}</h3>
                     </div>
+
                     <div class="stat-icon blue">
                         <i class="fa-solid fa-users"></i>
                     </div>
@@ -135,6 +168,7 @@
                         <h4>Admins</h4>
                         <h3>{{ $totalAdmins }}</h3>
                     </div>
+
                     <div class="stat-icon green">
                         <i class="fa-solid fa-shield-halved"></i>
                     </div>
@@ -145,6 +179,7 @@
                         <h4>Regular Users</h4>
                         <h3>{{ $totalRegularUsers }}</h3>
                     </div>
+
                     <div class="stat-icon purple">
                         <i class="fa-regular fa-user"></i>
                     </div>
@@ -155,14 +190,18 @@
                         <h4>Current Page</h4>
                         <h3>{{ $users->count() }}</h3>
                     </div>
+
                     <div class="stat-icon orange">
                         <i class="fa-solid fa-address-book"></i>
                     </div>
                 </div>
             </section>
 
+            <!-- =====================================================
+                 USER MANAGEMENT LAYOUT
+                 ===================================================== -->
             <section class="admin-users-layout">
-                <!-- User List Card -->
+                <!-- User List -->
                 <div class="recent-tasks-card admin-users-card">
                     <div class="section-header admin-users-header">
                         <div>
@@ -172,9 +211,14 @@
                     </div>
 
                     <!-- Search and Role Filter -->
-                    <form method="GET" action="{{ route('admin.users.index') }}" class="admin-filter-form">
+                    <form
+                        method="GET"
+                        action="{{ route('admin.users.index') }}"
+                        class="admin-filter-form"
+                    >
                         <div class="form-field">
                             <label for="search">Search</label>
+
                             <input
                                 type="text"
                                 id="search"
@@ -186,10 +230,23 @@
 
                         <div class="form-field">
                             <label for="role">Role</label>
+
                             <select id="role" name="role">
                                 <option value="">All Roles</option>
-                                <option value="admin" @selected($selectedRole === 'admin')>Admin</option>
-                                <option value="user" @selected($selectedRole === 'user')>User</option>
+
+                                <option
+                                    value="admin"
+                                    @selected($selectedRole === 'admin')
+                                >
+                                    Admin
+                                </option>
+
+                                <option
+                                    value="user"
+                                    @selected($selectedRole === 'user')
+                                >
+                                    User
+                                </option>
                             </select>
                         </div>
 
@@ -199,23 +256,44 @@
                                 Search
                             </button>
 
-                            <a href="{{ route('admin.users.index') }}" class="admin-secondary-btn">
+                            <a
+                                href="{{ route('admin.users.index') }}"
+                                class="admin-secondary-btn"
+                            >
                                 Reset
                             </a>
                         </div>
                     </form>
 
-                    <!-- Users -->
+                    <!-- User Records -->
                     <div class="admin-user-list">
                         @forelse($users as $user)
                             <article class="admin-user-row">
                                 <div class="admin-user-summary">
                                     <div class="admin-user-avatar">
-                                        {{ strtoupper(substr($user->full_name ?: $user->name ?: $user->username ?: 'U', 0, 1)) }}
+                                        {{
+                                            strtoupper(
+                                                substr(
+                                                    $user->full_name
+                                                        ?: $user->name
+                                                        ?: $user->username
+                                                        ?: 'U',
+                                                    0,
+                                                    1
+                                                )
+                                            )
+                                        }}
                                     </div>
 
                                     <div>
-                                        <h4>{{ $user->full_name ?: $user->name ?: $user->username }}</h4>
+                                        <h4>
+                                            {{
+                                                $user->full_name
+                                                    ?: $user->name
+                                                    ?: $user->username
+                                            }}
+                                        </h4>
+
                                         <p>{{ $user->email }}</p>
 
                                         <div class="admin-user-tags">
@@ -234,7 +312,10 @@
                                     </div>
                                 </div>
 
-                                <!-- Manage panel. Details keeps the page clean until admin needs to edit. -->
+                                <!--
+                                    Details panel keeps the page compact.
+                                    Admin opens it only when management is required.
+                                -->
                                 <details class="admin-user-details">
                                     <summary>
                                         <i class="fa-solid fa-pen-to-square"></i>
@@ -243,7 +324,11 @@
 
                                     <div class="admin-user-panel">
                                         <!-- Edit User -->
-                                        <form method="POST" action="{{ route('admin.users.update', $user) }}" class="admin-form-block">
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.users.update', $user) }}"
+                                            class="admin-form-block"
+                                        >
                                             @csrf
                                             @method('PATCH')
 
@@ -252,6 +337,7 @@
                                             <div class="admin-form-grid">
                                                 <div class="form-field">
                                                     <label>Full Name</label>
+
                                                     <input
                                                         type="text"
                                                         name="full_name"
@@ -262,6 +348,7 @@
 
                                                 <div class="form-field">
                                                     <label>Username</label>
+
                                                     <input
                                                         type="text"
                                                         name="username"
@@ -272,6 +359,7 @@
 
                                                 <div class="form-field">
                                                     <label>Email</label>
+
                                                     <input
                                                         type="email"
                                                         name="email"
@@ -282,20 +370,39 @@
 
                                                 <div class="form-field">
                                                     <label>Role</label>
+
                                                     <select name="role" required>
-                                                        <option value="user" @selected($user->role === 'user')>User</option>
-                                                        <option value="admin" @selected($user->role === 'admin')>Admin</option>
+                                                        <option
+                                                            value="user"
+                                                            @selected($user->role === 'user')
+                                                        >
+                                                            User
+                                                        </option>
+
+                                                        <option
+                                                            value="admin"
+                                                            @selected($user->role === 'admin')
+                                                        >
+                                                            Admin
+                                                        </option>
                                                     </select>
                                                 </div>
                                             </div>
 
-                                            <button type="submit" class="admin-primary-btn">
+                                            <button
+                                                type="submit"
+                                                class="admin-primary-btn"
+                                            >
                                                 Save Changes
                                             </button>
                                         </form>
 
                                         <!-- Reset Password -->
-                                        <form method="POST" action="{{ route('admin.users.password', $user) }}" class="admin-form-block">
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.users.password', $user) }}"
+                                            class="admin-form-block"
+                                        >
                                             @csrf
                                             @method('PATCH')
 
@@ -304,6 +411,7 @@
                                             <div class="admin-form-grid">
                                                 <div class="form-field">
                                                     <label>New Password</label>
+
                                                     <input
                                                         type="password"
                                                         name="password"
@@ -314,6 +422,7 @@
 
                                                 <div class="form-field">
                                                     <label>Confirm Password</label>
+
                                                     <input
                                                         type="password"
                                                         name="password_confirmation"
@@ -323,7 +432,10 @@
                                                 </div>
                                             </div>
 
-                                            <button type="submit" class="admin-secondary-btn">
+                                            <button
+                                                type="submit"
+                                                class="admin-secondary-btn"
+                                            >
                                                 Reset Password
                                             </button>
                                         </form>
@@ -338,7 +450,10 @@
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="submit" class="admin-danger-btn">
+                                            <button
+                                                type="submit"
+                                                class="admin-danger-btn"
+                                            >
                                                 <i class="fa-solid fa-trash"></i>
                                                 Delete User
                                             </button>
@@ -353,21 +468,26 @@
                         @endforelse
                     </div>
 
-                    <!-- Simple Pagination -->
+                    <!-- Pagination -->
                     @if($users->hasPages())
                         <div class="admin-pagination">
                             @if($users->previousPageUrl())
-                                <a href="{{ $users->previousPageUrl() }}">Previous</a>
+                                <a href="{{ $users->previousPageUrl() }}">
+                                    Previous
+                                </a>
                             @else
                                 <span>Previous</span>
                             @endif
 
                             <strong>
-                                Page {{ $users->currentPage() }} of {{ $users->lastPage() }}
+                                Page {{ $users->currentPage() }}
+                                of {{ $users->lastPage() }}
                             </strong>
 
                             @if($users->nextPageUrl())
-                                <a href="{{ $users->nextPageUrl() }}">Next</a>
+                                <a href="{{ $users->nextPageUrl() }}">
+                                    Next
+                                </a>
                             @else
                                 <span>Next</span>
                             @endif
@@ -375,18 +495,28 @@
                     @endif
                 </div>
 
-                <!-- Create User Card -->
-                <aside class="deadlines-card admin-create-card" id="createUserForm">
+                <!-- =================================================
+                     CREATE USER FORM
+                     ================================================= -->
+                <aside
+                    class="deadlines-card admin-create-card"
+                    id="createUserForm"
+                >
                     <div class="section-header">
                         <h3>Create User</h3>
                         <p>Create a new admin or regular user account</p>
                     </div>
 
-                    <form method="POST" action="{{ route('admin.users.store') }}" class="admin-create-form">
+                    <form
+                        method="POST"
+                        action="{{ route('admin.users.store') }}"
+                        class="admin-create-form"
+                    >
                         @csrf
 
                         <div class="form-field">
                             <label>Full Name</label>
+
                             <input
                                 type="text"
                                 name="full_name"
@@ -398,6 +528,7 @@
 
                         <div class="form-field">
                             <label>Username</label>
+
                             <input
                                 type="text"
                                 name="username"
@@ -409,6 +540,7 @@
 
                         <div class="form-field">
                             <label>Email</label>
+
                             <input
                                 type="email"
                                 name="email"
@@ -420,14 +552,27 @@
 
                         <div class="form-field">
                             <label>Role</label>
+
                             <select name="role" required>
-                                <option value="user" @selected(old('role') === 'user')>User</option>
-                                <option value="admin" @selected(old('role') === 'admin')>Admin</option>
+                                <option
+                                    value="user"
+                                    @selected(old('role') === 'user')
+                                >
+                                    User
+                                </option>
+
+                                <option
+                                    value="admin"
+                                    @selected(old('role') === 'admin')
+                                >
+                                    Admin
+                                </option>
                             </select>
                         </div>
 
                         <div class="form-field">
                             <label>Password</label>
+
                             <input
                                 type="password"
                                 name="password"
@@ -438,6 +583,7 @@
 
                         <div class="form-field">
                             <label>Confirm Password</label>
+
                             <input
                                 type="password"
                                 name="password_confirmation"
@@ -446,7 +592,10 @@
                             >
                         </div>
 
-                        <button type="submit" class="new-task-btn admin-create-btn">
+                        <button
+                            type="submit"
+                            class="new-task-btn admin-create-btn"
+                        >
                             Create User
                         </button>
                     </form>
@@ -455,6 +604,7 @@
         </main>
     </div>
 
+    <!-- Toast is retained for other future modules. -->
     <div class="admin-toast" id="adminToast">
         Feature will be available in the next admin stage.
     </div>
@@ -463,4 +613,5 @@
     <script src="{{ asset('assets/js/preferences.js') }}"></script>
     <script src="{{ asset('assets/js/admin-users.js') }}"></script>
 </body>
+
 </html>

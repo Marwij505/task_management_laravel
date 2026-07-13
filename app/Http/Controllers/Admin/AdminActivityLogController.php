@@ -10,12 +10,13 @@ use Illuminate\View\View;
 
 class AdminActivityLogController extends Controller
 {
+    /**
+     * Menampilkan daftar aktivitas sistem.
+     */
     public function index(Request $request): View
     {
         /*
-         * Ambil filter dari URL.
-         * Contoh:
-         * /admin/activity-logs?search=password&module=admin_users&action=reset_password
+         * Filter dari query string.
          */
         $filters = [
             'search' => trim((string) $request->query('search', '')),
@@ -26,7 +27,7 @@ class AdminActivityLogController extends Controller
         ];
 
         /*
-         * Dropdown actor.
+         * Daftar user untuk filter actor.
          */
         $users = User::query()
             ->orderBy('full_name')
@@ -34,7 +35,7 @@ class AdminActivityLogController extends Controller
             ->get();
 
         /*
-         * Dropdown module dan action diambil dari data log yang sudah ada.
+         * Module dan action diambil dari log yang tersedia.
          */
         $modules = ActivityLog::query()
             ->select('module')
@@ -49,9 +50,9 @@ class AdminActivityLogController extends Controller
             ->pluck('action');
 
         /*
-         * Query utama activity logs.
+         * Query utama activity log.
          */
-        $logsQuery = ActivityLog::query()
+        $logs = ActivityLog::query()
             ->with(['actor', 'targetUser'])
             ->when($filters['search'] !== '', function ($query) use ($filters) {
                 $search = $filters['search'];
@@ -61,8 +62,16 @@ class AdminActivityLogController extends Controller
                         ->where('description', 'like', "%{$search}%")
                         ->orWhere('module', 'like', "%{$search}%")
                         ->orWhere('action', 'like', "%{$search}%")
+                        ->orWhere('ip_address', 'like', "%{$search}%")
                         ->orWhereHas('actor', function ($actorQuery) use ($search) {
                             $actorQuery
+                                ->where('full_name', 'like', "%{$search}%")
+                                ->orWhere('name', 'like', "%{$search}%")
+                                ->orWhere('username', 'like', "%{$search}%")
+                                ->orWhere('email', 'like', "%{$search}%");
+                        })
+                        ->orWhereHas('targetUser', function ($targetQuery) use ($search) {
+                            $targetQuery
                                 ->where('full_name', 'like', "%{$search}%")
                                 ->orWhere('name', 'like', "%{$search}%")
                                 ->orWhere('username', 'like', "%{$search}%")
@@ -82,20 +91,31 @@ class AdminActivityLogController extends Controller
             ->when($filters['date'] !== '', function ($query) use ($filters) {
                 $query->whereDate('created_at', $filters['date']);
             })
-            ->latest('created_at');
-
-        $logs = $logsQuery
+            ->latest('created_at')
             ->paginate(12)
             ->withQueryString();
 
         /*
-         * Statistik kecil halaman activity logs.
+         * Ringkasan statistik.
          */
         $stats = [
             'totalLogs' => ActivityLog::count(),
-            'todayLogs' => ActivityLog::whereDate('created_at', today())->count(),
-            'adminLogs' => ActivityLog::where('module', 'like', 'admin_%')->count(),
-            'authLogs' => ActivityLog::where('module', 'auth')->count(),
+
+            'todayLogs' => ActivityLog::query()
+                ->whereDate('created_at', today())
+                ->count(),
+
+            'adminLogs' => ActivityLog::query()
+                ->where('module', 'like', 'admin_%')
+                ->count(),
+
+            'userLogs' => ActivityLog::query()
+                ->whereIn('module', ['user_tasks', 'profile'])
+                ->count(),
+
+            'authLogs' => ActivityLog::query()
+                ->where('module', 'auth')
+                ->count(),
         ];
 
         return view('admin.logs.index', [

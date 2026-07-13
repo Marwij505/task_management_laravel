@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Task;
+use App\Services\ActivityLogService;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -99,6 +100,23 @@ class TaskController extends Controller
             return $task;
         });
 
+        ActivityLogService::log(
+            module: 'user_tasks',
+            action: 'create',
+            description: 'User created task: '.$task->title,
+            properties: [
+                'task_id' => $task->id,
+                'title' => $task->title,
+                'status' => $task->status,
+                'priority' => $task->priority,
+                'category' => $task->category,
+                'deadline' => $task->deadline
+                    ? Carbon::parse($task->deadline)->format('Y-m-d')
+                    : null,
+            ],
+            targetUserId: $request->user()->id
+        );
+
         return response()->json([
             'success' => true,
             'message' => 'Task created successfully.',
@@ -138,6 +156,16 @@ class TaskController extends Controller
             ], 404);
         }
 
+        $before = $task->only([
+            'title',
+            'status',
+            'priority',
+            'category',
+            'deadline',
+            'progress',
+            'assignee',
+        ]);
+
         DB::transaction(function () use ($request, $task): void {
             $status = (string) $request->input('status');
 
@@ -154,6 +182,28 @@ class TaskController extends Controller
 
             $this->replaceTags($task, (string) $request->input('tags', ''));
         });
+
+        $task->refresh();
+
+        ActivityLogService::log(
+            module: 'user_tasks',
+            action: 'update',
+            description: 'User updated task: '.$task->title,
+            properties: [
+                'task_id' => $task->id,
+                'before' => $before,
+                'after' => $task->only([
+                    'title',
+                    'status',
+                    'priority',
+                    'category',
+                    'deadline',
+                    'progress',
+                    'assignee',
+                ]),
+            ],
+            targetUserId: $request->user()->id
+        );
 
         return response()->json([
             'success' => true,
@@ -190,6 +240,21 @@ class TaskController extends Controller
             'progress' => 100,
         ]);
 
+        ActivityLogService::log(
+            module: 'user_tasks',
+            action: 'complete',
+            description: 'User completed task: '.$task->title,
+            properties: [
+                'task_id' => $task->id,
+                'title' => $task->title,
+                'priority' => $task->priority,
+                'deadline' => $task->deadline
+                    ? Carbon::parse($task->deadline)->format('Y-m-d')
+                    : null,
+            ],
+            targetUserId: $request->user()->id
+        );
+
         return response()->json([
             'success' => true,
             'message' => 'Task marked as completed successfully.',
@@ -223,6 +288,23 @@ class TaskController extends Controller
                 'message' => 'Task not found or you do not have permission to delete it.',
             ], 404);
         }
+
+        $deletedTaskData = [
+            'task_id' => $task->id,
+            'title' => $task->title,
+            'status' => $task->status,
+            'priority' => $task->priority,
+            'category' => $task->category,
+            'deadline' => (string) $task->deadline,
+        ];
+
+        ActivityLogService::log(
+            module: 'user_tasks',
+            action: 'delete',
+            description: 'User deleted task: '.$task->title,
+            properties: $deletedTaskData,
+            targetUserId: $request->user()->id
+        );
 
         $task->delete();
 

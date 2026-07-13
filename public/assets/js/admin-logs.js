@@ -2,11 +2,15 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearButton = document.querySelector('.js-clear-filters');
 
     /*
-     * Tombol Clear Filters mengembalikan halaman ke daftar log tanpa filter.
+     * Menghapus seluruh filter tanpa hardcode URL aplikasi.
      */
     if (clearButton) {
         clearButton.addEventListener('click', function () {
-            window.location.href = '/admin/activity-logs';
+            const resetUrl = clearButton.dataset.resetUrl;
+
+            if (resetUrl) {
+                window.location.href = resetUrl;
+            }
         });
     }
 });

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ActivityLog extends Model
 {
     /**
-     * Kolom yang boleh diisi massal.
+     * Kolom yang boleh diisi melalui ActivityLog::create().
      */
     protected $fillable = [
         'user_id',
@@ -22,7 +22,7 @@ class ActivityLog extends Model
     ];
 
     /**
-     * properties otomatis dibaca sebagai array.
+     * Membaca properties JSON sebagai array.
      */
     protected function casts(): array
     {
@@ -32,7 +32,7 @@ class ActivityLog extends Model
     }
 
     /**
-     * Actor adalah user yang melakukan aktivitas.
+     * User yang melakukan aktivitas.
      */
     public function actor(): BelongsTo
     {
@@ -40,7 +40,7 @@ class ActivityLog extends Model
     }
 
     /**
-     * Target user adalah user yang terdampak aktivitas.
+     * User yang terdampak aktivitas.
      */
     public function targetUser(): BelongsTo
     {

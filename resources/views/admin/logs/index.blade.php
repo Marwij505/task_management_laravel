@@ -80,7 +80,11 @@
                 </div>
 
                 <div class="topbar-right">
-                    <button type="button" class="new-task-btn js-clear-filters">
+                    <button
+                        type="button"
+                        class="new-task-btn js-clear-filters"
+                        data-reset-url="{{ route('admin.logs.index') }}"
+                    >
                         <span>Clear Filters</span>
                     </button>
                 </div>
@@ -92,6 +96,7 @@
                         <h4>Total Logs</h4>
                         <h3>{{ $stats['totalLogs'] }}</h3>
                     </div>
+
                     <div class="stat-icon blue">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </div>
@@ -102,6 +107,7 @@
                         <h4>Today</h4>
                         <h3>{{ $stats['todayLogs'] }}</h3>
                     </div>
+
                     <div class="stat-icon green">
                         <i class="fa-regular fa-calendar-check"></i>
                     </div>
@@ -112,6 +118,7 @@
                         <h4>Admin Actions</h4>
                         <h3>{{ $stats['adminLogs'] }}</h3>
                     </div>
+
                     <div class="stat-icon purple">
                         <i class="fa-solid fa-user-shield"></i>
                     </div>
@@ -119,9 +126,10 @@
 
                 <div class="stat-card">
                     <div class="stat-info">
-                        <h4>Auth Events</h4>
-                        <h3>{{ $stats['authLogs'] }}</h3>
+                        <h4>User/Auth Events</h4>
+                        <h3>{{ $stats['userLogs'] + $stats['authLogs'] }}</h3>
                     </div>
+
                     <div class="stat-icon orange">
                         <i class="fa-solid fa-right-to-bracket"></i>
                     </div>
@@ -202,7 +210,19 @@
                     @forelse($logs as $log)
                         <article class="admin-log-row">
                             <div class="admin-log-icon {{ $log->module }}">
-                                <i class="fa-solid fa-clock-rotate-left"></i>
+                                @if($log->module === 'auth')
+                                    <i class="fa-solid fa-right-to-bracket"></i>
+                                @elseif($log->module === 'admin_users')
+                                    <i class="fa-solid fa-user-shield"></i>
+                                @elseif($log->module === 'admin_tasks')
+                                    <i class="fa-solid fa-list-check"></i>
+                                @elseif($log->module === 'user_tasks')
+                                    <i class="fa-regular fa-square-check"></i>
+                                @elseif($log->module === 'profile')
+                                    <i class="fa-regular fa-user"></i>
+                                @else
+                                    <i class="fa-solid fa-clock-rotate-left"></i>
+                                @endif
                             </div>
 
                             <div class="admin-log-main">
@@ -213,7 +233,10 @@
                                         <p>
                                             Actor:
                                             <strong>
-                                                {{ $log->actor?->full_name ?: $log->actor?->name ?: $log->actor?->username ?: 'System' }}
+                                                {{ $log->actor?->full_name
+                                                ?: $log->actor?->name
+                                                ?: $log->actor?->username
+                                                ?: 'System / Guest' }}
                                             </strong>
                                         </p>
                                     </div>
@@ -253,7 +276,10 @@
 
                                     <div class="admin-log-json">
                                         <strong>Properties</strong>
-                                        <pre>{{ json_encode($log->properties ?? [], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) }}</pre>
+                                        <pre>{{ json_encode(
+                                            $log->properties ?? [],
+                                            JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
+                                        ) }}</pre>
 
                                         <strong>User Agent</strong>
                                         <p>{{ $log->user_agent ?: 'No user agent recorded.' }}</p>
