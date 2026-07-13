@@ -116,6 +116,29 @@ PERSIAPAN
 
    http://127.0.0.1:8000
 
+8. Jika ingin membuat akun admin
+
+   php artisan tinker
+
+   use App\Models\User;
+   use Illuminate\Support\Facades\Hash;
+
+   $admin = User::create([
+      'name' => 'Flowlist Administrator',
+      'full_name' => 'Flowlist Administrator',
+      'username' => 'flowlistadmin',
+      'email' => 'admin@example.com',
+      'password' => Hash::make('12345'),
+      'role' => User::ROLE_ADMIN,
+   ]);
+
+   $admin;
+
+   exit
+
+   Username : flowlistadmin
+   Password : 12345
+
 URL UTAMA
 ---------
 /login
