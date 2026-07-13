@@ -213,11 +213,175 @@ if (passwordToggleBtn && passwordInput && passwordToggleIcon) {
     });
 }
 
+/*
+|--------------------------------------------------------------------------
+| LOGIN THEME SYNCHRONIZATION
+|--------------------------------------------------------------------------
+| Tema disimpan sementara di sessionStorage.
+|
+| Menggunakan sessionStorage, bukan localStorage global, karena:
+| 1. sessionStorage hanya berlaku pada tab saat ini.
+| 2. Data hanya dipakai satu kali setelah login.
+| 3. Tema akun lain tidak ikut terbawa.
+|--------------------------------------------------------------------------
+*/
+
+const FLOWLIST_LOGIN_THEME_KEY = 'flowlist.login-theme-bootstrap';
+
+/**
+ * Memastikan nilai tema hanya Light, Dark, atau System.
+ */
+function normalizeLoginTheme(theme) {
+    const value = String(theme || '').trim().toLowerCase();
+
+    if (value === 'dark') {
+        return 'Dark';
+    }
+
+    if (value === 'system') {
+        return 'System';
+    }
+
+    return 'Light';
+}
+
+/**
+ * Mengubah setting tema menjadi tema aktual untuk CSS.
+ *
+ * Light  menjadi light.
+ * Dark   menjadi dark.
+ * System mengikuti tema Windows atau browser.
+ */
+function resolveLoginTheme(themeSetting) {
+    if (themeSetting === 'System') {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+    }
+
+    return themeSetting === 'Dark'
+        ? 'dark'
+        : 'light';
+}
+
+/**
+ * Langsung menerapkan tema milik akun yang baru login.
+ *
+ * Selain mengubah tampilan login page, fungsi ini juga
+ * memperbarui cache utama Flowlist agar halaman dashboard
+ * dan menu sidebar berikutnya menggunakan tema yang sama.
+ */
+function applyLoginTheme(themeSetting) {
+    const normalizedSetting =
+        normalizeLoginTheme(themeSetting);
+
+    /*
+     * Gunakan Global Theme Manager jika tersedia.
+     *
+     * FlowlistTheme.applyTheme juga memperbarui cache tema,
+     * sehingga cache akun sebelumnya langsung diganti.
+     */
+    if (
+        window.FlowlistTheme
+        && typeof window.FlowlistTheme.applyTheme
+            === 'function'
+    ) {
+        window.FlowlistTheme.applyTheme(
+            normalizedSetting
+        );
+
+        return;
+    }
+
+    /*
+     * Fallback jika theme.js tidak dipanggil
+     * pada halaman login.
+     */
+    const resolvedTheme =
+        resolveLoginTheme(normalizedSetting);
+
+    const rootElement =
+        document.documentElement;
+
+    rootElement.setAttribute(
+        'data-theme-setting',
+        normalizedSetting
+    );
+
+    rootElement.setAttribute(
+        'data-theme',
+        resolvedTheme
+    );
+
+    /*
+     * Cache tetap harus diperbarui sebelum redirect.
+     */
+    try {
+        localStorage.setItem(
+            'flowlist_theme',
+            normalizedSetting
+        );
+    } catch (error) {
+        console.warn(
+            'Unable to save logged-in account theme.',
+            error
+        );
+    }
+}
+
+/**
+ * Menyimpan tema akun yang baru login.
+ *
+ * theme.js pada halaman tujuan akan membaca data ini
+ * sebelum preferences akun dimuat.
+ */
+function prepareAccountThemeAfterLogin(data) {
+    const themeSetting = normalizeLoginTheme(data.theme);
+
+    const payload = {
+        userId: Number(data.user_id || 0),
+        themeSetting: themeSetting,
+        createdAt: Date.now(),
+    };
+
+    try {
+        sessionStorage.setItem(
+            FLOWLIST_LOGIN_THEME_KEY,
+            JSON.stringify(payload)
+        );
+    } catch (error) {
+        /*
+         * Jika sessionStorage diblokir browser,
+         * login tetap boleh berjalan.
+         */
+        console.warn(
+            'Unable to store login theme preference.',
+            error
+        );
+    }
+
+    /*
+     * Tema login page juga langsung disesuaikan.
+     * Popup login berhasil tidak lagi memakai tema akun sebelumnya.
+     */
+    applyLoginTheme(themeSetting);
+}
+
 // Jika form login ada
 if (loginForm) {
     loginForm.addEventListener('submit', function (event) {
         // Cegah submit default browser
         event.preventDefault();
+
+        /*
+        * Bersihkan data login theme lama.
+        * Ini mencegah payload dari login sebelumnya digunakan kembali.
+        */
+        try {
+            sessionStorage.removeItem(FLOWLIST_LOGIN_THEME_KEY);
+        } catch (error) {
+            console.warn('Unable to clear previous login theme.', error);
+        }
 
         // Ambil nilai input dan rapikan spasi
         const loginValue = loginInput.value.trim();
@@ -264,18 +428,30 @@ if (loginForm) {
         .then(data => {
             // Jika login berhasil
             if (data.success) {
+                /*
+                * Terapkan tema akun baru sebelum redirect.
+                *
+                * Contoh:
+                * Akun kedua memakai Dark.
+                * Akun pertama memakai Light.
+                * Ketika akun pertama login, tema langsung kembali Light.
+                */
+                prepareAccountThemeAfterLogin(data);
+
                 showLoginAlert(
                     'Login Successful',
                     data.message,
                     'checkmark-circle-outline'
                 );
 
-                // Tunggu sebentar lalu pindah ke dashboard
+                /*
+                * Pindah ke dashboard setelah alert login berhasil.
+                */
                 setTimeout(function () {
-                    window.location.href = data.redirect || window.FlowlistRoutes.dashboard;
+                    window.location.href =
+                        data.redirect || window.FlowlistRoutes.dashboard;
                 }, 1200);
             }
-
             // Jika login gagal
             else {
                 showLoginAlert(

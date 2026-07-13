@@ -97,8 +97,24 @@ class AuthController extends Controller
             }
         }
 
-        $username = Auth::user()?->username ?: Auth::user()?->name ?: 'User';
+        $username = Auth::user()?->username 
+        ?: Auth::user()?->name 
+        ?: 'User';
+
         $user = Auth::user();
+        /*
+        * Ambil tema milik akun yang baru login.
+        *
+        * Tema harus berasal dari database user, bukan dari browser
+        * yang mungkin masih menyimpan tema akun sebelumnya.
+        */
+        $accountTheme = in_array(
+            $user?->theme,
+            ['Light', 'Dark', 'System'],
+            true
+        )
+            ? $user->theme
+            : 'Light';
         /*
         * Catat login admin maupun user biasa.
         */
@@ -127,6 +143,12 @@ class AuthController extends Controller
             'success' => true,
             'message' => 'Enjoy This Website, '.$username.'!',
             'redirect' => $redirectRoute,
+            /*
+            * Data ini dipakai login.js untuk langsung menerapkan
+            * tema akun sebelum halaman dashboard dibuka.
+            */
+            'user_id' => $user?->id,
+            'theme' => $accountTheme,
         ]);
     }
 
