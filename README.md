@@ -132,12 +132,12 @@ PERSIAPAN
       'role' => User::ROLE_ADMIN,
    ]);
 
-   $admin;
+   App\Models\User::where('role', 'admin')->select('id', 'name', 'username', 'email', 'role')->get();
 
    exit
 
    Username : flowlistadmin
-   Password : 12345
+   Password : 12345exit
 
 URL UTAMA
 ---------

@@ -1443,25 +1443,17 @@ html[data-theme="dark"] .more-task-count {
 
 /*
 |--------------------------------------------------------------------------
-| FLOWLIST APPLICATION FOOTER
+| FLOWLIST ACADEMIC APPLICATION FOOTER
 |--------------------------------------------------------------------------
-| Footer global untuk halaman user dan admin.
-|
-| Karakteristik:
-| 1. Menyesuaikan layout sidebar kiri.
-| 2. Mendukung light dan dark mode.
-| 3. Responsif pada tablet dan smartphone.
-| 4. Tetap berada di bawah ketika konten halaman sedikit.
-| 5. Tidak menggunakan posisi fixed sehingga tidak menutup konten.
+| Footer aplikasi Flowlist yang memuat:
+| 1. Identitas aplikasi.
+| 2. Informasi akademik.
+| 3. Anggota kelompok dan NIM.
+| 4. Status domain.
+| 5. Informasi sesi dan versi aplikasi.
 |--------------------------------------------------------------------------
 */
 
-/*
- * Main content dibuat sebagai vertical flex container.
- *
- * Footer memakai margin-top: auto agar tetap turun ke bagian bawah
- * ketika isi halaman pendek.
- */
 .main-content {
     min-height: 100vh;
     display: flex;
@@ -1470,7 +1462,7 @@ html[data-theme="dark"] .more-task-count {
 
 /*
 |--------------------------------------------------------------------------
-| Footer Wrapper
+| Footer Container
 |--------------------------------------------------------------------------
 */
 
@@ -1481,75 +1473,60 @@ html[data-theme="dark"] .more-task-count {
     flex-shrink: 0;
 }
 
-/*
- * Bagian utama footer.
- *
- * Menggunakan surface berbentuk card tipis agar terlihat profesional,
- * tetapi tetap sederhana untuk layout aplikasi.
- */
-.app-footer__inner {
+.app-footer__card {
     width: 100%;
-    min-height: 78px;
-    padding: 16px 20px;
+    overflow: hidden;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-
-    background:
-        linear-gradient(
-            135deg,
-            rgba(255, 255, 255, 0.96),
-            rgba(248, 250, 252, 0.92)
-        );
-
-    border: 1px solid #e5e9ef;
-    border-radius: 18px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
 
     box-shadow:
-        0 10px 30px rgba(15, 23, 42, 0.05);
+        0 14px 38px rgba(15, 23, 42, 0.07);
 
     transition:
-        background-color var(--ui-duration-normal) ease,
         border-color var(--ui-duration-normal) ease,
         box-shadow var(--ui-duration-normal) ease,
         transform var(--ui-duration-normal) var(--ui-ease-standard);
 }
 
-/*
- * Hover dibuat sangat halus agar footer tidak terasa seperti tombol.
- */
-.app-footer__inner:hover {
-    border-color: rgba(22, 217, 95, 0.26);
+.app-footer__card:hover {
+    border-color: rgba(22, 217, 95, 0.3);
 
     box-shadow:
-        0 14px 34px rgba(15, 23, 42, 0.075);
+        0 18px 44px rgba(15, 23, 42, 0.1);
 }
 
 /*
 |--------------------------------------------------------------------------
-| Footer Left Section
+| Footer Header
 |--------------------------------------------------------------------------
 */
 
-.app-footer__left {
-    min-width: 0;
+.app-footer__header {
+    padding: 20px 22px;
 
     display: flex;
     align-items: center;
-    gap: 18px;
+    justify-content: space-between;
+    gap: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(22, 217, 95, 0.08),
+            rgba(255, 255, 255, 0.96)
+        );
+
+    border-bottom: 1px solid #e7ebf0;
 }
 
-/*
- * Brand footer mengarah kembali ke dashboard.
- */
 .app-footer__brand {
     min-width: 0;
 
     display: inline-flex;
     align-items: center;
-    gap: 11px;
+    gap: 12px;
 
     color: #172033;
     text-decoration: none;
@@ -1564,13 +1541,10 @@ html[data-theme="dark"] .more-task-count {
     transform: translateY(-1px);
 }
 
-/*
- * Kotak logo kecil.
- */
 .app-footer__logo {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
 
     display: inline-flex;
     align-items: center;
@@ -1583,160 +1557,327 @@ html[data-theme="dark"] .more-task-count {
             #10b94f
         );
 
-    border-radius: 12px;
-
+    border-radius: 13px;
     color: #ffffff;
 
     box-shadow:
-        0 8px 18px rgba(22, 217, 95, 0.22);
+        0 9px 20px rgba(22, 217, 95, 0.24);
 
     transition:
-        transform var(--ui-duration-normal) var(--ui-ease-bounce),
-        box-shadow var(--ui-duration-normal) ease;
+        transform var(--ui-duration-normal) var(--ui-ease-bounce);
 }
 
 .app-footer__brand:hover .app-footer__logo {
     transform: rotate(-4deg) scale(1.06);
-
-    box-shadow:
-        0 10px 22px rgba(22, 217, 95, 0.3);
 }
 
 .app-footer__logo i {
     color: #ffffff;
-    font-size: 0.96rem;
+    font-size: 1rem;
 }
 
-/*
- * Nama Flowlist dan tagline.
- */
-.app-footer__brand-copy {
+.app-footer__brand-text {
     min-width: 0;
 
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
 }
 
-.app-footer__brand-copy strong {
+.app-footer__brand-text strong {
     color: #172033;
-    font-size: 0.96rem;
+    font-size: 1.05rem;
     font-weight: 800;
     line-height: 1.2;
 }
 
-.app-footer__brand-copy small {
-    color: #8490a3;
-    font-size: 0.73rem;
+.app-footer__brand-text small {
+    color: #7c889b;
+    font-size: 0.76rem;
     font-weight: 500;
-    line-height: 1.35;
-    white-space: nowrap;
-}
-
-/*
- * Garis pemisah antara brand dan copyright.
- */
-.app-footer__divider {
-    width: 1px;
-    height: 30px;
-    flex: 0 0 1px;
-
-    background: #e1e6ed;
-}
-
-/*
- * Copyright.
- */
-.app-footer__copyright {
-    margin: 0;
-
-    color: #8490a3;
-    font-size: 0.79rem;
-    font-weight: 500;
-    line-height: 1.5;
-    white-space: nowrap;
 }
 
 /*
 |--------------------------------------------------------------------------
-| Footer Right Section
+| Domain Status
 |--------------------------------------------------------------------------
 */
 
-.app-footer__right {
+.app-footer__domain {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
     gap: 9px;
     flex-wrap: wrap;
 }
 
-/*
- * Informasi kecil pada footer:
- * Session, role, dan version.
- */
-.app-footer__meta {
+.app-footer__domain-label,
+.app-footer__domain-status {
     min-height: 34px;
-    padding: 7px 11px;
+    padding: 8px 11px;
 
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 7px;
 
-    background: #f5f7fa;
-    border: 1px solid #e6eaf0;
     border-radius: 10px;
 
-    color: #64748b;
     font-size: 0.74rem;
     font-weight: 700;
     line-height: 1;
-    white-space: nowrap;
+}
+
+.app-footer__domain-label {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+}
+
+.app-footer__domain-status {
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    color: #b86d00;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Footer Main Content
+|--------------------------------------------------------------------------
+*/
+
+.app-footer__content {
+    padding: 22px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
+    gap: 22px;
+}
+
+.app-footer__section {
+    min-width: 0;
+    padding: 19px;
+
+    background: #f8fafc;
+    border: 1px solid #e7ebf0;
+    border-radius: 16px;
+}
+
+.app-footer__section h3 {
+    margin: 0 0 16px;
+
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    color: #172033;
+    font-size: 0.92rem;
+    font-weight: 800;
+}
+
+.app-footer__section h3 i {
+    color: var(--accent);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Academic Information
+|--------------------------------------------------------------------------
+*/
+
+.app-footer__info-list {
+    margin: 0;
+
+    display: grid;
+    gap: 0;
+}
+
+.app-footer__info-row {
+    padding: 10px 0;
+
+    display: grid;
+    grid-template-columns: minmax(125px, 0.45fr) minmax(0, 1fr);
+    gap: 14px;
+
+    border-bottom: 1px solid #e7ebf0;
+}
+
+.app-footer__info-row:first-child {
+    padding-top: 0;
+}
+
+.app-footer__info-row:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.app-footer__info-row dt {
+    color: #7c889b;
+    font-size: 0.76rem;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.app-footer__info-row dd {
+    margin: 0;
+
+    color: #263247;
+    font-size: 0.78rem;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+.app-footer__coming-soon {
+    padding: 5px 8px;
+
+    display: inline-flex;
+    align-items: center;
+
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.22);
+    border-radius: 8px;
+
+    color: #b86d00;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Group Members
+|--------------------------------------------------------------------------
+*/
+
+.app-footer__members {
+    margin: 0;
+    padding: 0;
+
+    display: grid;
+    gap: 10px;
+
+    list-style: none;
+}
+
+.app-footer__member {
+    padding: 11px;
+
+    display: flex;
+    align-items: center;
+    gap: 11px;
+
+    background: #ffffff;
+    border: 1px solid #e4e9ef;
+    border-radius: 12px;
 
     transition:
-        color var(--ui-duration-fast) ease,
         background-color var(--ui-duration-fast) ease,
         border-color var(--ui-duration-fast) ease,
         transform var(--ui-duration-fast) var(--ui-ease-standard);
 }
 
-.app-footer__meta:hover {
+.app-footer__member:hover {
+    border-color: rgba(22, 217, 95, 0.35);
+    transform: translateX(3px);
+}
+
+.app-footer__member-number {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    background: rgba(22, 217, 95, 0.12);
+    border-radius: 10px;
+
+    color: #138442;
+    font-size: 0.72rem;
+    font-weight: 800;
+}
+
+.app-footer__member-profile {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.app-footer__member-profile strong {
+    color: #263247;
+    font-size: 0.79rem;
+    font-weight: 800;
+}
+
+.app-footer__member-profile small {
+    color: #7c889b;
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Footer Bottom
+|--------------------------------------------------------------------------
+*/
+
+.app-footer__bottom {
+    padding: 15px 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+
+    background: #f8fafc;
+    border-top: 1px solid #e7ebf0;
+}
+
+.app-footer__copyright {
+    margin: 0;
+
+    color: #7c889b;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+.app-footer__meta-list {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.app-footer__meta {
+    min-height: 31px;
+    padding: 7px 10px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
     background: #ffffff;
-    border-color: rgba(22, 217, 95, 0.32);
-    color: #253247;
-    transform: translateY(-1px);
+    border: 1px solid #e2e8f0;
+    border-radius: 9px;
+
+    color: #64748b;
+    font-size: 0.7rem;
+    font-weight: 700;
+    line-height: 1;
 }
 
 .app-footer__meta i {
     color: #8490a3;
-    font-size: 0.73rem;
-
-    transition:
-        color var(--ui-duration-fast) ease,
-        transform var(--ui-duration-fast) var(--ui-ease-bounce);
 }
-
-.app-footer__meta:hover i {
-    color: var(--accent);
-    transform: scale(1.08);
-}
-
-/*
-|--------------------------------------------------------------------------
-| Session Status
-|--------------------------------------------------------------------------
-*/
 
 .app-footer__session {
-    background: rgba(22, 217, 95, 0.08);
-    border-color: rgba(22, 217, 95, 0.18);
+    background: rgba(22, 217, 95, 0.09);
+    border-color: rgba(22, 217, 95, 0.2);
     color: #138442;
 }
 
-/*
- * Titik hijau status aktif.
- */
 .app-footer__status-dot {
     position: relative;
 
@@ -1751,9 +1892,6 @@ html[data-theme="dark"] .more-task-count {
         0 0 0 3px rgba(22, 217, 95, 0.12);
 }
 
-/*
- * Animasi denyut kecil.
- */
 .app-footer__status-dot::after {
     content: "";
 
@@ -1781,80 +1919,101 @@ html[data-theme="dark"] .more-task-count {
 
 /*
 |--------------------------------------------------------------------------
-| Admin Account Styling
+| Dark Mode
 |--------------------------------------------------------------------------
-| Admin account diberi sedikit aksen ungu agar mudah dibedakan.
 */
 
-.app-footer__account .fa-shield-halved {
-    color: #8b5cf6;
+html[data-theme="dark"] .app-footer__card {
+    background: var(--dark-surface-1);
+    border-color: var(--dark-border);
+
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.23);
 }
 
-/*
-|--------------------------------------------------------------------------
-| Footer Dark Mode
-|--------------------------------------------------------------------------
-*/
-
-html[data-theme="dark"] .app-footer__inner {
+html[data-theme="dark"] .app-footer__header {
     background:
         linear-gradient(
             135deg,
-            rgba(17, 24, 39, 0.96),
-            rgba(23, 32, 51, 0.92)
+            rgba(22, 217, 95, 0.09),
+            rgba(17, 24, 39, 0.96)
         );
 
-    border-color: var(--dark-border);
-    box-shadow:
-        0 14px 34px rgba(0, 0, 0, 0.2);
+    border-bottom-color: var(--dark-border);
 }
 
-html[data-theme="dark"] .app-footer__inner:hover {
-    border-color: rgba(22, 217, 95, 0.32);
-
-    box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.26);
-}
-
-html[data-theme="dark"] .app-footer__brand {
+html[data-theme="dark"] .app-footer__brand-text strong,
+html[data-theme="dark"] .app-footer__section h3 {
     color: var(--dark-text-primary);
 }
 
-html[data-theme="dark"] .app-footer__brand:hover {
-    color: var(--dark-green-text);
-}
-
-html[data-theme="dark"] .app-footer__brand-copy strong {
-    color: var(--dark-text-primary);
-}
-
-html[data-theme="dark"] .app-footer__brand-copy small,
+html[data-theme="dark"] .app-footer__brand-text small,
 html[data-theme="dark"] .app-footer__copyright {
     color: var(--dark-text-muted);
 }
 
-html[data-theme="dark"] .app-footer__divider {
-    background: var(--dark-border);
-}
-
-html[data-theme="dark"] .app-footer__meta {
+html[data-theme="dark"] .app-footer__domain-label {
     background: var(--dark-surface-2);
     border-color: var(--dark-border);
     color: var(--dark-text-muted);
 }
 
-html[data-theme="dark"] .app-footer__meta:hover {
-    background: var(--dark-surface-hover);
-    border-color: rgba(22, 217, 95, 0.4);
-    color: var(--dark-text-primary);
+html[data-theme="dark"] .app-footer__domain-status,
+html[data-theme="dark"] .app-footer__coming-soon {
+    background: var(--dark-yellow-soft);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: var(--dark-yellow-text);
 }
 
-html[data-theme="dark"] .app-footer__meta i {
+html[data-theme="dark"] .app-footer__section {
+    background: var(--dark-surface-2);
+    border-color: var(--dark-border);
+}
+
+html[data-theme="dark"] .app-footer__info-row {
+    border-bottom-color: var(--dark-border);
+}
+
+html[data-theme="dark"] .app-footer__info-row dt {
     color: var(--dark-text-muted);
 }
 
-html[data-theme="dark"] .app-footer__meta:hover i {
+html[data-theme="dark"] .app-footer__info-row dd {
+    color: var(--dark-text-secondary);
+}
+
+html[data-theme="dark"] .app-footer__member {
+    background: var(--dark-surface-1);
+    border-color: var(--dark-border);
+}
+
+html[data-theme="dark"] .app-footer__member:hover {
+    background: var(--dark-surface-hover);
+    border-color: rgba(22, 217, 95, 0.4);
+}
+
+html[data-theme="dark"] .app-footer__member-number {
+    background: var(--dark-green-soft);
     color: var(--dark-green-text);
+}
+
+html[data-theme="dark"] .app-footer__member-profile strong {
+    color: var(--dark-text-primary);
+}
+
+html[data-theme="dark"] .app-footer__member-profile small {
+    color: var(--dark-text-muted);
+}
+
+html[data-theme="dark"] .app-footer__bottom {
+    background: rgba(23, 32, 51, 0.8);
+    border-top-color: var(--dark-border);
+}
+
+html[data-theme="dark"] .app-footer__meta {
+    background: var(--dark-surface-1);
+    border-color: var(--dark-border);
+    color: var(--dark-text-muted);
 }
 
 html[data-theme="dark"] .app-footer__session {
@@ -1863,32 +2022,30 @@ html[data-theme="dark"] .app-footer__session {
     color: var(--dark-green-text);
 }
 
-html[data-theme="dark"] .app-footer__account .fa-shield-halved {
-    color: var(--dark-purple-text);
-}
-
 /*
 |--------------------------------------------------------------------------
-| Footer Tablet
+| Tablet Responsive
 |--------------------------------------------------------------------------
 */
 
 @media (max-width: 1100px) {
-    .app-footer__inner {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 16px;
+    .app-footer__content {
+        grid-template-columns: 1fr;
     }
 
-    .app-footer__right {
-        width: 100%;
+    .app-footer__bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .app-footer__meta-list {
         justify-content: flex-start;
     }
 }
 
 /*
 |--------------------------------------------------------------------------
-| Footer Smartphone
+| Mobile Responsive
 |--------------------------------------------------------------------------
 */
 
@@ -1897,43 +2054,47 @@ html[data-theme="dark"] .app-footer__account .fa-shield-halved {
         padding-top: 32px;
     }
 
-    .app-footer__inner {
-        padding: 16px;
-        border-radius: 15px;
+    .app-footer__card {
+        border-radius: 16px;
     }
 
-    .app-footer__left {
-        width: 100%;
+    .app-footer__header {
         align-items: flex-start;
         flex-direction: column;
-        gap: 12px;
     }
 
-    .app-footer__divider {
-        display: none;
+    .app-footer__content {
+        padding: 16px;
+        gap: 16px;
     }
 
-    .app-footer__copyright {
-        white-space: normal;
+    .app-footer__section {
+        padding: 16px;
     }
 
-    .app-footer__right {
-        gap: 7px;
+    .app-footer__info-row {
+        grid-template-columns: 1fr;
+        gap: 4px;
     }
 
-    .app-footer__meta {
-        min-height: 32px;
-        padding: 7px 9px;
-        font-size: 0.7rem;
+    .app-footer__bottom {
+        padding: 15px 16px;
     }
 }
 
 @media (max-width: 480px) {
-    .app-footer__brand-copy small {
-        white-space: normal;
+    .app-footer__domain {
+        width: 100%;
     }
 
-    .app-footer__right {
+    .app-footer__domain-label,
+    .app-footer__domain-status {
+        justify-content: center;
+        flex: 1;
+    }
+
+    .app-footer__meta-list {
+        width: 100%;
         display: grid;
         grid-template-columns: 1fr;
     }
