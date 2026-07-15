@@ -30,15 +30,12 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# Install dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Install frontend dependencies
-RUN npm ci
+RUN npm install
 RUN npm run build
-
-# Laravel optimize
-RUN php artisan optimize:clear
 
 # Set Apache DocumentRoot ke public/
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
