@@ -1,6 +1,6 @@
-FROM php:8.4.1-cli
+FROM php:8.4-apache
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -9,8 +9,6 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libicu-dev \
     libonig-dev \
-    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
-    && apt-get install -y nodejs \
     && docker-php-ext-install \
         pdo_mysql \
         mbstring \
@@ -18,8 +16,15 @@ RUN apt-get update && apt-get install -y \
         intl \
         bcmath
 
-# Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs
+
+# Enable Apache Rewrite
+RUN a2enmod rewrite
 
 WORKDIR /var/www/html
 
@@ -27,12 +32,25 @@ COPY . .
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
+
+# Install frontend dependencies
 RUN npm ci
 RUN npm run build
 
-# Permissions
-RUN chmod -R 775 storage bootstrap/cache
+# Laravel optimize
+RUN php artisan optimize:clear
 
-EXPOSE 10000
+# Set Apache DocumentRoot ke public/
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
-CMD php artisan serve --host=0.0.0.0 --port=${PORT:-10000}
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf \
+    /etc/apache2/conf-available/*.conf
+
+# Permission
+RUN chown -R www-data:www-data storage bootstrap/cache
+
+EXPOSE 80
+
+CMD ["apache2-foreground"]
