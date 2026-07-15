@@ -1,13 +1,16 @@
 FROM php:8.4.1-cli
 
-# Install dependencies
+# Install system dependencies + Node.js
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
     zip \
+    curl \
     libzip-dev \
     libicu-dev \
     libonig-dev \
+    && curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
+    && apt-get install -y nodejs \
     && docker-php-ext-install \
         pdo_mysql \
         mbstring \
@@ -23,13 +26,18 @@ WORKDIR /var/www/html
 # Copy project
 COPY . .
 
-# Install Composer dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Laravel cache
+# Install Node dependencies & build Vite
+RUN npm install
+RUN npm run build
+
+# Laravel optimization
 RUN php artisan config:clear \
- && php artisan route:clear \
- && php artisan view:clear
+ && php artisan config:cache \
+ && php artisan route:cache \
+ && php artisan view:cache
 
 EXPOSE 10000
 
