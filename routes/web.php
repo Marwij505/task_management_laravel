@@ -167,3 +167,15 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
      */
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
+
+Route::get('/debug', function () {
+    return response()->json([
+        'env_app_url'     => env('APP_URL'),
+        'config_app_url'  => config('app.url'),
+        'asset'           => asset('assets/css/login.css'),
+        'secure_asset'    => secure_asset('assets/css/login.css'),
+        'scheme'          => request()->getScheme(),
+        'is_secure'       => request()->isSecure(),
+        'forwarded_proto' => request()->header('X-Forwarded-Proto'),
+    ]);
+});
