@@ -7,7 +7,8 @@
     | 1. The currently authenticated user.
     | 2. The user's account role.
     | 3. The correct dashboard route.
-    | 4. The current application version.
+    | 4. The application version.
+    | 5. The production URL and domain name.
     |--------------------------------------------------------------------------
     */
 
@@ -16,18 +17,33 @@
     $footerIsAdmin = $footerUser?->isAdmin() ?? false;
 
     /*
-     * Administrators are directed to the Admin Dashboard.
-     * Regular users are directed to the User Dashboard.
+     * Administrators return to the Admin Dashboard.
+     * Regular users return to the User Dashboard.
      */
     $footerHomeRoute = $footerIsAdmin
         ? route('admin.dashboard')
         : route('dashboard');
 
     /*
-     * The application version is retrieved from config/app.php
-     * or the APP_VERSION value in the .env file.
+     * Application version from config/app.php.
      */
     $footerAppVersion = config('app.version', '1.0.0');
+
+    /*
+     * Website URL from APP_URL.
+     */
+    $footerWebsiteUrl = rtrim(
+        config('app.url', 'http://127.0.0.1:8000'),
+        '/'
+    );
+
+    /*
+     * Display only the domain name without https://.
+     */
+    $footerDomainName = parse_url(
+        $footerWebsiteUrl,
+        PHP_URL_HOST
+    ) ?: $footerWebsiteUrl;
 @endphp
 
 <footer
@@ -39,7 +55,7 @@
         {{-- Footer header --}}
         <div class="app-footer__header">
 
-            {{-- Flowlist brand and dashboard link --}}
+            {{-- Flowlist brand --}}
             <a
                 href="{{ $footerHomeRoute }}"
                 class="app-footer__brand"
@@ -61,7 +77,7 @@
                 </span>
             </a>
 
-            {{-- Temporary domain status --}}
+            {{-- Website status --}}
             <div class="app-footer__domain">
                 <span class="app-footer__domain-label">
                     <i
@@ -69,16 +85,27 @@
                         aria-hidden="true"
                     ></i>
 
-                    Domain
+                    Live Website
                 </span>
 
-                <span class="app-footer__domain-status">
-                    Coming Soon
-                </span>
+                <a
+                    href="{{ $footerWebsiteUrl }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="app-footer__domain-status app-footer__domain-link"
+                    title="Open the Flowlist production website"
+                >
+                    Online
+
+                    <i
+                        class="fa-solid fa-arrow-up-right-from-square"
+                        aria-hidden="true"
+                    ></i>
+                </a>
             </div>
         </div>
 
-        {{-- Main footer information --}}
+        {{-- Main footer content --}}
         <div class="app-footer__content">
 
             {{-- Academic information --}}
@@ -97,11 +124,13 @@
 
                 <dl class="app-footer__info-list">
 
-                    {{-- Course name --}}
+                    {{-- Course --}}
                     <div class="app-footer__info-row">
                         <dt>Course</dt>
 
-                        <dd>Web Programming</dd>
+                        <dd>
+                            Web Programming
+                        </dd>
                     </div>
 
                     {{-- Course lecturer --}}
@@ -117,14 +146,18 @@
                     <div class="app-footer__info-row">
                         <dt>Class</dt>
 
-                        <dd>KH002</dd>
+                        <dd>
+                            KH002
+                        </dd>
                     </div>
 
                     {{-- Academic year --}}
                     <div class="app-footer__info-row">
                         <dt>Academic Year</dt>
 
-                        <dd>2025/2026</dd>
+                        <dd>
+                            2025/2026
+                        </dd>
                     </div>
 
                     {{-- Domain name --}}
@@ -132,9 +165,22 @@
                         <dt>Domain Name</dt>
 
                         <dd>
-                            <span class="app-footer__coming-soon">
-                                Coming Soon
-                            </span>
+                            <a
+                                href="{{ $footerWebsiteUrl }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="app-footer__website-link"
+                                title="Open {{ $footerDomainName }}"
+                            >
+                                <span>
+                                    {{ $footerDomainName }}
+                                </span>
+
+                                <i
+                                    class="fa-solid fa-arrow-up-right-from-square"
+                                    aria-hidden="true"
+                                ></i>
+                            </a>
                         </dd>
                     </div>
 
@@ -143,9 +189,22 @@
                         <dt>Website Link</dt>
 
                         <dd>
-                            <span class="app-footer__coming-soon">
-                                Coming Soon
-                            </span>
+                            <a
+                                href="{{ $footerWebsiteUrl }}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="app-footer__website-link"
+                                title="Visit the Flowlist production website"
+                            >
+                                <span>
+                                    Visit Flowlist Website
+                                </span>
+
+                                <i
+                                    class="fa-solid fa-arrow-up-right-from-square"
+                                    aria-hidden="true"
+                                ></i>
+                            </a>
                         </dd>
                     </div>
                 </dl>
@@ -174,7 +233,9 @@
                         </span>
 
                         <span class="app-footer__member-profile">
-                            <strong>MARCELL</strong>
+                            <strong>
+                                MARCELL
+                            </strong>
 
                             <small>
                                 Student ID: 20240801050
@@ -189,7 +250,9 @@
                         </span>
 
                         <span class="app-footer__member-profile">
-                            <strong>REIFAN</strong>
+                            <strong>
+                                REIFAN
+                            </strong>
 
                             <small>
                                 Student ID: 20240801002
@@ -204,7 +267,9 @@
                         </span>
 
                         <span class="app-footer__member-profile">
-                            <strong>DAVID</strong>
+                            <strong>
+                                DAVID
+                            </strong>
 
                             <small>
                                 Student ID: 20240801026
@@ -215,16 +280,16 @@
             </section>
         </div>
 
-        {{-- Footer bottom section --}}
+        {{-- Footer bottom --}}
         <div class="app-footer__bottom">
 
-            {{-- Automatic copyright year --}}
+            {{-- Copyright --}}
             <p class="app-footer__copyright">
                 &copy; {{ now()->year }} Flowlist.
                 All rights reserved.
             </p>
 
-            {{-- Application metadata --}}
+            {{-- Application information --}}
             <div class="app-footer__meta-list">
 
                 {{-- Session status --}}
@@ -240,7 +305,7 @@
                     Session Active
                 </span>
 
-                {{-- Current account role --}}
+                {{-- Account role --}}
                 <span
                     class="app-footer__meta"
                     title="Current account role"

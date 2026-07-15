@@ -1499,6 +1499,100 @@ html[data-theme="dark"] .more-task-count {
 
 /*
 |--------------------------------------------------------------------------
+| Footer Website Link
+|--------------------------------------------------------------------------
+| Prevents long Railway domains from breaking the footer layout.
+|--------------------------------------------------------------------------
+*/
+
+.app-footer__website-link,
+.app-footer__domain-link {
+    max-width: 100%;
+    min-width: 0;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    color: var(--accent);
+    font-size: 0.76rem;
+    font-weight: 800;
+    line-height: 1.45;
+    text-decoration: none;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    transition:
+        color var(--ui-duration-fast) ease,
+        transform var(--ui-duration-fast) ease,
+        background-color var(--ui-duration-fast) ease,
+        border-color var(--ui-duration-fast) ease;
+}
+
+.app-footer__website-link span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.app-footer__website-link:hover {
+    color: #10b94f;
+    transform: translateY(-1px);
+}
+
+.app-footer__website-link i,
+.app-footer__domain-link i {
+    flex: 0 0 auto;
+    font-size: 0.68rem;
+}
+
+/*
+ * Live website button in the footer header.
+ */
+.app-footer__domain-link {
+    background: rgba(22, 217, 95, 0.1);
+    border: 1px solid rgba(22, 217, 95, 0.24);
+    color: #138442;
+}
+
+.app-footer__domain-link:hover {
+    background: rgba(22, 217, 95, 0.16);
+    border-color: rgba(22, 217, 95, 0.42);
+    color: #0f7a3c;
+    transform: translateY(-1px);
+}
+
+/*
+ * Allows long domain names to shrink inside the information grid.
+ */
+.app-footer__info-row dd {
+    min-width: 0;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Dark Mode Website Link
+|--------------------------------------------------------------------------
+*/
+
+html[data-theme="dark"] .app-footer__website-link,
+html[data-theme="dark"] .app-footer__domain-link {
+    color: var(--dark-green-text);
+}
+
+html[data-theme="dark"] .app-footer__domain-link {
+    background: var(--dark-green-soft);
+    border-color: rgba(22, 217, 95, 0.28);
+}
+
+html[data-theme="dark"] .app-footer__website-link:hover,
+html[data-theme="dark"] .app-footer__domain-link:hover {
+    color: #ffffff;
+}
+
+/*
+|--------------------------------------------------------------------------
 | Footer Header
 |--------------------------------------------------------------------------
 */
@@ -2066,6 +2160,21 @@ html[data-theme="dark"] .app-footer__session {
     .app-footer__content {
         padding: 16px;
         gap: 16px;
+    }
+
+    .app-footer__domain {
+        width: 100%;
+        align-items: stretch;
+    }
+
+    .app-footer__domain-label,
+    .app-footer__domain-status {
+        max-width: 100%;
+    }
+
+    .app-footer__website-link {
+        width: fit-content;
+        max-width: 100%;
     }
 
     .app-footer__section {
