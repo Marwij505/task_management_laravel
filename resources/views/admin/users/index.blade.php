@@ -15,7 +15,14 @@
 
     <!-- Admin page styles. -->
     <link rel="stylesheet" href="{{ asset('assets/css/admin-dashboard.css') }}" />
-    <link rel="stylesheet" href="{{ asset('assets/css/admin-users.css') }}" />
+    {{-- 
+        file mtime menambahkan versi berdasarkan waktu perubahan file.
+        Browser akan mengambil CSS terbaru setelah deployment.
+    --}}
+    <link
+        rel="stylesheet"
+        href="{{ asset('assets/css/admin-users.css') }}?v={{ filemtime(public_path('assets/css/admin-users.css')) }}"
+    />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
