@@ -329,6 +329,96 @@
     color: var(--text-dark);
 }
 
+/* =========================================================
+   PASSWORD SECURITY INFORMATION
+   ========================================================= */
+
+.credential-security-card {
+    display: grid;
+    gap: 16px;
+    background: #f8fbff;
+    border-color: #dbe8f5;
+}
+
+.credential-security-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.credential-security-heading h5 {
+    margin-bottom: 5px;
+}
+
+.credential-security-heading p {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+.credential-protected-badge {
+    min-height: 36px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 0.82rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.credential-readonly-field {
+    position: relative;
+}
+
+.credential-readonly-field > i {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+}
+
+.credential-readonly-field input {
+    width: 100%;
+    padding-left: 43px;
+    background: #f3f6f9;
+    color: var(--text-dark);
+    cursor: default;
+}
+
+.credential-help-text {
+    display: block;
+    margin-top: 7px;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
+
+.credential-security-note {
+    padding: 12px 14px;
+    border-radius: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #eff6ff;
+    color: #1e3a5f;
+    font-size: 0.84rem;
+    line-height: 1.5;
+}
+
+.credential-security-note i {
+    margin-top: 3px;
+    flex-shrink: 0;
+}
+
 @media (max-width: 1200px) {
     .admin-users-layout {
         grid-template-columns: 1fr;
@@ -375,5 +465,9 @@
     .admin-pagination span,
     .admin-pagination strong {
         width: 100%;
+    }
+
+    .credential-security-heading {
+        flex-direction: column;
     }
 }

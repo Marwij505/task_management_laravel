@@ -25,6 +25,7 @@ class User extends Authenticatable
         'email',
         'avatar_path',
         'password',
+        'password_changed_at',
         'role',
         'email_notifications',
         'task_reminders',
@@ -44,6 +45,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'password_changed_at' => 'datetime',
             'email_notifications' => 'boolean',
             'task_reminders' => 'boolean',
             'weekly_report' => 'boolean',

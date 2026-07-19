@@ -28,6 +28,11 @@ class FlowlistSmokeTest extends TestCase
 
         $this->actingAs($user);
 
+        $this->withSession([
+            'login_remembered' => false,
+            'login_expires_at' => now()->addMinutes(120)->timestamp,
+        ]);
+
         foreach (['/dashboard', '/tasks', '/tasks/create', '/task-detail', '/calendar', '/statistics', '/profile'] as $uri) {
             $this->get($uri)->assertOk();
         }
@@ -37,6 +42,11 @@ class FlowlistSmokeTest extends TestCase
     {
         $user = User::factory()->create(['username' => 'tester']);
         $this->actingAs($user);
+
+        $this->withSession([
+            'login_remembered' => false,
+            'login_expires_at' => now()->addMinutes(120)->timestamp,
+        ]);
 
         $create = $this->postJson('/flowlist-api/tasks/store', [
             'title' => 'Laravel migration test',

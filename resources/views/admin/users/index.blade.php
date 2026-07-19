@@ -329,6 +329,84 @@
                                     </summary>
 
                                     <div class="admin-user-panel">
+                                        <!-- =====================================================
+                                            PASSWORD SECURITY INFORMATION
+                                            ===================================================== -->
+                                        <div class="admin-form-block credential-security-card">
+                                            <div class="credential-security-heading">
+                                                <div>
+                                                    <h5>Password Security</h5>
+
+                                                    <p>
+                                                        Security information for this account.
+                                                        The original password is never stored.
+                                                    </p>
+                                                </div>
+
+                                                <span class="credential-protected-badge">
+                                                    <i class="fa-solid fa-shield-halved"></i>
+                                                    Protected
+                                                </span>
+                                            </div>
+
+                                            <div class="admin-form-grid">
+                                                <!--
+                                                    Kolom ini hanya menampilkan simbol password.
+                                                    Simbol tidak berasal dari database dan bukan password asli.
+                                                -->
+                                                <div class="form-field">
+                                                    <label>Stored Password</label>
+
+                                                    <div class="credential-readonly-field">
+                                                        <i class="fa-solid fa-lock"></i>
+
+                                                        <input
+                                                            type="text"
+                                                            value="••••••••••••"
+                                                            readonly
+                                                            tabindex="-1"
+                                                            aria-label="Password is securely protected"
+                                                        >
+                                                    </div>
+
+                                                    <small class="credential-help-text">
+                                                        Original password cannot be recovered or displayed.
+                                                    </small>
+                                                </div>
+
+                                                <!-- Waktu terakhir password dibuat atau diganti. -->
+                                                <div class="form-field">
+                                                    <label>Last Password Change</label>
+
+                                                    <div class="credential-readonly-field">
+                                                        <i class="fa-regular fa-clock"></i>
+
+                                                        <input
+                                                            type="text"
+                                                            value="{{
+                                                                $user->password_changed_at
+                                                                    ? $user->password_changed_at->format('d M Y, H:i')
+                                                                    : 'Information not available'
+                                                            }}"
+                                                            readonly
+                                                        >
+                                                    </div>
+
+                                                    <small class="credential-help-text">
+                                                        Based on the recorded password update time.
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                            <div class="credential-security-note">
+                                                <i class="fa-solid fa-circle-info"></i>
+
+                                                <span>
+                                                    Flowlist stores a one-way password hash.
+                                                    Administrators can reset a password but cannot read the existing password.
+                                                </span>
+                                            </div>
+                                        </div>
                                         <!-- Edit User -->
                                         <form
                                             method="POST"

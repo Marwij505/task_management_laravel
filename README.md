@@ -137,7 +137,7 @@ PERSIAPAN
    exit
 
    Username : flowlistadmin
-   Password : 12345exit
+   Password : 12345
 
 URL UTAMA
 ---------

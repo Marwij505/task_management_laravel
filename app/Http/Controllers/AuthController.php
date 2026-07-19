@@ -182,7 +182,8 @@ class AuthController extends Controller
             'full_name' => $username,
             'email' => strtolower(trim((string) $request->input('email'))),
             'password' => Hash::make((string) $request->input('password')),
-
+             // Waktu pertama kali password dibuat.
+            'password_changed_at' => now(),
             /*
             * Register publik hanya boleh membuat user biasa.
             * Admin tidak boleh dibuat dari form register publik.
@@ -245,6 +246,8 @@ class AuthController extends Controller
 
         $user->forceFill([
             'password' => Hash::make((string) $request->input('password')),
+            // Catat waktu perubahan password.
+            'password_changed_at' => now(),
             'remember_token' => null,
         ])->save();
 

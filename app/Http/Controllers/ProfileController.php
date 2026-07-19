@@ -272,6 +272,7 @@ class ProfileController extends Controller
             'password' => Hash::make(
                 (string) $request->input('new_password')
             ),
+            'password_changed_at' => now(),
             'remember_token' => null,
         ])->save();
 

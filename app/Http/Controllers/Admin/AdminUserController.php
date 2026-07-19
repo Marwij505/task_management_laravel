@@ -83,6 +83,7 @@ class AdminUserController extends Controller
             'email' => strtolower($validated['email']),
             'role' => $validated['role'],
             'password' => Hash::make($validated['password']),
+            'password_changed_at' => now(),
         ]);
 
         /*
@@ -200,6 +201,7 @@ class AdminUserController extends Controller
 
         $user->forceFill([
             'password' => Hash::make($validated['password']),
+            'password_changed_at' => now(),
             'remember_token' => null,
         ])->save();
 
@@ -214,6 +216,7 @@ class AdminUserController extends Controller
                 'target_user_id' => $user->id,
                 'email' => $user->email,
                 'role' => $user->role,
+                'password_changed_at' => $user->password_changed_at?->toDateTimeString(),
             ],
             targetUserId: $user->id
         );
