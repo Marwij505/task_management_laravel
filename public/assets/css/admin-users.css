@@ -375,23 +375,78 @@
 
 .credential-readonly-field {
     position: relative;
+    width: 100%;
+    isolation: isolate;
 }
 
+/* Ikon selalu berada di atas input */
 .credential-readonly-field > i {
     position: absolute;
     top: 50%;
     left: 15px;
+
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     transform: translateY(-50%);
     color: var(--text-muted);
+
     pointer-events: none;
+
+    transition:
+        color 0.25s ease,
+        transform 0.25s ease;
 }
 
+/* Input tetap berada di bawah ikon */
 .credential-readonly-field input {
+    position: relative;
+    z-index: 1;
+
     width: 100%;
     padding-left: 43px;
+
     background: #f3f6f9;
     color: var(--text-dark);
     cursor: default;
+
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        background-color 0.25s ease,
+        transform 0.25s ease;
+}
+
+/* Animasi saat kursor diarahkan */
+.credential-readonly-field:hover input {
+    border-color: var(--accent);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(22, 217, 95, 0.10);
+    transform: translateY(-1px);
+}
+
+/* Ikon tetap terlihat dan ikut bergerak */
+.credential-readonly-field:hover > i {
+    z-index: 5;
+    color: var(--accent);
+    transform: translateY(-50%) scale(1.08);
+}
+
+/* Tampilan ketika input diklik */
+.credential-readonly-field:focus-within input {
+    border-color: var(--accent);
+    background-color: #ffffff;
+    box-shadow: 0 0 0 4px rgba(22, 217, 95, 0.12);
+}
+
+/* Ikon tetap terlihat ketika diklik */
+.credential-readonly-field:focus-within > i {
+    z-index: 5;
+    color: var(--accent);
+    transform: translateY(-50%) scale(1.08);
 }
 
 .credential-help-text {
