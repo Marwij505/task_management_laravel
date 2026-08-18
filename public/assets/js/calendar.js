@@ -337,3 +337,22 @@ if (todayBtn) {
 document.addEventListener('DOMContentLoaded', function () {
     loadCalendarTasks();
 });
+
+// ============================================================
+// FLOWLIST MK2 - REFRESH CALENDAR SETELAH QUICK ADD
+// ============================================================
+
+window.addEventListener(
+    'flowlist:quick-task-created',
+    function () {
+
+        /*
+         * Ambil ulang tasks pada bulan yang sedang
+         * ditampilkan.
+         *
+         * Jika deadline Quick Add berada di bulan aktif,
+         * task akan langsung muncul di kalender.
+         */
+        loadCalendarTasks();
+    }
+);

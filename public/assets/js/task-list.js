@@ -375,3 +375,19 @@ if (clearFiltersBtn) {
         filterTasks();
     });
 }
+
+// ============================================================
+// FLOWLIST MK2 - REFRESH TASK LIST SETELAH QUICK ADD
+// ============================================================
+
+window.addEventListener(
+    'flowlist:quick-task-created',
+    function () {
+
+        /*
+         * Load ulang tasks sehingga task Quick Add
+         * langsung muncul di Task List.
+         */
+        loadTasksFromDatabase();
+    }
+);

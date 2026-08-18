@@ -293,3 +293,20 @@ function normalizeProgress(progress) {
 document.addEventListener('DOMContentLoaded', function () {
     loadDashboardData();
 });
+
+// ============================================================
+// FLOWLIST MK2 - REFRESH SETELAH QUICK ADD
+// ============================================================
+//
+// Setelah Quick Add berhasil, quick-add-task.js akan
+// mengirim event "flowlist:quick-task-created".
+//
+// Dashboard mengambil ulang statistik, recent tasks,
+// dan upcoming deadlines.
+//
+window.addEventListener(
+    'flowlist:quick-task-created',
+    function () {
+        loadDashboardData();
+    }
+);

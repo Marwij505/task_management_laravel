@@ -85,6 +85,7 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
             Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
             Route::get('/task-detail', [TaskController::class, 'show'])->name('tasks.show');
             Route::post('/tasks/store', [TaskController::class, 'store'])->name('tasks.store');
+            Route::post('/tasks/quick-add', [TaskController::class, 'quickStore'])->name('tasks.quick-add');
             Route::post('/tasks/update', [TaskController::class, 'update'])->name('tasks.update');
             Route::post('/tasks/complete', [TaskController::class, 'complete'])->name('tasks.complete');
             Route::post('/tasks/delete', [TaskController::class, 'destroy'])->name('tasks.destroy');

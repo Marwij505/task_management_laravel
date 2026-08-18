@@ -9,6 +9,8 @@
   <title>Flowlist Dashboard</title>
   <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}" />
   <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
+  {{-- Flowlist MK2 - Quick Add Task --}}
+  <link rel="stylesheet" href="{{ asset('assets/css/quick-add-task.css') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -88,9 +90,23 @@
         </div>
         <!-- New Task Button -->
         <div class="topbar-right">
-          <a href="{{ route('tasks.create') }}" class="new-task-btn">
-            <span>New Task</span>
-          </a>
+            {{-- Flowlist MK2 - Quick Add --}}
+            <button
+                type="button"
+                class="quick-add-page-btn"
+                data-quick-add-open
+            >
+                <i class="fa-solid fa-bolt"></i>
+                <span>Quick Add</span>
+            </button>
+
+            {{-- Create Task lengkap milik MK1 tetap tersedia --}}
+            <a
+                href="{{ route('tasks.create') }}"
+                class="new-task-btn"
+            >
+                <span>New Task</span>
+            </a>
         </div>
       </header>
 
@@ -175,10 +191,15 @@
     </main>
   </div>
 
+  {{-- Flowlist MK2 - Shared Quick Add Modal --}}
+  @include('partials.quick-add-task')
+
   @include('partials.flowlist-routes')
   <script src="{{ asset('assets/js/theme.js') }}"></script>
   <script src="{{ asset('assets/js/preferences.js') }}"></script>
   <script src="{{ asset('assets/js/dashboard.js') }}"></script>
+  {{-- Flowlist MK2 - Quick Add Task --}}
+  <script src="{{ asset('assets/js/quick-add-task.js') }}"></script>
 
 </body>
 </html>

@@ -13,6 +13,7 @@
         taskListApi: @json(route('flowlist.api.tasks.index')),
         taskDetailApi: @json(route('flowlist.api.tasks.show')),
         taskStoreApi: @json(route('flowlist.api.tasks.store')),
+        taskQuickAddApi: @json(route('flowlist.api.tasks.quick-add')),
         taskUpdateApi: @json(route('flowlist.api.tasks.update')),
         taskCompleteApi: @json(route('flowlist.api.tasks.complete')),
         taskDeleteApi: @json(route('flowlist.api.tasks.destroy')),

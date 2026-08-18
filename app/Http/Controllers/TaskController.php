@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\QuickAddTaskRequest;
 use App\Models\Task;
 use App\Services\ActivityLogService;
 use Carbon\Carbon;
@@ -121,6 +122,171 @@ class TaskController extends Controller
             'success' => true,
             'message' => 'Task created successfully.',
             'task_id' => $task->id,
+        ], 201);
+    }
+
+    /**
+     * ============================================================
+     * QUICK ADD TASK - FLOWLIST MK2
+     * ============================================================
+     *
+     * Membuat task melalui fitur Quick Add.
+     *
+     * Quick Add sengaja hanya meminta empat informasi:
+     *
+     * 1. Title
+     * 2. Deadline
+     * 3. Priority
+     * 4. Category
+     *
+     * Field lainnya akan diberikan nilai default.
+     */
+    public function quickStore(
+        QuickAddTaskRequest $request
+    ): JsonResponse {
+        /*
+        * Data di sini sudah lolos validation
+        * QuickAddTaskRequest.
+        */
+        $data = $request->validated();
+
+        /*
+        * Ambil user yang sedang login.
+        */
+        $user = $request->user();
+
+        /*
+        * Simpan task menggunakan database transaction.
+        *
+        * Walaupun saat ini hanya satu proses INSERT,
+        * transaction membuat struktur lebih siap apabila
+        * Quick Add dikembangkan lagi pada Mark berikutnya.
+        */
+        $task = DB::transaction(
+            function () use ($data, $user): Task {
+
+                return Task::create([
+                    /*
+                    * Task selalu menjadi milik user login.
+                    */
+                    'user_id' => $user->id,
+
+                    /*
+                    * Data yang dimasukkan melalui Quick Add.
+                    */
+                    'title' => $data['title'],
+
+                    'deadline' => $data['deadline'],
+
+                    'priority' => $data['priority'],
+
+                    'category' => $this->nullableString(
+                        $data['category'] ?? null
+                    ),
+
+                    /*
+                    * Quick Add tidak memiliki Description.
+                    *
+                    * Jika user ingin menambahkan description,
+                    * user dapat membukanya melalui Task Detail.
+                    */
+                    'description' => null,
+
+                    /*
+                    * Semua task yang dibuat melalui Quick Add
+                    * dimulai dari status Pending.
+                    */
+                    'status' => 'pending',
+
+                    /*
+                    * Progress awal adalah 0%.
+                    */
+                    'progress' => 0,
+
+                    /*
+                    * Flowlist MK2 masih Personal Task Management.
+                    *
+                    * Karena itu assignee otomatis menggunakan
+                    * identitas user yang sedang login.
+                    */
+                    'assignee' => $this->nullableString(
+                        $user->full_name
+                        ?: $user->name
+                        ?: $user->username
+                    ),
+                ]);
+            }
+        );
+
+        /*
+        * ========================================================
+        * ACTIVITY LOG QUICK ADD
+        * ========================================================
+        *
+        * Action dibuat "quick_add" dan bukan "create".
+        *
+        * Tujuannya supaya Administrator dapat membedakan:
+        *
+        * create     = Create Task normal
+        * quick_add  = Quick Add Task MK2
+        */
+        ActivityLogService::log(
+            module: 'user_tasks',
+
+            action: 'quick_add',
+
+            description:
+                'User quick-added task: '
+                .$task->title,
+
+            properties: [
+                'task_id' => $task->id,
+
+                'title' => $task->title,
+
+                'priority' => $task->priority,
+
+                'category' => $task->category,
+
+                'deadline' => $task->deadline
+                    ? Carbon::parse(
+                        $task->deadline
+                    )->format('Y-m-d')
+                    : null,
+
+                /*
+                * Contoh:
+                *
+                * dashboard
+                * tasks.index
+                * calendar
+                */
+                'source' =>
+                    $data['source'] ?? null,
+            ],
+
+            targetUserId: $user->id
+        );
+
+        /*
+        * Response JSON untuk JavaScript.
+        */
+        return response()->json([
+            'success' => true,
+
+            'message' =>
+                'Task added successfully.',
+
+            'task_id' => $task->id,
+
+            /*
+            * Payload dikembalikan agar halaman aktif
+            * dapat melakukan refresh data.
+            */
+            'task' => $this->taskPayload(
+                $task,
+                includeTags: false
+            ),
         ], 201);
     }
 

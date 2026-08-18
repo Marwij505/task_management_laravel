@@ -8,6 +8,7 @@
     <title>Flowlist - Calendar</title>
     <link rel="stylesheet" href="{{ asset('assets/css/calendar.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/quick-add-task.css') }}"/>
     <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 </head>
 
@@ -77,9 +78,21 @@
         <!-- Main Content -->
         <main class="main-content">
             <!-- Page Header -->
-            <header class="page-header">
-                <h2>Calendar View</h2>
-                <p>Visualize tasks based on dates</p>
+            <header class="page-header quick-add-page-header">
+                <div>
+                    <h2>Calendar View</h2>
+                    <p>Visualize tasks based on dates</p>
+                </div>
+
+                {{-- Flowlist MK2 - Quick Add --}}
+                <button
+                    type="button"
+                    class="quick-add-page-btn"
+                    data-quick-add-open
+                >
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>Quick Add</span>
+                </button>
             </header>
 
             <!-- Calendar Card -->
@@ -144,10 +157,12 @@
         </main>
     </div>
 
+    @include('partials.quick-add-task')
     @include('partials.flowlist-routes')
-  <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
     <script src="{{ asset('assets/js/preferences.js') }}"></script>
     <script src="{{ asset('assets/js/calendar.js') }}"></script>
+    <script src="{{ asset('assets/js/quick-add-task.js') }}"></script>
 
 </body>
 </html>

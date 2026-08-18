@@ -9,6 +9,7 @@
     <title>Flowlist - Task List</title>
     <link rel="stylesheet" href="{{ asset('assets/css/task-list.css') }}" />
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
+    <link rel="stylesheet" href="{{ asset('assets/css/quick-add-task.css') }}"/>
     <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 </head>
 
@@ -85,7 +86,21 @@
                 </div>
                 <!-- New Task Button -->
                 <div class="topbar-right">
-                    <a href="{{ route('tasks.create') }}" class="view-btn">
+                    {{-- Flowlist MK2 - Quick Add --}}
+                    <button
+                        type="button"
+                        class="quick-add-page-btn"
+                        data-quick-add-open
+                    >
+                        <i class="fa-solid fa-bolt"></i>
+                        <span>Quick Add</span>
+                    </button>
+
+                    {{-- Form Create Task lengkap tetap tersedia --}}
+                    <a
+                        href="{{ route('tasks.create') }}"
+                        class="view-btn"
+                    >
                         <span>New Task</span>
                     </a>
                 </div>
@@ -158,10 +173,12 @@
         </main>
     </div>
 
+    @include('partials.quick-add-task')
     @include('partials.flowlist-routes')
-  <script src="{{ asset('assets/js/theme.js') }}"></script>
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
     <script src="{{ asset('assets/js/preferences.js') }}"></script>
     <script src="{{ asset('assets/js/task-list.js') }}"></script>
+    <script src="{{ asset('assets/js/quick-add-task.js') }}"></script>
     
 </body>
 </html>
