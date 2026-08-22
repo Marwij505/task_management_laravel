@@ -65,4 +65,53 @@ document.addEventListener('DOMContentLoaded', function () {
             showToast(`${feature} will be available in the next admin stage.`);
         });
     });
+
+
+    // =====================================
+    // FLOWLIST MK2 - FOCUS USER FROM ADMIN DASHBOARD
+    // =====================================
+    //
+    // URL contoh:
+    // /admin/users?search=user@email.com&focus=3
+    //
+    // Blade memberi attribute data-admin-user-focused="true"
+    // pada user target. Script kemudian:
+    // - scroll ke user target;
+    // - memberi highlight sementara;
+    // - tetap menghormati reduced motion.
+    const focusedUser =
+        document.querySelector(
+            '[data-admin-user-focused="true"]'
+        );
+
+    if (focusedUser) {
+        focusedUser.classList.add(
+            'admin-user-focus'
+        );
+
+        window.setTimeout(
+            function () {
+                focusedUser.scrollIntoView({
+                    behavior:
+                        window.matchMedia(
+                            '(prefers-reduced-motion: reduce)'
+                        ).matches
+                            ? 'auto'
+                            : 'smooth',
+                    block: 'center'
+                });
+            },
+            120
+        );
+
+        window.setTimeout(
+            function () {
+                focusedUser.classList.add(
+                    'admin-user-focus-fade'
+                );
+            },
+            2600
+        );
+    }
+
 });

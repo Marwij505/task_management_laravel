@@ -350,3 +350,132 @@
         width: 100%;
     }
 }
+
+/* ============================================================
+   FLOWLIST MK2 - ADMIN TASK CHECKLIST SUMMARY
+   ============================================================
+
+   Ringkasan checklist pada:
+   Admin -> All Tasks
+   ============================================================ */
+
+.admin-task-checklist-summary {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.admin-task-checklist-top,
+.admin-task-checklist-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-task-checklist-top {
+    margin-bottom: 9px;
+    color: var(--text-dark);
+    font-size: 0.8rem;
+}
+
+.admin-task-checklist-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.admin-task-checklist-label i {
+    color: var(--accent);
+}
+
+.admin-task-checklist-top strong {
+    color: var(--text-dark);
+    font-size: 0.8rem;
+}
+
+.admin-task-checklist-track {
+    width: 100%;
+    height: 7px;
+    overflow: hidden;
+    margin-bottom: 9px;
+    border-radius: 999px;
+    background: #e5e7eb;
+}
+
+.admin-task-checklist-fill {
+    width: 0;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--accent);
+    transition: width 0.35s ease;
+}
+
+.admin-task-checklist-bottom {
+    color: var(--text-muted);
+    font-size: 0.74rem;
+}
+
+.admin-task-detail-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 8px;
+    border-radius: 7px;
+    color: var(--accent);
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.admin-task-detail-link:hover {
+    background: rgba(16, 210, 79, 0.09);
+    color: var(--accent);
+    text-decoration: none;
+    transform: translateX(2px);
+}
+
+.admin-task-detail-link i {
+    font-size: 0.68rem;
+    transition: transform 0.2s ease;
+}
+
+.admin-task-detail-link:hover i {
+    transform: translateX(2px);
+}
+
+.admin-task-detail-link:focus-visible {
+    outline: 3px solid rgba(16, 210, 79, 0.22);
+    outline-offset: 2px;
+}
+
+html[data-theme="dark"] .admin-task-checklist-summary {
+    border-color: var(--dark-border, #334155);
+}
+
+html[data-theme="dark"] .admin-task-checklist-track {
+    background: #334155;
+}
+
+html[data-theme="dark"] .admin-task-checklist-top,
+html[data-theme="dark"] .admin-task-checklist-top strong {
+    color: var(--dark-text-primary, #f8fafc);
+}
+
+@media (max-width: 576px) {
+    .admin-task-checklist-bottom {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-task-checklist-fill,
+    .admin-task-detail-link,
+    .admin-task-detail-link i {
+        transition: none !important;
+    }
+}

@@ -223,6 +223,8 @@
                                     <i class="fa-solid fa-list-check"></i>
                                 @elseif($log->module === 'user_tasks')
                                     <i class="fa-regular fa-square-check"></i>
+                                @elseif($log->module === 'user_subtasks')
+                                    <i class="fa-solid fa-list-check"></i>
                                 @elseif($log->module === 'profile')
                                     <i class="fa-regular fa-user"></i>
                                 @else

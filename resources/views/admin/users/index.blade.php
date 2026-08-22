@@ -281,7 +281,22 @@
                     <!-- User Records -->
                     <div class="admin-user-list">
                         @forelse($users as $user)
-                            <article class="admin-user-row">
+                            {{-- =====================================================
+                                 FLOWLIST MK2 - ADMIN USER FOCUS TARGET
+                                 =====================================================
+                                 Recent User pada Admin Dashboard mengirim query:
+                                 ?search=email&focus=USER_ID
+
+                                 data-admin-user-focused dipakai oleh admin-users.js
+                                 untuk scroll + highlight target.
+                            ====================================================== --}}
+                            <article
+                                class="admin-user-row"
+                                data-admin-user-id="{{ $user->id }}"
+                                @if(request()->integer('focus') === (int) $user->id)
+                                    data-admin-user-focused="true"
+                                @endif
+                            >
                                 <div class="admin-user-summary">
                                     <div class="admin-user-avatar">
                                         {{

@@ -172,6 +172,33 @@
                         <i class="fa-solid fa-chart-simple"></i>
                     </div>
                 </div>
+
+                {{-- =================================================
+                     FLOWLIST MK2 - CHECKLIST STATISTICS
+                     =================================================
+                     Subtask tetap dihitung terpisah dari Total Tasks.
+                ================================================== --}}
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Total Subtasks</h4>
+                        <h3>{{ $totalSubtasks }}</h3>
+                    </div>
+
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-list-check"></i>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-info">
+                        <h4>Checklist Completion</h4>
+                        <h3>{{ $subtaskCompletionRate }}%</h3>
+                    </div>
+
+                    <div class="stat-icon green">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                </div>
             </section>
 
             <!-- =====================================================
@@ -327,6 +354,54 @@
                     </div>
                 </div>
 
+                <!-- =================================================
+                     FLOWLIST MK2 - Checklist Health
+                     ================================================= -->
+                <div class="recent-tasks-card">
+                    <div class="section-header">
+                        <h3>Checklist Health</h3>
+                        <p>Subtask completion across all main tasks</p>
+                    </div>
+
+                    <div class="checklist-health-summary">
+                        <div class="checklist-health-metrics">
+                            <div>
+                                <span>Total Subtasks</span>
+                                <strong>{{ $totalSubtasks }}</strong>
+                            </div>
+
+                            <div>
+                                <span>Completed</span>
+                                <strong>{{ $completedSubtasks }}</strong>
+                            </div>
+
+                            <div>
+                                <span>Remaining</span>
+                                <strong>{{ $pendingSubtasks }}</strong>
+                            </div>
+
+                            <div>
+                                <span>Tasks Using Checklist</span>
+                                <strong>{{ $tasksWithSubtasks }}</strong>
+                            </div>
+                        </div>
+
+                        <div class="checklist-health-progress">
+                            <div class="stat-bar-header">
+                                <span>Checklist Completion</span>
+                                <strong>{{ $subtaskCompletionRate }}%</strong>
+                            </div>
+
+                            <div class="stat-track">
+                                <div
+                                    class="stat-fill"
+                                    style="width: {{ $subtaskCompletionRate }}%;"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Top Productive Users -->
                 <div class="recent-tasks-card">
                     <div class="section-header">
@@ -460,6 +535,9 @@
                 Total Tasks: {{ $totalTasks }}
                 Completed Tasks: {{ $completedTasks }}
                 Completion Rate: {{ $completionRate }}%
+                Total Subtasks: {{ $totalSubtasks }}
+                Completed Subtasks: {{ $completedSubtasks }}
+                Checklist Completion: {{ $subtaskCompletionRate }}%
                 Overdue Tasks: {{ $statusBreakdown['overdue'] }}
                 Due Today Tasks: {{ $statusBreakdown['due-today'] }}</textarea>
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Subtask;
 use App\Models\Task;
 use App\Models\User;
 use App\Services\TaskProgressService;
@@ -36,6 +37,33 @@ class AdminStatisticsController extends Controller
 
         $totalTasks = $tasks->count();
         $completedTasks = $tasks->where('status', 'completed')->count();
+
+        /*
+         * ============================================================
+         * FLOWLIST MK2 - GLOBAL CHECKLIST STATISTICS
+         * ============================================================
+         *
+         * Subtask dihitung terpisah dari task utama.
+         * Jadi Total Tasks TIDAK pernah ditambah jumlah subtask.
+         */
+        $totalSubtasks = Subtask::count();
+
+        $completedSubtasks = Subtask::query()
+            ->where('is_completed', true)
+            ->count();
+
+        $pendingSubtasks = max(
+            0,
+            $totalSubtasks - $completedSubtasks
+        );
+
+        $subtaskCompletionRate = $totalSubtasks > 0
+            ? (int) round(($completedSubtasks / $totalSubtasks) * 100)
+            : 0;
+
+        $tasksWithSubtasks = Task::query()
+            ->has('subtasks')
+            ->count();
 
         /*
          * Completion rate dihitung dari total task yang sudah completed.
@@ -174,6 +202,16 @@ class AdminStatisticsController extends Controller
             'totalTasks' => $totalTasks,
             'completedTasks' => $completedTasks,
             'completionRate' => $completionRate,
+
+            /*
+             * Flowlist MK2 checklist analytics.
+             */
+            'totalSubtasks' => $totalSubtasks,
+            'completedSubtasks' => $completedSubtasks,
+            'pendingSubtasks' => $pendingSubtasks,
+            'subtaskCompletionRate' => $subtaskCompletionRate,
+            'tasksWithSubtasks' => $tasksWithSubtasks,
+
             'statusBreakdown' => $statusBreakdown,
             'priorityBreakdown' => $priorityBreakdown,
             'categoryRanking' => $categoryRanking,

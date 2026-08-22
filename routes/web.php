@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Admin\AdminTaskController;
+use App\Http\Controllers\Admin\AdminTaskDetailController;
 use App\Http\Controllers\Admin\AdminStatisticsController;
 use App\Http\Controllers\Admin\AdminActivityLogController;
 use App\Http\Controllers\AuthController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\SubtaskController;
 use App\Http\Middleware\EnsureLoginSessionStillValid;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserCanAccessUserPage;
@@ -89,6 +91,47 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
             Route::post('/tasks/update', [TaskController::class, 'update'])->name('tasks.update');
             Route::post('/tasks/complete', [TaskController::class, 'complete'])->name('tasks.complete');
             Route::post('/tasks/delete', [TaskController::class, 'destroy'])->name('tasks.destroy');
+            /*
+            |--------------------------------------------------------------------------
+            | FLOWLIST MK2 - SUBTASK AND CHECKLIST
+            |--------------------------------------------------------------------------
+            |
+            | Seluruh route ini masih berada di dalam middleware:
+            |
+            | auth
+            | EnsureLoginSessionStillValid
+            | EnsureUserCanAccessUserPage
+            |
+            */
+            Route::get(
+                '/subtasks',
+                [SubtaskController::class, 'index']
+            )->name('subtasks.index');
+
+            Route::post(
+                '/subtasks/store',
+                [SubtaskController::class, 'store']
+            )->name('subtasks.store');
+
+            Route::post(
+                '/subtasks/update',
+                [SubtaskController::class, 'update']
+            )->name('subtasks.update');
+
+            Route::post(
+                '/subtasks/toggle',
+                [SubtaskController::class, 'toggle']
+            )->name('subtasks.toggle');
+
+            Route::post(
+                '/subtasks/delete',
+                [SubtaskController::class, 'destroy']
+            )->name('subtasks.destroy');
+
+            Route::post(
+                '/subtasks/reorder',
+                [SubtaskController::class, 'reorder']
+            )->name('subtasks.reorder');
 
             Route::get('/calendar', [TaskController::class, 'calendar'])->name('calendar');
             Route::get('/statistics', [StatisticsController::class, 'data'])->name('statistics');
@@ -136,6 +179,18 @@ Route::middleware(['auth', EnsureLoginSessionStillValid::class])->group(function
         */
         Route::get('/tasks', [AdminTaskController::class, 'index'])
             ->name('tasks.index');
+        
+        /*
+        * ============================================================
+        * FLOWLIST MK2 - ADMIN TASK DETAIL
+        * ============================================================
+        *
+        * Admin dapat melihat detail seluruh task termasuk checklist.
+        */
+        Route::get(
+            '/tasks/{task}/detail',
+            [AdminTaskDetailController::class, 'show']
+        )->name('tasks.detail');
 
         Route::post('/tasks', [AdminTaskController::class, 'store'])
             ->name('tasks.store');

@@ -109,8 +109,18 @@ class AdminActivityLogController extends Controller
                 ->where('module', 'like', 'admin_%')
                 ->count(),
 
+            /*
+             * User-side activity.
+             *
+             * Flowlist MK2 menambahkan module user_subtasks,
+             * sehingga aktivitas checklist ikut masuk ringkasan.
+             */
             'userLogs' => ActivityLog::query()
-                ->whereIn('module', ['user_tasks', 'profile'])
+                ->whereIn('module', [
+                    'user_tasks',
+                    'user_subtasks',
+                    'profile',
+                ])
                 ->count(),
 
             'authLogs' => ActivityLog::query()

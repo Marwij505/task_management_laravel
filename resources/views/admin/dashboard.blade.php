@@ -272,9 +272,28 @@
                                     : $task['status'];
                             @endphp
 
-                            <div class="task-item">
+                            {{-- =====================================================
+                                 FLOWLIST MK2 - CLICKABLE RECENT TASK
+                                 =====================================================
+                                 Seluruh card menjadi link menuju Admin Task Detail.
+                                 Karena memakai tag <a>, card juga mendukung:
+                                 - Ctrl + Click
+                                 - middle click
+                                 - open in new tab
+                                 - keyboard navigation
+                            ====================================================== --}}
+                            <a
+                                href="{{ route('admin.tasks.detail', $task['id']) }}"
+                                class="task-item admin-dashboard-clickable-card admin-recent-task-link"
+                                title="Open task detail: {{ $task['title'] }}"
+                                aria-label="Open task detail: {{ $task['title'] }}"
+                            >
                                 <div class="task-top">
                                     <h4>{{ $task['title'] }}</h4>
+
+                                    <span class="admin-card-open-icon" aria-hidden="true">
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </span>
                                 </div>
 
                                 <div class="task-tags">
@@ -289,6 +308,16 @@
                                     <span class="badge category category-default">
                                         Owner: {{ $task['owner'] }}
                                     </span>
+
+                                    @if(($task['subtask_total'] ?? 0) > 0)
+                                        <span class="admin-dashboard-checklist-badge">
+                                            <i class="fa-solid fa-list-check"></i>
+
+                                            {{ $task['subtask_completed'] }}
+                                            /
+                                            {{ $task['subtask_total'] }}
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <div class="task-date">
@@ -309,7 +338,7 @@
                                         ></div>
                                     </div>
                                 </div>
-                            </div>
+                            </a>
                         @empty
                             <div class="empty-state">
                                 No recent tasks available
@@ -380,7 +409,27 @@
 
                         <div class="admin-user-list">
                             @forelse($recentUsers as $user)
-                                <div class="admin-user-item">
+                                {{-- =================================================
+                                     FLOWLIST MK2 - CLICKABLE RECENT USER
+                                     =================================================
+                                     User Management dibuka dengan:
+                                     - search=email agar target pasti muncul;
+                                     - focus=id agar card target diberi highlight.
+                                ================================================== --}}
+                                <a
+                                    href="{{
+                                        route(
+                                            'admin.users.index',
+                                            [
+                                                'search' => $user['email'],
+                                                'focus' => $user['id'],
+                                            ]
+                                        )
+                                    }}"
+                                    class="admin-user-item admin-dashboard-clickable-card admin-recent-user-link"
+                                    title="Open user management: {{ $user['name'] }}"
+                                    aria-label="Open user management: {{ $user['name'] }}"
+                                >
                                     <div class="admin-user-avatar">
                                         {{
                                             strtoupper(
@@ -407,8 +456,12 @@
                                         <small>
                                             {{ $user['tasks_count'] }} tasks
                                         </small>
+
+                                        <span class="admin-user-open-icon" aria-hidden="true">
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </span>
                                     </div>
-                                </div>
+                                </a>
                             @empty
                                 <div class="empty-state">
                                     No users available

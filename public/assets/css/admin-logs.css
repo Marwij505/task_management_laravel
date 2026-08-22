@@ -143,6 +143,14 @@
     color: var(--green-text);
 }
 
+/*
+ * Flowlist MK2 - Subtask / Checklist activity.
+ */
+.admin-log-icon.user_subtasks {
+    background: var(--blue-soft);
+    color: var(--blue-text);
+}
+
 .admin-log-icon.profile {
     background: var(--blue-soft);
     color: var(--blue-text);

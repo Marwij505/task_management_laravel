@@ -20,7 +20,52 @@
         calendarApi: @json(route('flowlist.api.calendar')),
         statisticsApi: @json(route('flowlist.api.statistics')),
         sessionExpiresAt: @json(session('login_expires_at', 0)),
-        profileApi: @json(route('flowlist.api.profile.show'))
+        profileApi: @json(route('flowlist.api.profile.show')),
+        // ============================================================
+        // FLOWLIST MK2 - SUBTASK AND CHECKLIST
+        // ============================================================
+
+        subtaskIndexApi:
+            @json(
+                route(
+                    'flowlist.api.subtasks.index'
+                )
+            ),
+
+        subtaskStoreApi:
+            @json(
+                route(
+                    'flowlist.api.subtasks.store'
+                )
+            ),
+
+        subtaskUpdateApi:
+            @json(
+                route(
+                    'flowlist.api.subtasks.update'
+                )
+            ),
+
+        subtaskToggleApi:
+            @json(
+                route(
+                    'flowlist.api.subtasks.toggle'
+                )
+            ),
+
+        subtaskDeleteApi:
+            @json(
+                route(
+                    'flowlist.api.subtasks.destroy'
+                )
+            ),
+
+        subtaskReorderApi:
+            @json(
+                route(
+                    'flowlist.api.subtasks.reorder'
+                )
+            ),
     };
 </script>
 <script src="{{ asset('assets/js/laravel-fetch.js') }}"></script>

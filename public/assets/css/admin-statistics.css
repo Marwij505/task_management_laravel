@@ -223,3 +223,53 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ============================================================
+   FLOWLIST MK2 - GLOBAL CHECKLIST ANALYTICS
+   ============================================================ */
+
+.checklist-health-summary {
+    display: grid;
+    gap: 18px;
+}
+
+.checklist-health-metrics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+}
+
+.checklist-health-metrics > div {
+    min-height: 110px;
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: #fbfcfd;
+}
+
+.checklist-health-metrics span {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+}
+
+.checklist-health-metrics strong {
+    display: block;
+    color: var(--text-dark);
+    font-size: 1.8rem;
+}
+
+.checklist-health-progress {
+    padding-top: 4px;
+}
+
+html[data-theme="dark"] .checklist-health-metrics > div {
+    background: var(--dark-surface-2, #1f2937);
+}
+
+@media (max-width: 576px) {
+    .checklist-health-metrics {
+        grid-template-columns: 1fr;
+    }
+}

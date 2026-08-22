@@ -8,6 +8,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Flowlist - Task Detail</title>
     <link rel="stylesheet" href="{{ asset('assets/css/task-detail.css') }}" />
+    {{-- Flowlist MK2 - Subtask & Checklist --}}
+    <link
+        rel="stylesheet"
+        href="{{ asset('assets/css/subtask-checklist.css') }}"
+    >
     <link rel="stylesheet" href="{{ asset('assets/css/theme.css') }}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -176,6 +181,11 @@
                 </div>
             </section>
 
+            {{-- =========================================================
+                FLOWLIST MK2 - SUBTASK & CHECKLIST
+                ========================================================= --}}
+            @include('partials.subtask-checklist')
+
             <!-- Bottom Actions -->
             <div class="bottom-actions">
                 <button type="button" class="primary-btn" id="markCompleteBtn">
@@ -193,9 +203,13 @@
     </div>
 
     @include('partials.flowlist-routes')
-  <script src="{{ asset('assets/js/theme.js') }}"></script>
+
+    <script src="{{ asset('assets/js/theme.js') }}"></script>
     <script src="{{ asset('assets/js/preferences.js') }}"></script>
     <script src="{{ asset('assets/js/task-detail.js') }}"></script>
+    
+    {{-- Flowlist MK2 - Subtask & Checklist --}}
+    <script src="{{ asset('assets/js/subtask-checklist.js') }}"></script>
     
 </body>
 </html>

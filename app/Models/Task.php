@@ -40,4 +40,21 @@ class Task extends Model
     {
         return $this->hasMany(TaskTag::class)->orderBy('created_at');
     }
+
+    /**
+     * ============================================================
+     * FLOWLIST MK2 - SUBTASK RELATIONSHIP
+     * ============================================================
+     *
+     * Satu Task memiliki banyak Subtask.
+     *
+     * Subtask selalu diurutkan berdasarkan position,
+     * kemudian id sebagai fallback.
+     */
+    public function subtasks(): HasMany
+    {
+        return $this->hasMany(Subtask::class)
+            ->orderBy('position')
+            ->orderBy('id');
+    }
 }

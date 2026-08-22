@@ -393,3 +393,140 @@
         text-align: left;
     }
 }
+
+/* ============================================================
+   FLOWLIST MK2 - ADMIN DASHBOARD CLICKABLE SYNCHRONIZATION
+   ============================================================
+
+   Card yang dibuat clickable:
+   - Recent Tasks  -> Admin Task Detail
+   - Recent Users  -> User Management target
+
+   Tag <a> dipakai sebagai container sehingga interaksi browser
+   tetap natural dan accessible.
+   ============================================================ */
+
+.admin-dashboard-clickable-card {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.admin-dashboard-clickable-card:hover,
+.admin-dashboard-clickable-card:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+.admin-dashboard-clickable-card:focus-visible {
+    outline: 3px solid rgba(16, 210, 79, 0.24);
+    outline-offset: 3px;
+}
+
+/* Recent Task tetap memakai bentuk card task lama. */
+.admin-recent-task-link {
+    display: block;
+    transition:
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease;
+}
+
+.admin-recent-task-link:hover {
+    transform: translateY(-2px);
+    border-color: rgba(16, 210, 79, 0.42);
+    box-shadow: 0 10px 24px rgba(22, 41, 56, 0.08);
+}
+
+/* Icon navigasi di kanan title Recent Task. */
+.admin-recent-task-link .task-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+}
+
+.admin-card-open-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    opacity: 0.52;
+    transform: translateX(-2px);
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+.admin-recent-task-link:hover .admin-card-open-icon {
+    color: var(--accent);
+    opacity: 1;
+    transform: translateX(2px);
+}
+
+/* Badge ringkas jumlah checklist pada Recent Task. */
+.admin-dashboard-checklist-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    background: rgba(16, 210, 79, 0.10);
+    color: var(--green-text);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.admin-dashboard-checklist-badge i {
+    font-size: 0.72rem;
+}
+
+/* Recent User memakai card lama, hanya sekarang berupa link. */
+.admin-recent-user-link {
+    width: 100%;
+}
+
+.admin-user-open-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    opacity: 0.5;
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease,
+        opacity 0.2s ease;
+}
+
+.admin-recent-user-link:hover .admin-user-open-icon {
+    color: var(--accent);
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* Dark mode mengikuti variable theme utama Flowlist. */
+html[data-theme="dark"] .admin-recent-task-link:hover,
+html[data-theme="dark"] .admin-recent-user-link:hover {
+    border-color: rgba(16, 210, 79, 0.48);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.24);
+}
+
+/* Hormati preferensi reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+    .admin-recent-task-link,
+    .admin-card-open-icon,
+    .admin-user-open-icon {
+        transition: none !important;
+    }
+
+    .admin-recent-task-link:hover {
+        transform: none;
+    }
+}

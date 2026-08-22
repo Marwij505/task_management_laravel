@@ -5,8 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\TaskProgressService;
 use App\Services\ActivityLogService;
+use App\Services\TaskProgressService;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +26,8 @@ class AdminTaskController extends Controller
     {
         /*
          * Ambil filter dari URL.
-         * Contoh: /admin/tasks?search=APSI&status=completed&priority=high&user_id=3
+         * Contoh:
+         * /admin/tasks?search=APSI&status=completed&priority=high&user_id=3
          */
         $filters = [
             'search' => trim((string) $request->query('search', '')),
@@ -36,25 +37,51 @@ class AdminTaskController extends Controller
         ];
 
         /*
-         * Daftar user dipakai untuk dropdown owner task.
+         * Daftar user dipakai oleh:
+         * - filter owner;
+         * - form create task;
+         * - form edit task.
          */
         $users = User::query()
             ->orderBy('full_name')
+            ->orderBy('name')
             ->orderBy('username')
             ->get();
 
         /*
-         * Ambil semua task admin.
-         * with('user', 'tags') mencegah query berulang ketika menampilkan owner dan tag.
+         * ============================================================
+         * FLOWLIST MK2 - ADMIN TASK QUERY
+         * ============================================================
+         *
+         * Tetap mempertahankan seluruh relationship MK1:
+         * - user
+         * - tags
+         *
+         * Tambahan MK2:
+         * - subtask_total
+         * - subtask_completed
+         *
+         * Kita hanya menghitung subtask di halaman All Tasks,
+         * bukan memuat seluruh row subtask, sehingga tetap ringan.
          */
         $allTasks = Task::query()
             ->with(['user', 'tags'])
+            ->withCount([
+                'subtasks as subtask_total',
+
+                'subtasks as subtask_completed' => function ($query) {
+                    $query->where('is_completed', true);
+                },
+            ])
             ->latest('created_at')
             ->get();
 
         /*
          * Statistik global.
          * Status overdue dan due today dihitung dari TaskProgressService.
+         *
+         * Subtask TIDAK ditambahkan ke total task karena subtask adalah
+         * child checklist, bukan task utama.
          */
         $stats = [
             'totalTasks' => $allTasks->count(),
@@ -72,8 +99,8 @@ class AdminTaskController extends Controller
         ];
 
         /*
-         * Filter dilakukan di collection agar status tampilan seperti overdue
-         * dan due today tetap bisa difilter dengan benar.
+         * Filter dilakukan di collection agar effective status
+         * seperti overdue dan due today tetap dapat difilter.
          */
         $filteredTasks = $allTasks->filter(function (Task $task) use ($filters) {
             $effectiveStatus = $this->taskProgressService->effectiveStatus($task);
@@ -111,20 +138,31 @@ class AdminTaskController extends Controller
                     $tags,
                 ])));
 
-                return str_contains($haystack, mb_strtolower($filters['search']));
+                return str_contains(
+                    $haystack,
+                    mb_strtolower($filters['search'])
+                );
             }
 
             return true;
         })->values();
 
         /*
-         * Ubah task menjadi array siap tampil di Blade.
+         * Ubah model Task menjadi array siap pakai Blade.
+         *
+         * Struktur array ini dipertahankan karena halaman
+         * resources/views/admin/tasks/index.blade.php
+         * memang membaca $task['...'].
          */
         $preparedTasks = $filteredTasks
             ->map(fn (Task $task) => $this->taskViewPayload($task))
             ->values();
 
-        $paginatedTasks = $this->paginateCollection($preparedTasks, $request, 6);
+        $paginatedTasks = $this->paginateCollection(
+            $preparedTasks,
+            $request,
+            6
+        );
 
         return view('admin.tasks.index', [
             'tasks' => $paginatedTasks,
@@ -172,8 +210,8 @@ class AdminTaskController extends Controller
         $this->replaceTags($task, $validated['tags'] ?? '');
 
         /*
-        * Catat aktivitas create task oleh admin.
-        */
+         * Catat aktivitas create task oleh admin.
+         */
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'create',
@@ -241,8 +279,8 @@ class AdminTaskController extends Controller
         $this->replaceTags($task, $validated['tags'] ?? '');
 
         /*
-        * Catat aktivitas update task oleh admin.
-        */
+         * Catat aktivitas update task oleh admin.
+         */
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'update',
@@ -280,8 +318,8 @@ class AdminTaskController extends Controller
         ])->save();
 
         /*
-        * Catat aktivitas mark completed.
-        */
+         * Catat aktivitas mark completed.
+         */
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'complete',
@@ -302,8 +340,8 @@ class AdminTaskController extends Controller
     public function destroy(Task $task): RedirectResponse
     {
         /*
-        * Simpan seluruh data penting sebelum task dihapus.
-        */
+         * Simpan seluruh data penting sebelum task dihapus.
+         */
         $deletedTaskData = [
             'task_id' => $task->id,
             'title' => $task->title,
@@ -311,19 +349,26 @@ class AdminTaskController extends Controller
             'status' => $task->status,
             'priority' => $task->priority,
             'category' => $task->category,
+
+            /*
+             * Audit tambahan MK2.
+             * Database akan menghapus subtask dengan cascade.
+             */
+            'subtasks_count' => $task->subtasks()->count(),
         ];
 
         $taskTitle = $task->title;
         $ownerUserId = (int) $task->user_id;
 
         /*
-        * Hapus task setelah informasi audit disimpan.
-        */
+         * Foreign key subtasks.task_id memakai cascadeOnDelete(),
+         * sehingga seluruh checklist anak ikut terhapus otomatis.
+         */
         $task->delete();
 
         /*
-        * Owner user masih ada, sehingga targetUserId tetap dapat digunakan.
-        */
+         * Owner user masih ada, sehingga targetUserId tetap dapat digunakan.
+         */
         ActivityLogService::log(
             module: 'admin_tasks',
             action: 'delete',
@@ -337,9 +382,19 @@ class AdminTaskController extends Controller
             ->with('success', 'Task has been deleted successfully.');
     }
 
+    /**
+     * Membuat payload untuk card/form pada halaman Admin All Tasks.
+     */
     private function taskViewPayload(Task $task): array
     {
         $effectiveStatus = $this->taskProgressService->effectiveStatus($task);
+
+        $subtaskTotal = (int) ($task->subtask_total ?? 0);
+        $subtaskCompleted = (int) ($task->subtask_completed ?? 0);
+
+        $checklistPercentage = $subtaskTotal > 0
+            ? (int) round(($subtaskCompleted / $subtaskTotal) * 100)
+            : 0;
 
         return [
             'id' => $task->id,
@@ -352,25 +407,47 @@ class AdminTaskController extends Controller
             'status_label' => $this->taskProgressService->statusLabel($task),
             'priority' => $task->priority,
             'category' => $task->category ?? '',
-            'deadline_input' => $task->deadline ? Carbon::parse($task->deadline)->format('Y-m-d') : '',
-            'deadline_label' => $task->deadline ? Carbon::parse($task->deadline)->format('d M Y') : 'No deadline',
+            'deadline_input' => $task->deadline
+                ? Carbon::parse($task->deadline)->format('Y-m-d')
+                : '',
+            'deadline_label' => $task->deadline
+                ? Carbon::parse($task->deadline)->format('d M Y')
+                : 'No deadline',
             'progress' => $this->taskProgressService->progress($task),
             'stored_progress' => (int) $task->progress,
             'assignee' => $task->assignee ?? '',
-            'owner_name' => $task->user?->full_name ?: $task->user?->name ?: $task->user?->username ?: 'Unknown User',
+            'owner_name' => $task->user?->full_name
+                ?: $task->user?->name
+                ?: $task->user?->username
+                ?: 'Unknown User',
             'owner_email' => $task->user?->email ?: '-',
             'tags' => $task->tags->pluck('tag_name')->values()->all(),
             'tags_text' => $task->tags->pluck('tag_name')->implode(', '),
+
+            /*
+             * ========================================================
+             * FLOWLIST MK2 - CHECKLIST SUMMARY
+             * ========================================================
+             */
+            'subtask_total' => $subtaskTotal,
+            'subtask_completed' => $subtaskCompleted,
+            'checklist_percentage' => $checklistPercentage,
         ];
     }
 
-    private function paginateCollection(Collection $items, Request $request, int $perPage): LengthAwarePaginator
-    {
+    private function paginateCollection(
+        Collection $items,
+        Request $request,
+        int $perPage
+    ): LengthAwarePaginator {
         /*
          * Pagination manual karena data sudah difilter melalui collection.
          */
         $page = LengthAwarePaginator::resolveCurrentPage();
-        $itemsForPage = $items->slice(($page - 1) * $perPage, $perPage)->values();
+
+        $itemsForPage = $items
+            ->slice(($page - 1) * $perPage, $perPage)
+            ->values();
 
         return new LengthAwarePaginator(
             $itemsForPage,
@@ -384,8 +461,10 @@ class AdminTaskController extends Controller
         );
     }
 
-    private function normalizeStoredProgress(string $status, int $progress): int
-    {
+    private function normalizeStoredProgress(
+        string $status,
+        int $progress
+    ): int {
         /*
          * Pending selalu 0.
          * Completed selalu 100.
@@ -402,14 +481,20 @@ class AdminTaskController extends Controller
     {
         $value = trim((string) ($value ?? ''));
 
-        return $value === '' ? null : $value;
+        return $value === ''
+            ? null
+            : $value;
     }
 
-    private function replaceTags(Task $task, string $rawTags): void
-    {
+    private function replaceTags(
+        Task $task,
+        string $rawTags
+    ): void {
         /*
-         * Format input tags: urgent, frontend, revision
-         * Data lama dihapus lalu diganti dengan tags baru.
+         * Format input tags:
+         * urgent, frontend, revision
+         *
+         * Data lama dihapus lalu diganti tags baru.
          */
         $task->tags()->delete();
 

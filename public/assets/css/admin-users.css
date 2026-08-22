@@ -526,3 +526,43 @@
         flex-direction: column;
     }
 }
+
+/* ============================================================
+   FLOWLIST MK2 - ADMIN USER FOCUS
+   ============================================================
+
+   Dipakai ketika Recent User pada Admin Dashboard diklik.
+   User Management akan menampilkan user target dengan highlight.
+   ============================================================ */
+
+.admin-user-focus {
+    border-color: var(--accent) !important;
+    box-shadow:
+        0 0 0 4px rgba(16, 210, 79, 0.12),
+        0 14px 32px rgba(22, 41, 56, 0.10);
+    transform: translateY(-2px);
+    transition:
+        border-color 0.45s ease,
+        box-shadow 0.45s ease,
+        transform 0.45s ease;
+}
+
+.admin-user-focus-fade {
+    box-shadow: 0 10px 22px rgba(22, 41, 56, 0.06);
+    transform: none;
+}
+
+html[data-theme="dark"] .admin-user-focus {
+    border-color: var(--accent) !important;
+    box-shadow:
+        0 0 0 4px rgba(16, 210, 79, 0.14),
+        0 14px 32px rgba(0, 0, 0, 0.22);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .admin-user-focus,
+    .admin-user-focus-fade {
+        transition: none !important;
+        transform: none;
+    }
+}

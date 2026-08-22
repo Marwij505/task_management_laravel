@@ -391,6 +391,61 @@
                                     </div>
                                 </div>
 
+                                {{-- =================================================
+                                     FLOWLIST MK2 - CHECKLIST SUMMARY
+                                     =================================================
+                                     Admin dapat memonitor jumlah subtask secara
+                                     read-only tanpa memuat seluruh checklist pada
+                                     halaman All Tasks.
+                                ================================================== --}}
+                                <div class="admin-task-checklist-summary">
+                                    <div class="admin-task-checklist-top">
+                                        <div class="admin-task-checklist-label">
+                                            <i class="fa-solid fa-list-check"></i>
+                                            <span>Checklist</span>
+                                        </div>
+
+                                        <strong>
+                                            {{ $task['subtask_completed'] }}
+                                            /
+                                            {{ $task['subtask_total'] }}
+                                        </strong>
+                                    </div>
+
+                                    <div
+                                        class="admin-task-checklist-track"
+                                        role="progressbar"
+                                        aria-label="Checklist progress"
+                                        aria-valuemin="0"
+                                        aria-valuemax="100"
+                                        aria-valuenow="{{ $task['checklist_percentage'] }}"
+                                    >
+                                        <div
+                                            class="admin-task-checklist-fill"
+                                            style="width: {{ $task['checklist_percentage'] }}%;"
+                                        ></div>
+                                    </div>
+
+                                    <div class="admin-task-checklist-bottom">
+                                        <span>
+                                            @if($task['subtask_total'] > 0)
+                                                {{ $task['checklist_percentage'] }}% completed
+                                            @else
+                                                No checklist items
+                                            @endif
+                                        </span>
+
+                                        <a
+                                            href="{{ route('admin.tasks.detail', $task['id']) }}"
+                                            class="admin-task-detail-link"
+                                            title="View task detail"
+                                        >
+                                            <span>View Detail</span>
+                                            <i class="fa-solid fa-chevron-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
                                 @if(count($task['tags']))
                                     <div class="admin-tag-list">
                                         @foreach($task['tags'] as $tag)

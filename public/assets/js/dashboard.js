@@ -117,93 +117,380 @@ function getProgressWidthClass(progress) {
 // RENDER RECENT TASKS
 // ===============================
 function renderRecentTasks(tasks) {
-    if (!recentTaskListEl) return;
-
-    recentTaskListEl.innerHTML = '';
-
-    if (!tasks || tasks.length === 0) {
-        renderEmptyState(recentTaskListEl, 'No recent tasks available');
+    if (!recentTaskListEl) {
         return;
     }
 
+    /*
+     * Bersihkan data sebelumnya.
+     */
+    recentTaskListEl.innerHTML = '';
+
+    /*
+     * Empty state.
+     */
+    if (
+        !tasks ||
+        tasks.length === 0
+    ) {
+        renderEmptyState(
+            recentTaskListEl,
+            'No recent tasks available'
+        );
+
+        return;
+    }
+
+
     tasks.forEach(function (task) {
-        const taskItem = document.createElement('div');
-        taskItem.className = 'task-item';
 
-        // Pakai status realistis dari backend.
-        // Jika backend belum mengirim effective_status, fallback ke status asli database.
-        const displayStatus = task.effective_status || task.status;
-        const statusLabel = task.status_label || formatStatus(displayStatus);
+        /*
+         * =====================================================
+         * CLICKABLE TASK CARD
+         * =====================================================
+         *
+         * Sebelumnya menggunakan:
+         *
+         * document.createElement('div')
+         *
+         * Sekarang menggunakan:
+         *
+         * document.createElement('a')
+         *
+         * Dengan begitu seluruh card menjadi link yang valid,
+         * accessible, dan bisa dibuka melalui:
+         *
+         * - klik kiri
+         * - Ctrl + Click
+         * - klik tengah mouse
+         * - Open Link in New Tab
+         */
+        const taskItem =
+            document.createElement('a');
 
+
+        /*
+         * Pertahankan class task-item agar desain MK1
+         * tidak berubah.
+         *
+         * dashboard-task-link merupakan class tambahan
+         * untuk efek klik/hover.
+         */
+        taskItem.className =
+            'task-item dashboard-task-link';
+
+
+        /*
+         * URL menuju Task Detail.
+         */
+        taskItem.href =
+            buildTaskDetailUrl(
+                task.id
+            );
+
+
+        /*
+         * Tooltip browser.
+         */
+        taskItem.title =
+            `Open task: ${task.title || 'Task'}`;
+
+
+        /*
+         * Accessibility untuk screen reader.
+         */
+        taskItem.setAttribute(
+            'aria-label',
+            `Open task detail: ${task.title || 'Task'}`
+        );
+
+
+        /*
+         * Status realistis dari backend.
+         *
+         * effective_status dapat berupa:
+         *
+         * pending
+         * in-progress
+         * completed
+         * due-today
+         * overdue
+         */
+        const displayStatus =
+            task.effective_status
+            || task.status;
+
+
+        const statusLabel =
+            task.status_label
+            || formatStatus(
+                displayStatus
+            );
+
+
+        /*
+         * Render isi card.
+         *
+         * escapeHTML tetap digunakan untuk mencegah
+         * title/category dari menghasilkan HTML berbahaya.
+         */
         taskItem.innerHTML = `
             <div class="task-top">
-                <h4>${escapeHTML(task.title)}</h4>
+                <h4>
+                    ${escapeHTML(task.title)}
+                </h4>
+
+                <span
+                    class="dashboard-open-icon"
+                    aria-hidden="true"
+                >
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </span>
             </div>
 
             <div class="task-tags">
-                <span class="badge status ${getStatusClass(displayStatus)}">
-                    ${statusLabel}
+
+                <span
+                    class="badge status ${getStatusClass(displayStatus)}"
+                >
+                    ${escapeHTML(statusLabel)}
                 </span>
 
-                <span class="badge priority ${getPriorityClass(task.priority)}">
+                <span
+                    class="badge priority ${getPriorityClass(task.priority)}"
+                >
                     ${formatPriority(task.priority)}
                 </span>
 
-                ${task.category ? `<span class="badge category ${getCategoryClass(task.category)}">${escapeHTML(task.category)}</span>` : ''}
+                ${
+                    task.category
+                        ? `
+                            <span
+                                class="badge category ${getCategoryClass(task.category)}"
+                            >
+                                ${escapeHTML(task.category)}
+                            </span>
+                        `
+                        : ''
+                }
+
             </div>
 
             <div class="task-date">
+
                 <i class="fa-regular fa-calendar"></i>
-                <span>${formatDate(task.deadline)}</span>
+
+                <span>
+                    ${formatDate(task.deadline)}
+                </span>
+
             </div>
 
             <div class="task-progress">
+
                 <div class="progress-header">
-                    <span>Progress</span>
-                    <span>${normalizeProgress(task.progress)}%</span>
+
+                    <span>
+                        Progress
+                    </span>
+
+                    <span>
+                        ${normalizeProgress(task.progress)}%
+                    </span>
+
                 </div>
+
                 <div class="progress-bar">
-                    <div class="progress-fill" style="width: ${normalizeProgress(task.progress)}%;"></div>
+
+                    <div
+                        class="progress-fill"
+                        style="width: ${normalizeProgress(task.progress)}%;"
+                    ></div>
+
                 </div>
+
             </div>
         `;
 
-        recentTaskListEl.appendChild(taskItem);
+
+        /*
+         * Masukkan card ke Recent Tasks.
+         */
+        recentTaskListEl.appendChild(
+            taskItem
+        );
     });
+}
+
+// ============================================================
+// FLOWLIST - BUILD TASK DETAIL URL
+// ============================================================
+//
+// Membuat URL menuju halaman Task Detail berdasarkan ID task.
+//
+// Contoh:
+//
+// taskId = 12
+//
+// menghasilkan:
+//
+// /task-detail?id=12
+//
+// Kita menggunakan FlowlistRoutes.taskDetail agar URL tetap
+// mengikuti route Laravel dan tidak di-hardcode.
+//
+function buildTaskDetailUrl(taskId) {
+    /*
+     * Pastikan ID benar-benar angka positif.
+     */
+    const safeTaskId =
+        Number(taskId);
+
+    if (
+        !Number.isInteger(safeTaskId) ||
+        safeTaskId <= 0
+    ) {
+        return '#';
+    }
+
+    /*
+     * Gunakan URL() agar query string dibuat
+     * secara aman dan konsisten.
+     */
+    const url =
+        new URL(
+            window.FlowlistRoutes.taskDetail,
+            window.location.origin
+        );
+
+    url.searchParams.set(
+        'id',
+        String(safeTaskId)
+    );
+
+    return url.toString();
 }
 
 // ===============================
 // RENDER UPCOMING DEADLINES
 // ===============================
 function renderUpcomingDeadlines(deadlines) {
-    if (!upcomingDeadlineListEl) return;
-
-    upcomingDeadlineListEl.innerHTML = '';
-
-    if (!deadlines || deadlines.length === 0) {
-        renderEmptyState(upcomingDeadlineListEl, 'No upcoming deadlines available');
+    if (!upcomingDeadlineListEl) {
         return;
     }
 
-    deadlines.forEach(function (task) {
-        const deadlineItem = document.createElement('div');
-        deadlineItem.className = 'deadline-item';
 
+    /*
+     * Bersihkan isi sebelumnya.
+     */
+    upcomingDeadlineListEl.innerHTML = '';
+
+
+    /*
+     * Empty state.
+     */
+    if (
+        !deadlines ||
+        deadlines.length === 0
+    ) {
+        renderEmptyState(
+            upcomingDeadlineListEl,
+            'No upcoming deadlines available'
+        );
+
+        return;
+    }
+
+
+    deadlines.forEach(function (task) {
+
+        /*
+         * =====================================================
+         * CLICKABLE DEADLINE CARD
+         * =====================================================
+         *
+         * Gunakan anchor agar seluruh card dapat
+         * membuka Task Detail.
+         */
+        const deadlineItem =
+            document.createElement('a');
+
+
+        /*
+         * Pertahankan class deadline-item lama.
+         */
+        deadlineItem.className =
+            'deadline-item dashboard-deadline-link';
+
+
+        /*
+         * Arahkan langsung ke Task Detail.
+         */
+        deadlineItem.href =
+            buildTaskDetailUrl(
+                task.id
+            );
+
+
+        /*
+         * Tooltip browser.
+         */
+        deadlineItem.title =
+            `Open task: ${task.title || 'Task'}`;
+
+
+        /*
+         * Accessibility.
+         */
+        deadlineItem.setAttribute(
+            'aria-label',
+            `Open task detail: ${task.title || 'Task'}`
+        );
+
+
+        /*
+         * Isi card.
+         */
         deadlineItem.innerHTML = `
             <div class="deadline-info">
-                <h4>${escapeHTML(task.title)}</h4>
+
+                <h4>
+                    ${escapeHTML(task.title)}
+                </h4>
+
                 <p>
                     <i class="fa-regular fa-calendar"></i>
-                    <span>${formatDate(task.deadline)}</span>
+
+                    <span>
+                        ${formatDate(task.deadline)}
+                    </span>
                 </p>
+
             </div>
 
-            <span class="badge priority ${getPriorityClass(task.priority)}">
-                ${formatPriority(task.priority)}
-            </span>
+
+            <div class="deadline-right">
+
+                <span
+                    class="badge priority ${getPriorityClass(task.priority)}"
+                >
+                    ${formatPriority(task.priority)}
+                </span>
+
+                <span
+                    class="dashboard-open-icon"
+                    aria-hidden="true"
+                >
+                    <i class="fa-solid fa-chevron-right"></i>
+                </span>
+
+            </div>
         `;
 
-        upcomingDeadlineListEl.appendChild(deadlineItem);
+
+        upcomingDeadlineListEl.appendChild(
+            deadlineItem
+        );
     });
 }
 

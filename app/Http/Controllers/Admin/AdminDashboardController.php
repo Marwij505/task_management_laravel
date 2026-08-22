@@ -19,8 +19,15 @@ class AdminDashboardController extends Controller
     public function index(): View
     {
         /*
-         * Load users and tasks once for dashboard summary.
-         * This keeps the admin dashboard simple and easy to debug.
+         * ============================================================
+         * ADMIN DASHBOARD DATA
+         * ============================================================
+         *
+         * User dan task diambil sekali untuk seluruh ringkasan dashboard.
+         *
+         * Flowlist MK2:
+         * - task juga membawa jumlah subtask/checklist.
+         * - Recent Tasks dapat menampilkan summary checklist.
          */
         $users = User::query()
             ->withCount('tasks')
@@ -29,6 +36,19 @@ class AdminDashboardController extends Controller
 
         $tasks = Task::query()
             ->with('user')
+            ->withCount([
+                /*
+                 * Jumlah seluruh subtask pada task.
+                 */
+                'subtasks as subtask_total',
+
+                /*
+                 * Jumlah subtask yang sudah selesai.
+                 */
+                'subtasks as subtask_completed' => function ($query) {
+                    $query->where('is_completed', true);
+                },
+            ])
             ->latest('created_at')
             ->get();
 
@@ -36,8 +56,8 @@ class AdminDashboardController extends Controller
         $completedTasks = $tasks->where('status', 'completed')->count();
 
         /*
-         * Effective status follows the realistic deadline logic.
-         * This keeps admin numbers consistent with the user dashboard.
+         * Effective status mengikuti deadline realistis.
+         * Angka admin tetap konsisten dengan dashboard user.
          */
         $inProgressTasks = $tasks
             ->filter(function (Task $task) {
@@ -70,8 +90,7 @@ class AdminDashboardController extends Controller
             : 0;
 
         /*
-         * Count unique categories globally.
-         * Category text is normalized to avoid duplicate values like Personal and personal.
+         * Hitung kategori unik secara global.
          */
         $totalCategories = $tasks
             ->pluck('category')
@@ -86,6 +105,14 @@ class AdminDashboardController extends Controller
             'low' => $tasks->where('priority', 'low')->count(),
         ];
 
+        /*
+         * ============================================================
+         * RECENT USERS
+         * ============================================================
+         *
+         * ID dan email ikut dikirim agar card Recent User dapat
+         * diarahkan ke User Management dan langsung memfokuskan user.
+         */
         $recentUsers = $users
             ->take(5)
             ->map(function (User $user) {
@@ -102,10 +129,26 @@ class AdminDashboardController extends Controller
                 ];
             });
 
+        /*
+         * ============================================================
+         * RECENT TASKS
+         * ============================================================
+         *
+         * Flowlist MK2 Admin Synchronization:
+         * - card dapat diklik menuju Admin Task Detail.
+         * - jumlah checklist ikut ditampilkan.
+         */
         $recentTasks = $tasks
             ->take(6)
             ->map(function (Task $task) {
                 $effectiveStatus = $this->taskProgressService->effectiveStatus($task);
+
+                $subtaskTotal = (int) ($task->subtask_total ?? 0);
+                $subtaskCompleted = (int) ($task->subtask_completed ?? 0);
+
+                $checklistPercentage = $subtaskTotal > 0
+                    ? (int) round(($subtaskCompleted / $subtaskTotal) * 100)
+                    : 0;
 
                 return [
                     'id' => $task->id,
@@ -121,6 +164,13 @@ class AdminDashboardController extends Controller
                     'deadline' => $task->deadline
                         ? Carbon::parse($task->deadline)->format('d M Y')
                         : 'No deadline',
+
+                    /*
+                     * Checklist summary.
+                     */
+                    'subtask_total' => $subtaskTotal,
+                    'subtask_completed' => $subtaskCompleted,
+                    'checklist_percentage' => $checklistPercentage,
                 ];
             });
 

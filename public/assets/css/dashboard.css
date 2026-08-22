@@ -759,3 +759,271 @@ select {
         font-size: 0.96rem;
     }
 }
+
+/* ============================================================
+   FLOWLIST MK2
+   CLICKABLE DASHBOARD TASK CARDS
+   ============================================================
+
+   Membuat:
+   - Recent Tasks
+   - Upcoming Deadlines
+
+   terasa seperti elemen interaktif tanpa mengubah
+   desain utama dashboard.
+   ============================================================ */
+
+
+/* =========================================================
+   LINK RESET
+   ========================================================= */
+
+/*
+ * Karena card sekarang menggunakan tag <a>,
+ * hilangkan style default browser seperti underline.
+ */
+.dashboard-task-link,
+.dashboard-deadline-link {
+    color: inherit;
+    text-decoration: none;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color:
+        transparent;
+}
+
+
+/*
+ * Jangan munculkan underline saat hover.
+ */
+.dashboard-task-link:hover,
+.dashboard-deadline-link:hover,
+.dashboard-task-link:focus,
+.dashboard-deadline-link:focus {
+    color: inherit;
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   RECENT TASK CARD
+   ========================================================= */
+
+/*
+ * Recent Task sebelumnya berupa DIV.
+ * Karena sekarang berupa anchor, pastikan tetap
+ * berperilaku sebagai sebuah card/block.
+ */
+.dashboard-task-link {
+    display: block;
+
+    position: relative;
+
+    transition:
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        background-color 0.22s ease;
+}
+
+
+/*
+ * Animasi saat cursor berada di card.
+ */
+.dashboard-task-link:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(16, 210, 79, 0.45);
+
+    box-shadow:
+        0 10px 26px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+/* =========================================================
+   UPCOMING DEADLINE CARD
+   ========================================================= */
+
+.dashboard-deadline-link {
+    transition:
+        transform 0.22s ease,
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        background-color 0.22s ease;
+}
+
+
+.dashboard-deadline-link:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(16, 210, 79, 0.45);
+
+    box-shadow:
+        0 9px 22px
+        rgba(15, 23, 42, 0.08);
+}
+
+
+/* =========================================================
+   TASK TOP
+   ========================================================= */
+
+/*
+ * Title di kiri dan icon open di kanan.
+ */
+.dashboard-task-link .task-top {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+
+/* =========================================================
+   DEADLINE RIGHT
+   ========================================================= */
+
+.deadline-right {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   OPEN ICON
+   ========================================================= */
+
+.dashboard-open-icon {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color:
+        var(--text-muted, #94a3b8);
+
+    font-size: 0.78rem;
+
+    opacity: 0.55;
+
+    transform:
+        translateX(-2px);
+
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/*
+ * Icon bergerak sedikit saat card di-hover.
+ */
+.dashboard-task-link:hover
+.dashboard-open-icon,
+.dashboard-deadline-link:hover
+.dashboard-open-icon {
+    color:
+        var(--accent, #10d24f);
+
+    opacity: 1;
+
+    transform:
+        translateX(2px);
+}
+
+
+/* =========================================================
+   KEYBOARD ACCESSIBILITY
+   ========================================================= */
+
+/*
+ * Pengguna keyboard dapat melihat card
+ * mana yang sedang memiliki focus.
+ */
+.dashboard-task-link:focus-visible,
+.dashboard-deadline-link:focus-visible {
+    outline:
+        3px solid
+        rgba(16, 210, 79, 0.25);
+
+    outline-offset:
+        3px;
+
+    border-color:
+        var(--accent, #10d24f);
+}
+
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+html[data-theme="dark"]
+.dashboard-task-link:hover,
+html[data-theme="dark"]
+.dashboard-deadline-link:hover {
+    border-color:
+        rgba(16, 210, 79, 0.55);
+
+    box-shadow:
+        0 10px 26px
+        rgba(0, 0, 0, 0.22);
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 576px) {
+
+    /*
+     * Icon eksternal pada Recent Task dapat dibuat sedikit
+     * lebih kecil agar card tidak sesak.
+     */
+    .dashboard-task-link
+    .dashboard-open-icon {
+        font-size: 0.72rem;
+    }
+
+
+    .deadline-right {
+        gap: 7px;
+    }
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .dashboard-task-link,
+    .dashboard-deadline-link,
+    .dashboard-open-icon {
+        transition: none !important;
+    }
+
+
+    .dashboard-task-link:hover,
+    .dashboard-deadline-link:hover {
+        transform: none;
+    }
+}
